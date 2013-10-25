@@ -20,7 +20,7 @@ module.exports = function(grunt) {
                 options: {
                     frameworks: ['jasmine'],
                     browsers: ['Chrome'],
-                    singleRun: false,
+                    singleRun: true,
                     autoWatch: true,
                     files: [
                         'karma/phantomjs-hacks.js',
