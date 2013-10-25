@@ -19,7 +19,7 @@ module.exports = function(grunt) {
             unit: {
                 options: {
                     frameworks: ['jasmine'],
-                    browsers: ['PhantomJS'],
+                    browsers: ['Chrome'],
                     singleRun: true,
                     autoWatch: true,
                     files: [
