@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="en"><head><title>spec/single_collection_inheritance_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/single_collection_inheritance_spec"><meta name="groc-project-path" content="spec/single_collection_inheritance_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/single_collection_inheritance_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Iguana.SingleCollectionInheritance&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">Iguana</span><span class="p">,</span> <span class="nx">Klass</span><span class="p">;</span>
+
+    <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;Iguana&#39;</span><span class="p">);</span>
+
+        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">_Iguana_</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">Iguana</span> <span class="o">=</span> <span class="nx">_Iguana_</span><span class="p">;</span>
+            <span class="nx">Klass</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">setSciProperty</span><span class="p">(</span><span class="s1">&#39;___type&#39;</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;myklass&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;sciProperty&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should default to iguana_type&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">.</span><span class="nx">sciProperty</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;iguana_type&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">().</span><span class="nx">sciProperty</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;iguana_type&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+        
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;new&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should create an instance of the class if there is no type property&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> 
+            <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="nx">Klass</span><span class="p">.</span><span class="k">new</span><span class="p">({});</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Klass</span><span class="p">);</span>
+        <span class="p">});</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should create an instance of the class if the type property matches the sciAlias&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="nx">Klass</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">___type</span><span class="o">:</span> <span class="s1">&#39;myklass&#39;</span><span class="p">});</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Klass</span><span class="p">);</span>
+        <span class="p">});</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should create an instance of a subclass if the attributes match the subclass polyMorph settings&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">SubClass1</span> <span class="o">=</span> <span class="nx">Klass</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;subclass1&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+            <span class="kd">var</span> <span class="nx">SubClass2</span> <span class="o">=</span> <span class="nx">Klass</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;subclass2&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+            <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="nx">Klass</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">___type</span><span class="o">:</span> <span class="s1">&#39;subclass2&#39;</span><span class="p">});</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">SubClass2</span><span class="p">);</span>
+        <span class="p">});</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should raise if nothing matches the polyMorph settings&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">Klass</span><span class="p">.</span><span class="k">new</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">Klass</span><span class="p">,</span> <span class="p">{</span><span class="nx">___type</span><span class="o">:</span> <span class="s1">&#39;noKlassForThis&#39;</span><span class="p">})).</span><span class="nx">toThrow</span><span class="p">(</span><span class="s1">&#39;No class could be found for ___type=&quot;noKlassForThis&quot;.&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+        
+    <span class="p">});</span>
+
+    
+<span class="p">});</span></div></div></div></div></body></html>

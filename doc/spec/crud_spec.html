@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="en"><head><title>spec/crud_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/crud_spec"><meta name="groc-project-path" content="spec/crud_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/crud_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Iguana.Crud&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">Item</span><span class="p">;</span>
+
+    <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;Iguana&#39;</span><span class="p">);</span>
+        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$injector</span><span class="p">,</span> <span class="nx">_Iguana_</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">mockAdapter</span> <span class="o">=</span> <span class="nx">$injector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;Iguana.Mock.Adapter&#39;</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">Iguana</span> <span class="o">=</span> <span class="nx">_Iguana_</span><span class="p">;</span>
+            <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">);</span>
+            <span class="p">});</span>
+            <span class="nx">Iguana</span><span class="p">.</span><span class="nx">setAdapter</span><span class="p">(</span><span class="nx">mockAdapter</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;ClassMethod show&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">assertMakesApiCallAndReturnsASingleInstance</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;arg1&#39;</span><span class="p">,</span> <span class="s1">&#39;arg2&#39;</span><span class="p">]);</span>
+        <span class="p">});</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and handle an error&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">assertMakesApiCallAndFiresErrorCallback</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;arg1&#39;</span><span class="p">,</span> <span class="s1">&#39;arg2&#39;</span><span class="p">]);</span>
+        <span class="p">});</span>
+        
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;ClassMethod index&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">assertMakesApiCallAndReturnsAnArrayOfInstances</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;arg1&#39;</span><span class="p">,</span> <span class="s1">&#39;arg2&#39;</span><span class="p">]);</span>
+        <span class="p">});</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and handle an error&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">assertMakesApiCallAndFiresErrorCallback</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;arg1&#39;</span><span class="p">,</span> <span class="s1">&#39;arg2&#39;</span><span class="p">]);</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;ClassMethod create&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">assertMakesApiCallAndReturnsASingleInstance</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="p">[{}]);</span>
+        <span class="p">});</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and handle an error&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">assertMakesApiCallAndFiresErrorCallback</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="p">[{}]);</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;ClassMethod update&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">assertMakesApiCallAndReturnsASingleInstance</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="p">[{}]);</span>
+        <span class="p">});</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and handle an error&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">assertMakesApiCallAndFiresErrorCallback</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="p">[{}]);</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;ClassMethod destroy&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">assertMakesApiCallAndReturnsNothing</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]);</span>
+        <span class="p">});</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and handle an error&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">assertMakesApiCallAndFiresErrorCallback</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]);</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;InstanceMethod save&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should create a new item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({});</span>
+            <span class="nx">assertSavesAndFiresSuccessCallback</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="s1">&#39;create&#39;</span><span class="p">);</span>            
+        <span class="p">});</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should update an existing item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">});</span>
+            <span class="nx">assertSavesAndFiresSuccessCallback</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should fire error when creating a new item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({});</span>
+            <span class="nx">assertFiresErrorCallbackOnSave</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="s1">&#39;create&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should fire error when updating an existing item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">});</span>
+            <span class="nx">assertFiresErrorCallbackOnSave</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+        
+        <span class="kd">function</span> <span class="nx">assertSavesAndFiresSuccessCallback</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">toBeSpiedOn</span> <span class="o">=</span> <span class="p">{</span><span class="nx">onSuccess</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">item</span><span class="p">);</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">meta</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;meta&#39;</span><span class="p">);</span>
+            <span class="p">}};</span>                        
+            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">,</span> <span class="s1">&#39;onSuccess&#39;</span><span class="p">).</span><span class="nx">andCallThrough</span><span class="p">();</span>
+
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="nx">action</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="p">[</span><span class="nx">item</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()],</span> <span class="p">{</span><span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">item</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()],</span> <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">});</span>
+
+            <span class="nx">item</span><span class="p">.</span><span class="nx">save</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onSuccess</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onSuccess</span><span class="p">).</span><span class="nx">not</span><span class="p">.</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span> <span class="c1">// results have not come back from the server yet</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">flush</span><span class="p">(</span><span class="nx">action</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onSuccess</span><span class="p">).</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span>
+        <span class="p">}</span>
+        
+        <span class="kd">function</span> <span class="nx">assertFiresErrorCallbackOnSave</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">error</span> <span class="o">=</span> <span class="p">{</span><span class="nx">message</span><span class="o">:</span> <span class="s1">&#39;message&#39;</span><span class="p">};</span>
+            <span class="kd">var</span> <span class="nx">toBeSpiedOn</span> <span class="o">=</span> <span class="p">{</span><span class="nx">onError</span><span class="o">:</span> <span class="kc">null</span><span class="p">};</span>                        
+            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">,</span> <span class="s1">&#39;onError&#39;</span><span class="p">);</span>
+
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="nx">action</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="p">[</span><span class="nx">item</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()],</span> <span class="p">{</span><span class="nx">error</span><span class="o">:</span> <span class="nx">error</span><span class="p">});</span>
+
+            <span class="nx">item</span><span class="p">.</span><span class="nx">save</span><span class="p">().</span><span class="k">catch</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onError</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onError</span><span class="p">).</span><span class="nx">not</span><span class="p">.</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span> <span class="c1">// results have not come back from the server yet</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">flush</span><span class="p">(</span><span class="nx">action</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onError</span><span class="p">).</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;InstanceMethod destroy&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should destroy an instance and call success&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">toBeSpiedOn</span> <span class="o">=</span> <span class="p">{</span><span class="nx">onSuccess</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">meta</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;meta&#39;</span><span class="p">);</span>
+            <span class="p">}};</span>                        
+            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">,</span> <span class="s1">&#39;onSuccess&#39;</span><span class="p">).</span><span class="nx">andCallThrough</span><span class="p">();</span>
+
+            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="p">{</span><span class="nx">result</span><span class="o">:</span> <span class="p">[],</span> <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">});</span>            
+            <span class="nx">item</span><span class="p">.</span><span class="nx">destroy</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onSuccess</span><span class="p">);</span>
+            
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onSuccess</span><span class="p">).</span><span class="nx">not</span><span class="p">.</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span> <span class="c1">// results have not come back from the server yet</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onSuccess</span><span class="p">).</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span>
+        <span class="p">});</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should fire an error when failing to destroy&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">error</span> <span class="o">=</span> <span class="p">{</span><span class="nx">message</span><span class="o">:</span> <span class="s1">&#39;message&#39;</span><span class="p">};</span>
+            <span class="kd">var</span> <span class="nx">toBeSpiedOn</span> <span class="o">=</span> <span class="p">{</span><span class="nx">onError</span><span class="o">:</span> <span class="kc">null</span><span class="p">};</span>                        
+            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">,</span> <span class="s1">&#39;onError&#39;</span><span class="p">);</span>
+
+            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="p">{</span><span class="nx">error</span><span class="o">:</span> <span class="s1">&#39;error&#39;</span><span class="p">});</span>            
+            <span class="nx">item</span><span class="p">.</span><span class="nx">destroy</span><span class="p">().</span><span class="k">catch</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onError</span><span class="p">);</span>
+            
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onError</span><span class="p">).</span><span class="nx">not</span><span class="p">.</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span> <span class="c1">// results have not come back from the server yet</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onError</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+    
+    <span class="kd">function</span> <span class="nx">assertMakesApiCallAndReturnsNothing</span><span class="p">(</span><span class="nx">meth</span><span class="p">,</span> <span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">assertMakesApiCallAndFiresSuccessCallback</span><span class="p">(</span><span class="nx">meth</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="p">[],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">meta</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;meta&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+    
+    <span class="kd">function</span> <span class="nx">assertMakesApiCallAndReturnsASingleInstance</span><span class="p">(</span><span class="nx">meth</span><span class="p">,</span> <span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">};</span>
+        <span class="nx">assertMakesApiCallAndFiresSuccessCallback</span><span class="p">(</span><span class="nx">meth</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="p">[</span><span class="nx">attrs</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">attrs</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">meta</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;meta&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+    
+    <span class="kd">function</span> <span class="nx">assertMakesApiCallAndReturnsAnArrayOfInstances</span><span class="p">(</span><span class="nx">meth</span><span class="p">,</span> <span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">[{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id1&#39;</span><span class="p">},</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id2&#39;</span><span class="p">}];</span>
+        <span class="nx">assertMakesApiCallAndFiresSuccessCallback</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">items</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">json</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">){</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
+                <span class="nx">json</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">asJson</span><span class="p">());</span>
+            <span class="p">});</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">json</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">attrs</span><span class="p">);</span>                
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">meta</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;meta&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">assertMakesApiCallAndFiresSuccessCallback</span><span class="p">(</span><span class="nx">meth</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">returnAttrs</span><span class="p">,</span> <span class="nx">success</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">toBeSpiedOn</span> <span class="o">=</span> <span class="p">{</span><span class="nx">onSuccess</span><span class="o">:</span> <span class="nx">success</span><span class="p">};</span>                        
+        <span class="nx">spyOn</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">,</span> <span class="s1">&#39;onSuccess&#39;</span><span class="p">).</span><span class="nx">andCallThrough</span><span class="p">();</span>
+        
+        <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="nx">meth</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="p">{</span><span class="nx">result</span><span class="o">:</span> <span class="nx">returnAttrs</span><span class="p">,</span> <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">});</span>
+        
+        <span class="nx">Item</span><span class="p">[</span><span class="nx">meth</span><span class="p">].</span><span class="nx">apply</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">args</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onSuccess</span><span class="p">);</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onSuccess</span><span class="p">).</span><span class="nx">not</span><span class="p">.</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span> <span class="c1">// results have not come back from the server yet</span>
+        <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">flush</span><span class="p">(</span><span class="nx">meth</span><span class="p">);</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onSuccess</span><span class="p">).</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span>
+    <span class="p">}</span>
+    
+    <span class="kd">function</span> <span class="nx">assertMakesApiCallAndFiresErrorCallback</span><span class="p">(</span><span class="nx">meth</span><span class="p">,</span> <span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">error</span> <span class="o">=</span> <span class="p">{</span><span class="nx">message</span><span class="o">:</span> <span class="s1">&#39;message&#39;</span><span class="p">};</span>
+        <span class="kd">var</span> <span class="nx">toBeSpiedOn</span> <span class="o">=</span> <span class="p">{</span><span class="nx">onError</span><span class="o">:</span> <span class="kc">null</span><span class="p">};</span>                        
+        <span class="nx">spyOn</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">,</span> <span class="s1">&#39;onError&#39;</span><span class="p">);</span>
+        
+        <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="nx">meth</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="p">{</span><span class="nx">error</span><span class="o">:</span> <span class="nx">error</span><span class="p">});</span>
+        
+        <span class="nx">Item</span><span class="p">[</span><span class="nx">meth</span><span class="p">].</span><span class="nx">apply</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">args</span><span class="p">).</span><span class="k">catch</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onError</span><span class="p">);</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onError</span><span class="p">).</span><span class="nx">not</span><span class="p">.</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span> <span class="c1">// results have not come back from the server yet</span>
+        <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">flush</span><span class="p">(</span><span class="nx">meth</span><span class="p">);</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">toBeSpiedOn</span><span class="p">.</span><span class="nx">onError</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+    
+<span class="p">});</span></div></div></div></div></body></html>

@@ -1,0 +1,13 @@
+{
+    "name": "iguana",
+    "version": "0.0.1",
+    "main": "./dist/iguana.js",
+    "dependencies": {
+        "angular": ">1.0.0",
+        "super-model": "~0.0.2",
+        "angular-resource": "~1.2.0-rc.3"
+    },
+	"devDependencies": {
+		"angular-mocks": "~1.2.0-rc.3"
+	}
+}
