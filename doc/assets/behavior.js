@@ -6,6 +6,22 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
 
   tableOfContents = [
     {
+      "type": "file",
+      "data": {
+        "language": {
+          "nameMatchers": [".md"],
+          "commentsOnly": true,
+          "name": "Markdown"
+        },
+        "sourcePath": "/Users/nbrustein/code/iguana/doc.md",
+        "projectPath": "doc.md",
+        "targetPath": "index",
+        "pageTitle": "index",
+        "title": "index"
+      },
+      "depth": 1,
+      "outline": []
+    }, {
       "type": "folder",
       "data": {
         "path": "scripts",
@@ -275,31 +291,11 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/spec/crud_spec.js",
-            "projectPath": "spec/crud_spec.js",
-            "targetPath": "spec/crud_spec",
-            "pageTitle": "spec/crud_spec",
-            "title": "crud_spec"
-          },
-          "depth": 2,
-          "outline": []
-        }, {
-          "type": "file",
-          "data": {
-            "language": {
-              "nameMatchers": [".js"],
-              "pygmentsLexer": "javascript",
-              "multiLineComment": ["/*", "*", "*/"],
-              "singleLineComment": ["//"],
-              "ignorePrefix": "}",
-              "foldPrefix": "^",
-              "name": "JavaScript"
-            },
-            "sourcePath": "/Users/nbrustein/code/iguana/spec/doc_spec.js",
-            "projectPath": "spec/doc_spec.js",
-            "targetPath": "spec/doc_spec",
-            "pageTitle": "spec/doc_spec",
-            "title": "doc_spec"
+            "sourcePath": "/Users/nbrustein/code/iguana/spec/basics_spec.js",
+            "projectPath": "spec/basics_spec.js",
+            "targetPath": "spec/basics_spec",
+            "pageTitle": "spec/basics_spec",
+            "title": "basics_spec"
           },
           "depth": 2,
           "outline": [
@@ -372,6 +368,26 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               ]
             }
           ]
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
+            "sourcePath": "/Users/nbrustein/code/iguana/spec/crud_spec.js",
+            "projectPath": "spec/crud_spec.js",
+            "targetPath": "spec/crud_spec",
+            "pageTitle": "spec/crud_spec",
+            "title": "crud_spec"
+          },
+          "depth": 2,
+          "outline": []
         }, {
           "type": "file",
           "data": {

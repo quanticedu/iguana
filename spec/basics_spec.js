@@ -55,7 +55,13 @@ describe('Iguana', function() {
         myApp.controller('ShowItemController', function(Item, $scope, $window){
             
             // Call 'show' to load up a single item from the database,
-            // and then stick it onto the scope once it is loaded.
+            // and then stick it onto the scope once it is loaded.  
+            //  
+            // ### <a id='querying'></a>Querying
+            // This example shows us passing an id to 'show', but what if you needed
+            // to run a more complex query?  The supported querying functionality for 'show' and
+            // 'index' is defined by the adapter that you are using.  Check the documentation
+            // for your adapter for information on how to query.
             //Call Item.show
             Item.show($scope.itemId).then(function(response){
                 $scope.item = response.result;
@@ -108,8 +114,6 @@ describe('Iguana', function() {
         
         myApp.controller('ShowItemController', function(Item, $scope, $window){
             
-            // Call 'show' to load up a single item from the database,
-            // and then call an instance method on it to build an alert message.
             //Call Item.show
             Item.show($scope.itemId).then(function(response){
                 var item = response.result;
@@ -156,9 +160,8 @@ describe('Iguana', function() {
         //Create controller
         myApp.controller('ListItemsController', function(Item, $scope, $window){
             
-            // Call 'index' to load up a list of items from the database.  Right now,
-            // Iguana does not support any sort of querying functionality in index.  It can
-            // only return everything for a collection.  We will have to fix this very soon.
+            // Call 'index' to load up a list of items from the database.  As with show,
+            // supported querying functionality is defined by the adapter ([see note above](#querying))
             //Call Item.index
             Item.index().then(function(response){
                 $scope.items = response.result;
