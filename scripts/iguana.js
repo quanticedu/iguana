@@ -1,7 +1,6 @@
 angular.module('Iguana', ['SuperModel', 'ngResource'])
 .provider('Iguana', function(){
         
-        this._defaultAdapterName = 'Iguana.Adapters.RestfulIdStyle';
         this._defaultBaseUrl = '';
         
         this.setAdapter = function(adapterName) {
@@ -22,7 +21,8 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
             'Iguana.SingleCollectionInheritance', 
             
             function(SuperModel, Alias, Callbacks, Crud, Embeds, Serializers, SingleCollectionInheritance) {
-                 var plugins = Array.prototype.slice.call(arguments, 1);
+                
+                var plugins = Array.prototype.slice.call(arguments, 1);
                                 
                 var Iguana = SuperModel.subclass(function(){ 
                 
@@ -56,7 +56,7 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                 
                 });
                 
-                Iguana.setAdapter(this._defaultAdapterName);
+                if (this._defaultAdapterName) Iguana.setAdapter(this._defaultAdapterName);
                 Iguana.setBaseUrl(this._defaultBaseUrl);
                             
                 return Iguana;

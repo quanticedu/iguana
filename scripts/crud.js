@@ -14,7 +14,12 @@ angular.module('Iguana')
                 },
                 
                 setAdapter: function(adapterName) {
-                    var adapterKlass = $injector.get(adapterName);
+                    try {
+                        var adapterKlass = $injector.get(adapterName);
+                    } catch(e) {
+                        throw new Error('Cannot find adapter "'+adapterName+'"');
+                    }
+                    
                     this.extend({adapterKlass: adapterKlass});
                 },
                 

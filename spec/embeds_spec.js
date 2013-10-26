@@ -8,6 +8,7 @@ describe('Iguana.Embeds', function() {
         module('Iguana');
         inject(function($injector, _Iguana_) {
             Iguana = _Iguana_;
+            
             Item = Iguana.subclass(function() {
                 this.embedsMany('subItems', 'SubItem');
             });

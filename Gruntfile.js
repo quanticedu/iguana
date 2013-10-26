@@ -20,7 +20,7 @@ module.exports = function(grunt) {
                 options: {
                     frameworks: ['jasmine'],
                     browsers: ['Chrome'],
-                    singleRun: true,
+                    singleRun: false,
                     autoWatch: true,
                     files: [
                         'karma/phantomjs-hacks.js',
@@ -32,8 +32,8 @@ module.exports = function(grunt) {
                         'scripts/<%= yeoman.main %>.js', 
                         'scripts/**/*.js',
                         'mock/**/*.js',
-                        //'spec/**/*.js'
-                        'spec/**/*doc*.js'
+                        'spec/**/*.js'
+                        //'spec/**/*embed*.js'
                         ]
                 }
             }

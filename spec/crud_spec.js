@@ -7,12 +7,11 @@ describe('Iguana.Crud', function() {
     beforeEach(function() {
         module('Iguana');
         inject(function($injector, _Iguana_) {
-            var mockAdapter = $injector.get('Iguana.Mock.Adapter');
             var Iguana = _Iguana_;
             Item = Iguana.subclass(function() {
                 this.setCollection("items");
             });
-            Iguana.setAdapter(mockAdapter);
+            Iguana.setAdapter('Iguana.Mock.Adapter');
         });
     });
     

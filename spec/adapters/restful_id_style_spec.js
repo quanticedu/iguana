@@ -7,13 +7,12 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
     beforeEach(function() {
         module('Iguana', 'Iguana.Adapters.RestfulIdStyle');
         inject(function($injector, _Iguana_) {
-            var RestfulIdStyle = $injector.get('Iguana.Adapters.RestfulIdStyle');
             $httpBackend = $injector.get('$httpBackend');
             var Iguana = _Iguana_;
             Item = Iguana.subclass(function() {
                 this.setCollection("items");
             });
-            Iguana.setAdapter(RestfulIdStyle);
+            Iguana.setAdapter('Iguana.Adapters.RestfulIdStyle');
         });
     });
     
