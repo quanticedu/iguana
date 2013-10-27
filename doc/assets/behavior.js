@@ -407,7 +407,41 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "title": "embeds_spec"
           },
           "depth": 2,
-          "outline": []
+          "outline": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 3,
+                "title": "Embedding documents",
+                "slug": "embedding-documents"
+              },
+              "depth": 3
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 3,
+                "title": "Embedded arrays",
+                "slug": "embedded-arrays"
+              },
+              "depth": 3
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 3,
+                "title": "Embedded objects",
+                "slug": "embedded-objects"
+              },
+              "depth": 3
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 3,
+                "title": "embeddedIn",
+                "slug": "embeddedin"
+              },
+              "depth": 3
+            }
+          ]
         }, {
           "type": "file",
           "data": {

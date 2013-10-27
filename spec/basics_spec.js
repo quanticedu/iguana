@@ -54,7 +54,7 @@ describe('Iguana', function() {
         //Create controller
         myApp.controller('ShowItemController', function(Item, $scope, $window){
             
-            // Call 'show' to load up a single item from the database,
+            // Here we are calling 'show' to load up a single item from the database,
             // and then stick it onto the scope once it is loaded.  
             //  
             // ### <a id='querying'></a>Querying
@@ -76,15 +76,29 @@ describe('Iguana', function() {
             scope.itemId = "id";
             
             Item.adapter().expect('show', 'items', 'id', {
-                result: [{id: 'id', prop: 'value'}],
+                result: [{
+                    id: 'id', 
+                    someString: 'value',
+                    someNumber: 1.4,
+                    someArray: [1,2,3,4],
+                    someObject: {a: 1}
+                    }],
                 meta: {}
             });
             $controller("ShowItemController", {$scope: scope});
             Item.adapter().flush('show');
             
             var loadedItem = scope.item;
+            
+            // The value of response.result is an instance of Item,
+            // and all of the properties that came over the api
+            // have been copied onto it.
             expect(loadedItem.constructor).toBe(Item);
-            expect(loadedItem.prop).toBe('value');
+            expect(loadedItem.id).toBe('id');
+            expect(loadedItem.someString).toEqual('value');
+            expect(loadedItem.someNumber).toEqual(1.4);
+            expect(loadedItem.someArray).toEqual([1,2,3,4]);
+            expect(loadedItem.someObject).toEqual({a: 1});
             
         });
         
@@ -236,12 +250,30 @@ describe('Iguana', function() {
             var scope = $rootScope.$new();
             spyOn($window, 'alert');
             $controller("EditItemController", {$scope: scope});
-            scope.item.prop = "set";
+            
+            // The object that gets sent to the api will be the
+            // jsonified version of our instance (following the rules of
+            // angular.toJson).  This means that any property whose name does
+            // not start with '$' and whose value is not a function will be sent
+            // to the api's 'save' method.
+            scope.item.some = "value";
+            scope.item.someNumber = 1.4;
+            scope.item.someArray = [1,2,3,4];
+            scope.item.someObject = {a: 1};
+            scope.item.ignoreThisFunction = function() {};
+            scope.item.$$ignoreThisProperty = "ignored";
+            
+            var expectedObject = {
+                someString: 'value',
+                someNumber: 1.4,
+                someArray: [1,2,3,4],
+                someObject: {a: 1}
+            }
             
             //Since the item does not have an id, we will call the "create"
             //method on our api.
             Item.adapter().expect('create', 'items', scope.item.asJson(), {
-                result: [scope.item.asJson()],
+                result: [expectedObject],
                 meta: {}
             });
             scope.save();

@@ -48,7 +48,7 @@ http:://baseurl/items.json or http:://baseurl/items/SOME_ID.json</p></div></div>
 <p>Create a controller that will load up a model from the api and use it
 for something</p></div></div><div class="code"><div class="wrapper">        <span class="c1">//Create controller</span>
         <span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ShowItemController&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">$scope</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
-            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Call 'show' to load up a single item from the database,
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Here we are calling 'show' to load up a single item from the database,
 and then stick it onto the scope once it is loaded.  </p>
 
 <h3 id="aidqueryingaquerying"><a id='querying'></a>Querying</h3>
@@ -70,15 +70,27 @@ for your adapter for information on how to query.</p></div></div><div class="cod
             <span class="nx">scope</span><span class="p">.</span><span class="nx">itemId</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">;</span>
             
             <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="p">{</span>
-                <span class="nx">result</span><span class="o">:</span> <span class="p">[{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="nx">prop</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">}],</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[{</span>
+                    <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> 
+                    <span class="nx">someString</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
+                    <span class="nx">someNumber</span><span class="o">:</span> <span class="mf">1.4</span><span class="p">,</span>
+                    <span class="nx">someArray</span><span class="o">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+                    <span class="nx">someObject</span><span class="o">:</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">}</span>
+                    <span class="p">}],</span>
                 <span class="nx">meta</span><span class="o">:</span> <span class="p">{}</span>
             <span class="p">});</span>
             <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;ShowItemController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
             <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">);</span>
             
             <span class="kd">var</span> <span class="nx">loadedItem</span> <span class="o">=</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">;</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">prop</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">);</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The value of response.result is an instance of Item,
+and all of the properties that came over the api
+have been copied onto it.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">id</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">someString</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">someNumber</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mf">1.4</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">someArray</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">someObject</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">});</span>
             
         <span class="p">});</span>
         
@@ -218,12 +230,28 @@ responding to success and failure conditions.</p></div></div><div class="code"><
             <span class="kd">var</span> <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
             <span class="nx">spyOn</span><span class="p">(</span><span class="nx">$window</span><span class="p">,</span> <span class="s1">&#39;alert&#39;</span><span class="p">);</span>
             <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;EditItemController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">prop</span> <span class="o">=</span> <span class="s2">&quot;set&quot;</span><span class="p">;</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The object that gets sent to the api will be the
+jsonified version of our instance (following the rules of
+angular.toJson).  This means that any property whose name does
+not start with '$' and whose value is not a function will be sent
+to the api's 'save' method.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">some</span> <span class="o">=</span> <span class="s2">&quot;value&quot;</span><span class="p">;</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">someNumber</span> <span class="o">=</span> <span class="mf">1.4</span><span class="p">;</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">someArray</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">];</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">someObject</span> <span class="o">=</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">};</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">ignoreThisFunction</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{};</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">$$ignoreThisProperty</span> <span class="o">=</span> <span class="s2">&quot;ignored&quot;</span><span class="p">;</span>
+            
+            <span class="kd">var</span> <span class="nx">expectedObject</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="nx">someString</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
+                <span class="nx">someNumber</span><span class="o">:</span> <span class="mf">1.4</span><span class="p">,</span>
+                <span class="nx">someArray</span><span class="o">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+                <span class="nx">someObject</span><span class="o">:</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">}</span>
+            <span class="p">}</span>
             
             <span class="c1">//Since the item does not have an id, we will call the &quot;create&quot;</span>
             <span class="c1">//method on our api.</span>
             <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">asJson</span><span class="p">(),</span> <span class="p">{</span>
-                <span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()],</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">expectedObject</span><span class="p">],</span>
                 <span class="nx">meta</span><span class="o">:</span> <span class="p">{}</span>
             <span class="p">});</span>
             <span class="nx">scope</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>

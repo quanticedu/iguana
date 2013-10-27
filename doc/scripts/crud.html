@@ -14,7 +14,12 @@
                 <span class="p">},</span>
                 
                 <span class="nx">setAdapter</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">adapterName</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="kd">var</span> <span class="nx">adapterKlass</span> <span class="o">=</span> <span class="nx">$injector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">adapterName</span><span class="p">);</span>
+                    <span class="k">try</span> <span class="p">{</span>
+                        <span class="kd">var</span> <span class="nx">adapterKlass</span> <span class="o">=</span> <span class="nx">$injector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">adapterName</span><span class="p">);</span>
+                    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Cannot find adapter &quot;&#39;</span><span class="o">+</span><span class="nx">adapterName</span><span class="o">+</span><span class="s1">&#39;&quot;&#39;</span><span class="p">);</span>
+                    <span class="p">}</span>
+                    
                     <span class="k">this</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span><span class="nx">adapterKlass</span><span class="o">:</span> <span class="nx">adapterKlass</span><span class="p">});</span>
                 <span class="p">},</span>
                 
