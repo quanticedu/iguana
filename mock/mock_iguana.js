@@ -1,16 +1,29 @@
 angular.module('Iguana')
-.factory('Iguana.Mock', ['Iguana', '$q', function(Iguana, $q){
+.factory('MockIguana', ['Iguana', '$q', function(Iguana, $q){
     
     Iguana.setAdapter('Iguana.Mock.Adapter');
     
     Iguana.extend({
         
-        expectsShow: function(args, result, meta) {
+        expect: function(meth, args, response) {
+            if( Object.prototype.toString.call( args ) !== '[object Array]' ) {
+                args = [args];
+            }
+            
+            var result = response.result;
+            if( Object.prototype.toString.call( result ) !== '[object Array]' ) {
+                result = [result];
+            }
+            
+            var _result = [];
+            angular.forEach(result, function(instance){
+                _result.push(instance.asJson ? instance.asJson() : instance);
+            });
             this.adapter().expect(
-                'show', 
+                meth, 
                 this.collection, 
                 args, 
-                {result: [result.asJson()], meta: meta}
+                {result: _result, meta: response.meta}
             );
         },
         

@@ -71,11 +71,11 @@ describe('Iguana', function() {
         });
         
         module('myApp');        
-        inject(function($rootScope, $controller, Item){
+        inject(function(MockIguana, $rootScope, $controller, Item){
             var scope = $rootScope.$new();
             scope.itemId = "id";
             
-            Item.adapter().expect('show', 'items', 'id', {
+            Item.expect('show', ['id'], {
                 result: [{
                     id: 'id', 
                     someString: 'value',
@@ -86,7 +86,7 @@ describe('Iguana', function() {
                 meta: {}
             });
             $controller("ShowItemController", {$scope: scope});
-            Item.adapter().flush('show');
+            Item.flush('show');
             
             var loadedItem = scope.item;
             
@@ -140,17 +140,17 @@ describe('Iguana', function() {
         var attrs = {id: 'id', size: 3, quality: 4};
         
         module('myApp');        
-        inject(function($rootScope, $controller, Item, $window){
+        inject(function($rootScope, $controller, Item, $window, MockIguana){
             var scope = $rootScope.$new();
             scope.itemId = "id";
             spyOn($window, 'alert');
             
-            Item.adapter().expect('show', 'items', 'id', {
+            Item.expect('show', 'id', {
                 result: [attrs],
                 meta: {}
             });
             $controller("ShowItemController", {$scope: scope});
-            Item.adapter().flush('show');
+            Item.flush('show');
             
             expect($window.alert).toHaveBeenCalledWith('You loaded an item with an awesomeness level of 12');
             
@@ -185,15 +185,15 @@ describe('Iguana', function() {
         });
         
         module('myApp');        
-        inject(function($rootScope, $controller, Item){
+        inject(function(MockIguana, $rootScope, $controller, Item){
             var scope = $rootScope.$new();
             
-            Item.adapter().expect('index', 'items', [], {
+            Item.expect('index', [], {
                 result: [{id: 'id1'}, {id: 'id2'}],
                 meta: {}
             });
             $controller("ListItemsController", {$scope: scope});
-            Item.adapter().flush('index');
+            Item.flush('index');
             
             var loadedItems = scope.items;
             expect(loadedItems.length).toBe(2);
@@ -245,7 +245,7 @@ describe('Iguana', function() {
         }); 
         
         module('myApp');        
-        inject(function($rootScope, $controller, Item, $window){
+        inject(function(MockIguana, $rootScope, $controller, Item, $window){
             //Creating a new item
             var scope = $rootScope.$new();
             spyOn($window, 'alert');
@@ -272,34 +272,34 @@ describe('Iguana', function() {
             
             //Since the item does not have an id, we will call the "create"
             //method on our api.
-            Item.adapter().expect('create', 'items', scope.item.asJson(), {
+            Item.expect('create', scope.item.asJson(), {
                 result: [expectedObject],
                 meta: {}
             });
             scope.save();
-            Item.adapter().flush('create')
+            Item.flush('create')
             expect($window.alert).toHaveBeenCalledWith('Saved!');
             
             //Updating an existing item
             scope = $rootScope.$new();
             scope.itemId = "id";
-            Item.adapter().expect('show', 'items', 'id', {
+            Item.expect('show', 'id', {
                 result: [{id: 'id', prop: 'value'}],
                 meta: {}
             });
             $controller("EditItemController", {$scope: scope});
-            Item.adapter().flush('show');
+            Item.flush('show');
             expect(scope.item.prop).toBe('value');
             scope.item.prop = "reset";   
             //Since the item already has an id, we will call the "update"
             //method on our api.
-            Item.adapter().expect('update', 'items', scope.item.asJson(), {
+            Item.expect('update', scope.item.asJson(), {
                 result: [scope.item.asJson()],
                 meta: {}
             });         
             scope.save();
             expect($window.alert.calls.length).toBe(1);
-            Item.adapter().flush('update');
+            Item.flush('update');
             expect($window.alert.calls.length).toBe(2);
             
         });      
@@ -347,28 +347,57 @@ describe('Iguana', function() {
         }); 
         
         module('myApp');        
-        inject(function($rootScope, $controller, Item, $window){
+        inject(function(MockIguana, $rootScope, $controller, Item, $window){
             
             //Deleting an existing item
             var scope = $rootScope.$new();
             spyOn($window, 'alert');
             scope.itemId = "id";
-            Item.adapter().expect('show', 'items', 'id', {
+            Item.expect('show', 'id', {
                 result: [{id: 'id', prop: 'value'}],
                 meta: {}
             });
             $controller("EditItemController", {$scope: scope});
-            Item.adapter().flush('show');
+            Item.flush('show');
             
-            Item.adapter().expect('destroy', 'items', scope.item.id, {
+            Item.expect('destroy', scope.item.id, {
                 result: [],
                 meta: {}
             });         
             scope.destroy();
-            Item.adapter().flush('destroy');
+            Item.flush('destroy');
             expect($window.alert).toHaveBeenCalledWith('Destroyed!')
             
         });      
+    });
+    
+    // ### Testing
+    it('should be testable', function() {
+        
+        module('myApp');        
+        inject(function(MockIguana, Item){
+            
+            //Deleting an existing item
+            var scope = $rootScope.$new();
+            spyOn($window, 'alert');
+            scope.itemId = "id";
+            Item.expect('show', 'id', {
+                result: [{id: 'id', prop: 'value'}],
+                meta: {}
+            });
+            $controller("EditItemController", {$scope: scope});
+            Item.flush('show');
+            
+            Item.expect('destroy', scope.item.id, {
+                result: [],
+                meta: {}
+            });         
+            scope.destroy();
+            Item.flush('destroy');
+            expect($window.alert).toHaveBeenCalledWith('Destroyed!')
+            
+        });
+        
     });
     
 });
