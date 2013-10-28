@@ -126,7 +126,7 @@ describe('Iguana.SingleCollectionInheritance', function() {
         });
         
         // ### Configuring the property used for the alias.
-        // If you want to use something other than '__iguana_type' for
+        // If you want to use something other than '\_\_iguana\_type' for
         // the property that defines the alias, you can use 'setSciProperty'.
         it('should be overridable', function() {
             var Item = Iguana.subclass(function() {
