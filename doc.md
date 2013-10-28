@@ -10,3 +10,7 @@ The most useful documentation is in our spec files:
   * Assigning different classes to documents from the same collection
  * [Serializers](spec/serializers_spec.html)
   * asJson and toJson
+ * Adapters
+  * [RestfulIdStyle](spec/adapters/restful_id_style_spec.html)
+
+For information about creating new adapters, see [AdapterBase](scripts/adapters/adapter_base.html)
