@@ -6,6 +6,7 @@ angular.module('Iguana')
             included: function(Iguana) {
                 Iguana.defineCallbacks('copyAttrs');
                 Iguana.defineCallbacks('copyAttrsOnInitialize');
+                Iguana.defineCallbacks('save');
             }
         };
         

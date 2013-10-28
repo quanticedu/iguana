@@ -64,6 +64,10 @@ module.exports = function(grunt) {
                 src: ['scripts/<%= yeoman.main %>.js', 'scripts/**/*.js'],
                 dest: '<%= yeoman.dist %>/<%= yeoman.main %>.js',
             },
+            mock: {
+                src: ['mock/**/*.js'],
+                dest: '<%= yeoman.dist %>/<%= yeoman.main %>-mock.js'
+            }
         },
         
         uglify: {

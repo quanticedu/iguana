@@ -119,6 +119,14 @@ angular.module('Iguana')
             instanceMixin: {
                 
                 save: function() {
+                    var returnValue;
+                    this.runCallbacks('save', function() {
+                        returnValue = this._save();
+                    });
+                    return returnValue;
+                },
+                
+                _save: function() {
                     var action = this[this.idProperty()] ? "update" : "create"; 
                     
                     return this.constructor.saveWithoutInstantiating(action, this.asJson()).then(function(response){

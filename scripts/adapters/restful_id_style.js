@@ -7,6 +7,8 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
             
             return {
                 
+                name: 'Iguana.Adapters.RestfulIdStyle',
+                
                 index: function(collection) {
                     return this._makeApiCall(collection, 'index', {});
                 },

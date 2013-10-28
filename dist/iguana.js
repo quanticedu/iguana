@@ -162,6 +162,8 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
             
             return {
                 
+                name: 'Iguana.Adapters.RestfulIdStyle',
+                
                 index: function(collection) {
                     return this._makeApiCall(collection, 'index', {});
                 },
@@ -277,6 +279,7 @@ angular.module('Iguana')
             included: function(Iguana) {
                 Iguana.defineCallbacks('copyAttrs');
                 Iguana.defineCallbacks('copyAttrsOnInitialize');
+                Iguana.defineCallbacks('save');
             }
         };
         
@@ -402,6 +405,14 @@ angular.module('Iguana')
             instanceMixin: {
                 
                 save: function() {
+                    var returnValue;
+                    this.runCallbacks('save', function() {
+                        returnValue = this._save();
+                    });
+                    return returnValue;
+                },
+                
+                _save: function() {
                     var action = this[this.idProperty()] ? "update" : "create"; 
                     
                     return this.constructor.saveWithoutInstantiating(action, this.asJson()).then(function(response){
