@@ -374,29 +374,43 @@ describe('Iguana', function() {
     // ### Testing
     it('should be testable', function() {
         
-        module('myApp');        
-        inject(function(MockIguana, Item){
+        module('myApp');
+        // Inject MockIguana into your test        
+        inject(function(MockIguana, Iguana){
+            // set the adapter to Iguana.Mock.Adapter
+            Iguana.setAdapter('Iguana.Mock.Adapter');
             
-            //Deleting an existing item
-            var scope = $rootScope.$new();
-            spyOn($window, 'alert');
-            scope.itemId = "id";
-            Item.expect('show', 'id', {
-                result: [{id: 'id', prop: 'value'}],
-                meta: {}
+            var Item = Iguana.subclass(function() {
+                this.setCollection('items');
             });
-            $controller("EditItemController", {$scope: scope});
+            
+            var itemLoaded = false;
+            
+            // Call 'expect' with the following args:  
+            // **meth** - can be any of: show, index, create, update, or destroy  
+            // **args** - an array of arguments that will be passed to the method  
+            // **response** - an object with *result* and *meta* keys. Values in *result* can be either vanilla objects or Iguana instances 
+            Item.expect('show', ['id'], {
+                result: [{id: 'id', prop: 'value'}],
+                meta: {'some': 'metadata'}
+            });
+            
+            // Run some code that calls the expected method, in this case 'show'
+            Item.show('id').then(function(response) {
+                itemLoaded = true;
+                expect(response.result.constructor).toBe(Item);
+                expect(response.result.prop).toBe('value');
+            })
+            
+            expect(itemLoaded).toBe(false);
+            
+            // Call 'flush' to simulate the api call returning a response
             Item.flush('show');
             
-            Item.expect('destroy', scope.item.id, {
-                result: [],
-                meta: {}
-            });         
-            scope.destroy();
-            Item.flush('destroy');
-            expect($window.alert).toHaveBeenCalledWith('Destroyed!')
-            
+            expect(itemLoaded).toBe(true);
         });
+        // See all of the previous examples in this file for more examples on using
+        // MockIguana, expect, and flush in tests.
         
     });
     

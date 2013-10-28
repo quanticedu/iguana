@@ -119,6 +119,14 @@
             <span class="nx">instanceMixin</span><span class="o">:</span> <span class="p">{</span>
                 
                 <span class="nx">save</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="kd">var</span> <span class="nx">returnValue</span><span class="p">;</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">runCallbacks</span><span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="nx">returnValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_save</span><span class="p">();</span>
+                    <span class="p">});</span>
+                    <span class="k">return</span> <span class="nx">returnValue</span><span class="p">;</span>
+                <span class="p">},</span>
+                
+                <span class="nx">_save</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
                     <span class="kd">var</span> <span class="nx">action</span> <span class="o">=</span> <span class="k">this</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">idProperty</span><span class="p">()]</span> <span class="o">?</span> <span class="s2">&quot;update&quot;</span> <span class="o">:</span> <span class="s2">&quot;create&quot;</span><span class="p">;</span> 
                     
                     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">saveWithoutInstantiating</span><span class="p">(</span><span class="nx">action</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
