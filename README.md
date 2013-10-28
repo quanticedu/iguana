@@ -19,8 +19,10 @@ From the bower.json file
 	}
 	
 In your html
+
     <script type="text/javascript" src="bower_components/iguana/dist/iguana.js"></script>
 or
+
     <script type="text/javascript" src="bower_components/iguana/dist/iguana.min.js"></script>
 
 ### Documentation
