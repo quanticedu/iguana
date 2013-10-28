@@ -5,9 +5,11 @@ Object-Document Mapper (ODM) for angular
 ### Installation
 
 From the command line:
+    
     bower install iguana
 
 From the bower.json file
+    
     {
 	    "...
 	    "dependencies": {
