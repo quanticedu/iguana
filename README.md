@@ -12,7 +12,6 @@ Current features:
  * **Embedded documents** - assign classes to sub-documents inside of arrays or objects inside of your document
  * **Swappable API layer** - build an adapter to allow Iguana to work with whatever CRUD API you happen to be using 
 
-
 ### Installation
 
 From the command line:
@@ -31,10 +30,20 @@ From the bower.json file
 	
 In your html
 
+	<script type="text/javascript" src="bower_components/a-class-above/dist/a_class_above.js"></script>
+	<script type="text/javascript" src="bower_components/super-model/dist/super_model.js"></script>
     <script type="text/javascript" src="bower_components/iguana/dist/iguana.js"></script>
 or
 
+	<script type="text/javascript" src="bower_components/a-class-above/dist/a_class_above.min.js"></script>
+	<script type="text/javascript" src="bower_components/super-model/dist/super_model.min.js"></script>
     <script type="text/javascript" src="bower_components/iguana/dist/iguana.min.js"></script>
+
+### Dependencies
+
+iguana uses [a-class-above](https://github.com/pedago/a-class-above) for OOP and 
+[super-model](https://github.com/pedago/super-model) for callbacks.  Please see the documentation
+in those projects for more information.
 
 ### Documentation
 

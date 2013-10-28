@@ -372,6 +372,9 @@ describe('Iguana', function() {
     });
     
     // ### Testing
+    // The dist folder of iguana includes a file for use in testing called iguana-mock.js.
+    // You will need to include that file when running tests in order to use the features 
+    // described here.
     it('should be testable', function() {
         
         module('myApp');
