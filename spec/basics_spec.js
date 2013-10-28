@@ -62,6 +62,7 @@ describe('Iguana', function() {
             // to run a more complex query?  The supported querying functionality for 'show' and
             // 'index' is defined by the adapter that you are using.  Check the documentation
             // for your adapter for information on how to query.
+            //
             //Call Item.show
             Item.show($scope.itemId).then(function(response){
                 $scope.item = response.result;
@@ -101,6 +102,27 @@ describe('Iguana', function() {
             expect(loadedItem.someObject).toEqual({a: 1});
             
         });
+        
+    });
+    
+    // ### setting the id property
+    // By default, Iguana assumes that your documents have a property called 'id'
+    // which includes a unique id for your document.  You can change the name of 
+    // the property that is used as the unique identifier with the *setIdProperty* class method.
+    it ('should allow the idProperty to be overridden', function() {
+        
+        module('myApp');        
+        inject(function(Iguana){
+            var Item = Iguana.subclass(function() {
+                this.setIdProperty('customIdProp');
+            });
+            
+            Item.new({
+                customIdProp: 'id'
+            });
+        });
+        
+        
         
     });
     

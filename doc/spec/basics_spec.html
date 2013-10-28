@@ -95,6 +95,26 @@ have been copied onto it.</p></div></div><div class="code"><div class="wrapper">
         <span class="p">});</span>
         
     <span class="p">});</span>
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="setting-the-id-property">setting the id property</h3>
+
+<p>By default, Iguana assumes that your documents have a property called 'id'
+which includes a unique id for your document.  You can change the name of 
+the property that is used as the unique identifier with the <em>setIdProperty</em> class method.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">it</span> <span class="p">(</span><span class="s1">&#39;should allow the idProperty to be overridden&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        
+        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>        
+        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">setIdProperty</span><span class="p">(</span><span class="s1">&#39;customIdProp&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+            
+            <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span>
+                <span class="nx">customIdProp</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+        
+        
+        
+    <span class="p">});</span>
     
     <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should add instance methods onto our model&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="add-instance-methods-to-your-class">Add instance methods to your class</h3>
@@ -340,7 +360,11 @@ responding to success and failure conditions.</p></div></div><div class="code"><
             
         <span class="p">});</span>      
     <span class="p">});</span>
-    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="testing">Testing</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should be testable&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="testing">Testing</h3>
+
+<p>The dist folder of iguana includes a file for use in testing called iguana-mock.js.
+You will need to include that file when running tests in order to use the features 
+described here.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should be testable&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         
         <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Inject MockIguana into your test        </p></div></div><div class="code"><div class="wrapper">        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">MockIguana</span><span class="p">,</span> <span class="nx">Iguana</span><span class="p">){</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>set the adapter to Iguana.Mock.Adapter</p></div></div><div class="code"><div class="wrapper">            <span class="nx">Iguana</span><span class="p">.</span><span class="nx">setAdapter</span><span class="p">(</span><span class="s1">&#39;Iguana.Mock.Adapter&#39;</span><span class="p">);</span>
             

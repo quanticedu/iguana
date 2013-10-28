@@ -450,6 +450,14 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                   "type": "heading",
                   "data": {
                     "level": 3,
+                    "title": "setting the id property",
+                    "slug": "setting-the-id-property"
+                  },
+                  "depth": 3
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
                     "title": "Add instance methods to your class",
                     "slug": "add-instance-methods-to-your-class"
                   },
