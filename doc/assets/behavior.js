@@ -411,35 +411,38 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             {
               "type": "heading",
               "data": {
-                "level": 3,
+                "level": 1,
                 "title": "Embedding documents",
                 "slug": "embedding-documents"
               },
-              "depth": 3
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 3,
-                "title": "Embedded arrays",
-                "slug": "embedded-arrays"
-              },
-              "depth": 3
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 3,
-                "title": "Embedded objects",
-                "slug": "embedded-objects"
-              },
-              "depth": 3
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 3,
-                "title": "embeddedIn",
-                "slug": "embeddedin"
-              },
-              "depth": 3
+              "depth": 1,
+              "children": [
+                {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
+                    "title": "Embedded arrays",
+                    "slug": "embedded-arrays"
+                  },
+                  "depth": 3
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
+                    "title": "Embedded objects",
+                    "slug": "embedded-objects"
+                  },
+                  "depth": 3
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
+                    "title": "embeddedIn",
+                    "slug": "embeddedin"
+                  },
+                  "depth": 3
+                }
+              ]
             }
           ]
         }, {
@@ -501,7 +504,28 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "title": "single_collection_inheritance_spec"
           },
           "depth": 2,
-          "outline": []
+          "outline": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 1,
+                "title": "Single Collection Inheritance",
+                "slug": "single-collection-inheritance"
+              },
+              "depth": 1,
+              "children": [
+                {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
+                    "title": "Configuring the property used for the alias.",
+                    "slug": "configuring-the-property-used-for-the-alias"
+                  },
+                  "depth": 3
+                }
+              ]
+            }
+          ]
         }
       ]
     }

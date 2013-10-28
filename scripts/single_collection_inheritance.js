@@ -2,9 +2,21 @@ angular.module('Iguana')
 .factory('Iguana.SingleCollectionInheritance', function(){
         
         return {
+            
+            included: function(Iguana) {
+                // if the class has an alias, but the type property is 
+                // not set, then set it to the alias.
+                Iguana.setCallback('after', 'copyAttrs', function() {
+                    var sciProperty = this.constructor.sciProperty;
+                    if (this.constructor.alias() && !this.hasOwnProperty(sciProperty)) {
+                        this[sciProperty] = this.constructor.alias();
+                    }
+                });
+            },
+            
             classMixin: {
                 
-                sciProperty: 'iguana_type',
+                sciProperty: '__iguana_type',
                 
                 setSciProperty: function(prop) {
                     this.extend({sciProperty: prop});
@@ -26,7 +38,7 @@ angular.module('Iguana')
                     if (!attrs.hasOwnProperty(this.sciProperty)) {
                         return new this(attrs);
                     }
-                    else if (attrs[this.sciProperty] && attrs[this.sciProperty] === this.alias) {
+                    else if (attrs[this.sciProperty] && attrs[this.sciProperty] === this.alias()) {
                         instance = new this(attrs);
                     } else {
                         for (var i = 0; i < this.subclasses.length; i++) {

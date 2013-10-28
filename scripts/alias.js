@@ -5,12 +5,14 @@ angular.module('Iguana')
             classMixin: {
                 
                 alias: function(value) {
-                    this.alias = value;
-                    if (this._aliasedKlasses[value]) {
-                        throw new Error('A klass has already been aliased to "'+value+'".  Cannot alias another to the same name.');
+                    if (value) {
+                        this._alias = value;
+                        if (this._aliasedKlasses[value]) {
+                            throw new Error('A klass has already been aliased to "'+value+'".  Cannot alias another to the same name.');
+                        }
+                        this._aliasedKlasses[value] = this;
                     }
-                    this._aliasedKlasses[value] = this;
-                    return this;
+                    return this._alias;
                 },
                 
                 getAliasedKlass: function(alias) {

@@ -8,7 +8,7 @@ describe('Iguana.Embeds', function() {
         module('Iguana');
         inject(function($injector, _Iguana_) {
             
-            /* ### Embedding documents
+            /* # Embedding documents
             You have an 'item' document that looks like this ...
             
                   {
@@ -62,17 +62,16 @@ describe('Iguana.Embeds', function() {
                 // matching the object that came over the api.
                 expect(subitem).not.toBeUndefined();
                 expect(subitem.constructor).toBe(SubItem);
-                expect(subitem.asJson()).toEqual({a: i});
+                expect(subitem.a).toEqual(i);
             });
-            expect(item.asJson()).toEqual(attrs);
         });
         
         // ### Embedded objects
         it('should instantiate instances of expected classes in an object', function() {
             var attrs = {
                 subItems: {
-                    one: {a: 0}, 
-                    another: {a: 1}
+                    one: {a: 'one'}, 
+                    another: {a: 'another'}
                 }
             };
             var item = Item.new(attrs);
@@ -83,9 +82,8 @@ describe('Iguana.Embeds', function() {
                 // matching the object that came over the api.
                 expect(subitem).not.toBeUndefined();
                 expect(subitem.constructor).toBe(SubItem);
-                expect(subitem.asJson()).toEqual(obj);
+                expect(subitem.a).toEqual(name);
             });
-            expect(item.asJson()).toEqual(attrs);
         });
     
     });

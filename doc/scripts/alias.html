@@ -5,12 +5,14 @@
             <span class="nx">classMixin</span><span class="o">:</span> <span class="p">{</span>
                 
                 <span class="nx">alias</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">alias</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">value</span><span class="p">])</span> <span class="p">{</span>
-                        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;A klass has already been aliased to &quot;&#39;</span><span class="o">+</span><span class="nx">value</span><span class="o">+</span><span class="s1">&#39;&quot;.  Cannot alias another to the same name.&#39;</span><span class="p">);</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="nx">_alias</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">value</span><span class="p">])</span> <span class="p">{</span>
+                            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;A klass has already been aliased to &quot;&#39;</span><span class="o">+</span><span class="nx">value</span><span class="o">+</span><span class="s1">&#39;&quot;.  Cannot alias another to the same name.&#39;</span><span class="p">);</span>
+                        <span class="p">}</span>
+                        <span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">value</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">value</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_alias</span><span class="p">;</span>
                 <span class="p">},</span>
                 
                 <span class="nx">getAliasedKlass</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">alias</span><span class="p">)</span> <span class="p">{</span>

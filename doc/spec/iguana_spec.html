@@ -19,6 +19,13 @@
             <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">});</span>
             <span class="nx">expect</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">a</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
         <span class="p">});</span>
+        
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should only allow instances to be created with Iguana.new, not new Iguana()&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">func</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">new</span> <span class="nx">Item</span><span class="p">();</span>
+            <span class="p">};</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">func</span><span class="p">).</span><span class="nx">toThrow</span><span class="p">(</span><span class="s2">&quot;Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()&quot;</span><span class="p">);</span>
+        <span class="p">});</span>
     <span class="p">});</span>
 
     
