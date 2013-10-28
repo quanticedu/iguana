@@ -16,6 +16,12 @@ describe('Iguana.Alias', function() {
 
     });
     
+    describe('alias', function() {
+        it('should return the alias if no arg is passed in', function() {
+            expect(Item.alias()).toBe('item');
+        });
+    });
+    
     describe('getAliasedKlass', function() {
        it('should find an aliased class', function() {
            expect(Iguana.getAliasedKlass('item')).toBe(Item);

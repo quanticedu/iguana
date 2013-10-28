@@ -228,7 +228,7 @@ describe('Iguana', function() {
                 });
             } else {
                 // If no itemId is passed in then we will create a new one
-                $scope.item = new Item();
+                $scope.item = Item.new();
             }
             
             // Respond to some user action by calling item.save() and then 

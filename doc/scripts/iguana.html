@@ -33,25 +33,39 @@
                             <span class="nx">mixins</span><span class="p">.</span><span class="nx">included</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
                         <span class="p">}</span>
                     <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
-                                    
+                    
+                    <span class="c1">//We always want to call the superclass&#39;s initialize so </span>
+                    <span class="c1">//that we can have initialize callbacks.</span>
+                    <span class="kd">var</span> <span class="nx">subclassWithoutIguana</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">subclass</span><span class="p">;</span>
+                                                        
                     <span class="k">return</span> <span class="p">{</span>
                         <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="nx">$$sourceAttrs</span> <span class="o">=</span> <span class="nx">attrs</span><span class="p">;</span>
                             <span class="k">if</span> <span class="p">(</span><span class="nx">attrs</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
                                 <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{};</span>
                             <span class="p">}</span>
-                        
+
                             <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">attrs</span> <span class="o">!==</span> <span class="s1">&#39;object&#39;</span> <span class="o">||</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span> <span class="nx">attrs</span> <span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;[object Array]&#39;</span><span class="p">)</span> <span class="p">{</span>
                                 <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Expecting to instantiate Iguana class with object, got &#39;&quot;</span><span class="o">+</span><span class="nx">attrs</span><span class="o">+</span><span class="s2">&quot;&#39;&quot;</span><span class="p">);</span>
                             <span class="p">}</span>
-                            <span class="k">this</span><span class="p">.</span><span class="nx">copyAttrs</span><span class="p">(</span><span class="nx">attrs</span><span class="p">);</span>
+
+                            <span class="k">this</span><span class="p">.</span><span class="nx">copyAttrsOnInitialize</span><span class="p">(</span><span class="nx">attrs</span><span class="p">);</span>                                
+                        <span class="p">},</span>
+                        
+                        <span class="nx">copyAttrsOnInitialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="nx">runCallbacks</span><span class="p">(</span><span class="s1">&#39;copyAttrsOnInitialize&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                                <span class="k">this</span><span class="p">.</span><span class="nx">copyAttrs</span><span class="p">();</span>
+                            <span class="p">});</span>
                         <span class="p">},</span>
                         
                         <span class="nx">copyAttrs</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="k">this</span><span class="p">.</span><span class="nx">$$sourceAttrs</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">({},</span> <span class="nx">attrs</span><span class="p">);</span>
                             <span class="k">this</span><span class="p">.</span><span class="nx">runCallbacks</span><span class="p">(</span><span class="s1">&#39;copyAttrs&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
                                 <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">$$sourceAttrs</span><span class="p">);</span>
                             <span class="p">});</span>
-                        <span class="p">}</span>
+                        <span class="p">},</span>
+                        
+                        <span class="c1">//see subclass extension above</span>
+                        <span class="nx">_initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span>
                     <span class="p">}</span>
                 
                 <span class="p">});</span>

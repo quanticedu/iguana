@@ -33,7 +33,7 @@ module.exports = function(grunt) {
                         'scripts/**/*.js',
                         'mock/**/*.js',
                         'spec/**/*.js'
-                        //'spec/**/*embed*.js'
+                        //'spec/**/*iguana*.js'
                         ]
                 }
             }

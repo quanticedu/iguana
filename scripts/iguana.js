@@ -33,25 +33,39 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                             mixins.included(this);
                         }
                     }.bind(this));
-                                    
+                    
+                    //We always want to call the superclass's initialize so 
+                    //that we can have initialize callbacks.
+                    var subclassWithoutIguana = this.subclass;
+                                                        
                     return {
                         initialize: function(attrs) {
+                            this.$$sourceAttrs = attrs;
                             if (attrs === undefined) {
                                 attrs = {};
                             }
-                        
+
                             if (typeof attrs !== 'object' || Object.prototype.toString.call( attrs ) === '[object Array]') {
                                 throw new Error("Expecting to instantiate Iguana class with object, got '"+attrs+"'");
                             }
-                            this.copyAttrs(attrs);
+
+                            this.copyAttrsOnInitialize(attrs);                                
+                        },
+                        
+                        copyAttrsOnInitialize: function(attrs) {
+                            this.runCallbacks('copyAttrsOnInitialize', function() {
+                                this.copyAttrs();
+                            });
                         },
                         
                         copyAttrs: function(attrs) {
-                            this.$$sourceAttrs = angular.extend({}, attrs);
                             this.runCallbacks('copyAttrs', function() {
                                 angular.extend(this, this.$$sourceAttrs);
                             });
-                        }
+                        },
+                        
+                        //see subclass extension above
+                        _initialize: function() {}
                     }
                 
                 });

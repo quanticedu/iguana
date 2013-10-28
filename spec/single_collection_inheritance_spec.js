@@ -25,7 +25,7 @@ describe('Iguana.SingleCollectionInheritance', function() {
             // "ploymorphism" or "single collection inheritance."  
             //   
             // In order to implement single collection inheritance, you 
-            // will need to set [aliases](alias_spec.html) for your classes.
+            // will need to set aliases for your classes.
             // Doing so will cause a property to be added to each document (by default,
             // the property is \_\_iguana_type), 
             // indicating which class it should be mapped to.  This allows
@@ -85,6 +85,15 @@ describe('Iguana.SingleCollectionInheritance', function() {
             var instance = ItemType1.new({});
             expect(instance.constructor).toBe(ItemType1);
             expect(instance.__iguana_type).toBe('item_type_1');
+        });
+        
+        
+        // Iguana classes cannot be created with 'new Item()'; You must call 'Item.new' 
+        it('should only allow instances to be created with Item.new, not new Item()', function() {
+            var func = function() {
+                new Item();
+            };
+            expect(func).toThrow("Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()");
         });
         
         it('should throw an error if no class matches the __iguana_type property', function() {

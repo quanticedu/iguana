@@ -12,6 +12,15 @@ angular.module('Iguana')
                         this[sciProperty] = this.constructor.alias();
                     }
                 });
+                
+                Iguana.setCallback('before', 'copyAttrsOnInitialize', function() {
+                    var attrs = this.$$sourceAttrs;
+                    if (!attrs || !attrs.$instantiatedWithNew) {
+                        throw new Error("Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()");
+                    }
+                    
+                    delete attrs.$instantiatedWithNew;
+                });
             },
             
             classMixin: {
@@ -23,6 +32,9 @@ angular.module('Iguana')
                 },
 
                 new: function(attrs, raiseOnFailure) {
+                    //clone the provided attrs object
+                    attrs = angular.extend({}, attrs);
+                    
                     if (raiseOnFailure !== false) {
                         raiseOnFailure = true;
                     }
@@ -33,6 +45,10 @@ angular.module('Iguana')
                     if (typeof attrs !== 'object' || Object.prototype.toString.call( attrs ) === '[object Array]') {
                         throw new Error("Expecting to instantiate Iguana class with object, got '"+attrs+"'");
                     }
+                    
+                    //Ensure that all instances are created with Iguana.new rather than 'new Iguana'
+                    //See after copyAttrs callback above
+                    attrs.$instantiatedWithNew = true;
                     
                     var instance;
                     if (!attrs.hasOwnProperty(this.sciProperty)) {

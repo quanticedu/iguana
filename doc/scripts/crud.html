@@ -122,7 +122,14 @@
                     <span class="kd">var</span> <span class="nx">action</span> <span class="o">=</span> <span class="k">this</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">idProperty</span><span class="p">()]</span> <span class="o">?</span> <span class="s2">&quot;update&quot;</span> <span class="o">:</span> <span class="s2">&quot;create&quot;</span><span class="p">;</span> 
                     
                     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">saveWithoutInstantiating</span><span class="p">(</span><span class="nx">action</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
-                        <span class="k">this</span><span class="p">.</span><span class="nx">copyAttrs</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+                        <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">({},</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+                        
+                        <span class="c1">//Breaking encapsulation a bit here, but single collection inheritance</span>
+                        <span class="c1">//enforces that we don&#39;t create instance with &#39;new Item()&#39;, because then</span>
+                        <span class="c1">//we would skip the class selection stuff.  Setting the $loadedFromApi</span>
+                        <span class="c1">//flag tells sci that this object is okay.</span>
+                        <span class="nx">attrs</span><span class="p">.</span><span class="nx">$loadedFromApi</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+                        <span class="k">this</span><span class="p">.</span><span class="nx">copyAttrs</span><span class="p">(</span><span class="nx">attrs</span><span class="p">);</span>
                         <span class="k">return</span> <span class="p">{</span>
                             <span class="nx">result</span><span class="o">:</span> <span class="k">this</span><span class="p">,</span>
                             <span class="nx">meta</span><span class="o">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">meta</span>

@@ -122,7 +122,14 @@ angular.module('Iguana')
                     var action = this[this.idProperty()] ? "update" : "create"; 
                     
                     return this.constructor.saveWithoutInstantiating(action, this.asJson()).then(function(response){
-                        this.copyAttrs(response.result);
+                        var attrs = angular.extend({}, response.result);
+                        
+                        //Breaking encapsulation a bit here, but single collection inheritance
+                        //enforces that we don't create instance with 'new Item()', because then
+                        //we would skip the class selection stuff.  Setting the $loadedFromApi
+                        //flag tells sci that this object is okay.
+                        attrs.$loadedFromApi = true;
+                        this.copyAttrs(attrs);
                         return {
                             result: this,
                             meta: response.meta

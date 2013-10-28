@@ -5,6 +5,7 @@ angular.module('Iguana')
         return {
             included: function(Iguana) {
                 Iguana.defineCallbacks('copyAttrs');
+                Iguana.defineCallbacks('copyAttrsOnInitialize');
             }
         };
         

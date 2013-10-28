@@ -23,7 +23,7 @@ describe('Iguana.Embeds', function() {
             and to each of the items in the 'subItems' array.
             
             You will need to call 'embedsMany' on the 'item' class
-            and '[alias](alias_spec.html)' on the 'subItems' class.
+            and 'alias' on the 'subItems' class.
             */
             Iguana = _Iguana_;
             // ...
