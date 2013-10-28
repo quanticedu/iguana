@@ -92,15 +92,6 @@ describe('Iguana.Crud', function() {
             assertFiresErrorCallbackOnSave(item, 'update');
         });
         
-        it('should support callbacks', function() {
-            var called = false;
-            Item.setCallback('before', 'save', function() {
-                called = true;
-            });
-            assertSavesAndFiresSuccessCallback(Item.new({}), 'create');          
-            expect(called).toBe(true);
-        });
-        
         function assertSavesAndFiresSuccessCallback(item, action) {
             var toBeSpiedOn = {onSuccess: function(response){
                 expect(response.result).toBe(item);
