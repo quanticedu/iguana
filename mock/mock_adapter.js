@@ -28,7 +28,13 @@ angular.module('Iguana')
                     var error = response.error;
                     expectedArgs = [collection].concat(expectedArgs);
                     delete response.error;
-                    spyOn(this, meth).andCallThrough();
+                    try {
+                        //We need a try/catch because, if expect is called multiple times,
+                        //then spyOn will complain about being called twice on the same
+                        //method.
+                        spyOn(this, meth).andCallThrough();
+                    } catch(e) {}
+                    
                     if (response.result && Object.prototype.toString.call( response.result ) !== '[object Array]') {
                         throw new Error("response.result should be an array, as adapters always return an array of results");
                     }

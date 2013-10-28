@@ -9,6 +9,7 @@ describe('Iguana.SingleCollectionInheritance', function() {
 
         inject(function(_Iguana_) {
             Iguana = _Iguana_;
+            Iguana.setAdapter('Iguana.Mock.Adapter');
         });
 
     });
@@ -33,45 +34,59 @@ describe('Iguana.SingleCollectionInheritance', function() {
                 // ...
                 Item = Iguana.subclass(function() {
                     this.alias('item');
+                    this.setCollection('items');
                 });
                 
                 ItemType1 = Item.subclass(function() {
-                    this.alias('itemtype1');
+                    this.alias('item_type_1');
                 });
                 
                 ItemType2 = Item.subclass(function() {
-                    this.alias('itemtype2');
+                    this.alias('item_type_2');
                 });
             });
 
         });
         
         // Now that you have called alias(), when a document 
-        // is instantiated that already has the \_\_iguana_type
-        // property set, the class will
-        // be chosen based on the value of the \_\_iguana\_type property.  This
-        // will generally be the case when loading documents up over the api
-        // via 'show' or 'index'.
+        // is loaded up over the api, it will be instantiated
+        // as instance of the appropriate class.
         it('should create an instance of a subclass if the type property matches the alias', function() {
             // ...
-            var instance1 = Item.new({__iguana_type: 'itemtype1'});
-            expect(instance1.constructor).toBe(ItemType1);
+            //There are two items in the database
+            var items = [
+                {id: 1, __iguana_type: 'item_type_1'},
+                {id: 2, __iguana_type: 'item_type_2'}];
             
-            var instance2 = Item.new({__iguana_type: 'itemtype2'});
-            expect(instance2.constructor).toBe(ItemType2);
+            //Mocking out the adapter to load up the first item.
+            Item.adapter().expect('show', 'items', 1, {result: [items[0]]});
+            Item.show(1).then(function(response){
+                var item = response.result;
+                
+                //Since the __iguana_type is 'item_type_1', the result is 
+                //an instance of ItemType1
+                expect(item.constructor).toBe(ItemType1);
+            });
+            
+            //Mocking out the adapter to load up the second item.
+            Item.adapter().expect('show', 'items', 2, {result: [items[1]]});
+            Item.show(2).then(function(response){
+                var item = response.result;
+                
+                //Since the __iguana_type is 'item_type_2', the result is 
+                //an instance of ItemType2
+                expect(item.constructor).toBe(ItemType2);
+            });
         });
         
-        // When a document does not have the \_\_iguana\_type property,
-        // it will be set automatically.
+        // When a new instance is created, the \_\_iguana\_type is set automatically.
         it('should create an instance of the class and set the __iguana_type if the __iguana_type is not set', function() { 
             // ...
             var instance = ItemType1.new({});
             expect(instance.constructor).toBe(ItemType1);
-            expect(instance.__iguana_type).toBe('itemtype1');
+            expect(instance.__iguana_type).toBe('item_type_1');
         });
         
-        // An error will be thrown if the \_\_iguana\_type property is set to
-        // a class that cannot be found.
         it('should throw an error if no class matches the __iguana_type property', function() {
             // ...
             var func = function() {
@@ -107,22 +122,32 @@ describe('Iguana.SingleCollectionInheritance', function() {
         it('should be overridable', function() {
             var Item = Iguana.subclass(function() {
                 this.alias('item');
-                this.setSciProperty('itemType');
+                this.setCollection('items');
+                this.setSciProperty('item_type');
             });
             
             var ItemType1 = Item.subclass(function() {
-                this.alias('itemtype1');
+                this.alias('item_type_1');
             });
             
             var ItemType2 = Item.subclass(function() {
-                this.alias('itemtype2');
+                this.alias('item_type_2');
             });
             
-            // Since we called setSciPropert('itemType'), we should
+            // Since we called setSciProperty('itemType'), we should
             // use the itemType property to define the alias of the 
             // class used to instantiate the document.
-            var instance1 = Item.new({itemType: 'itemtype1'});
-            expect(instance1.constructor).toBe(ItemType1);
+            var item = {id: 1, item_type: 'item_type_1'};
+            
+            //Mocking out the adapter to load up the item.
+            Item.adapter().expect('show', 'items', 1, {result: [item]});
+            Item.show(1).then(function(response){
+                var loadedItem = response.result;
+                
+                //Since the __iguana_type is 'item_type_1', the result is 
+                //an instance of ItemType1
+                expect(loadedItem.constructor).toBe(ItemType1);
+            });
         });
         
     });

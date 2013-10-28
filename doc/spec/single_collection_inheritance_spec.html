@@ -9,6 +9,7 @@
 
         <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">_Iguana_</span><span class="p">)</span> <span class="p">{</span>
             <span class="nx">Iguana</span> <span class="o">=</span> <span class="nx">_Iguana_</span><span class="p">;</span>
+            <span class="nx">Iguana</span><span class="p">.</span><span class="nx">setAdapter</span><span class="p">(</span><span class="s1">&#39;Iguana.Mock.Adapter&#39;</span><span class="p">);</span>
         <span class="p">});</span>
 
     <span class="p">});</span>
@@ -29,6 +30,7 @@ the property is __iguana_type),
 indicating which class it should be mapped to.  This allows
 iguana to map each document to the appropriate class.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...</p></div></div><div class="code"><div class="wrapper">                <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;item&#39;</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">);</span>
                 <span class="p">});</span>
                 
                 <span class="nx">ItemType1</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -41,15 +43,32 @@ iguana to map each document to the appropriate class.</p></div></div><div class=
             <span class="p">});</span>
 
         <span class="p">});</span>
-        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>When a document is instantiated that already has the __iguana_type
-property set, the class will
-be chosen based on the value of the __iguana_type property.  This
-will generally be the case when loading documents up over the api
-via 'show' or 'index'.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should create an instance of a subclass if the type property matches the alias&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...</p></div></div><div class="code"><div class="wrapper">            <span class="kd">var</span> <span class="nx">instance1</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">__iguana_type</span><span class="o">:</span> <span class="s1">&#39;itemtype1&#39;</span><span class="p">});</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">instance1</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">ItemType1</span><span class="p">);</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Now that you have called alias(), when a document 
+is loaded up over the api, it will be instantiated
+as instance of the appropriate class.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should create an instance of a subclass if the type property matches the alias&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...</p></div></div><div class="code"><div class="wrapper">            <span class="c1">//There are two items in the database</span>
+            <span class="kd">var</span> <span class="nx">items</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">__iguana_type</span><span class="o">:</span> <span class="s1">&#39;itemtype1&#39;</span><span class="p">},</span>
+                <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">__iguana_type</span><span class="o">:</span> <span class="s1">&#39;itemtype2&#39;</span><span class="p">}];</span>
             
-            <span class="kd">var</span> <span class="nx">instance2</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">__iguana_type</span><span class="o">:</span> <span class="s1">&#39;itemtype2&#39;</span><span class="p">});</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">instance2</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">ItemType2</span><span class="p">);</span>
+            <span class="c1">//Mocking out the adapter to load up the first item.</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">{</span><span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]]});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+                <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+                
+                <span class="c1">//Since the __iguana_type is &#39;itemtype1&#39;, the result is </span>
+                <span class="c1">//an instance of ItemType1</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">ItemType1</span><span class="p">);</span>
+            <span class="p">});</span>
+            
+            <span class="c1">//Mocking out the adapter to load up the second item.</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">items</span><span class="p">[</span><span class="mi">1</span><span class="p">]]});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+                <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+                
+                <span class="c1">//Since the __iguana_type is &#39;itemtype2&#39;, the result is </span>
+                <span class="c1">//an instance of ItemType2</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">ItemType2</span><span class="p">);</span>
+            <span class="p">});</span>
         <span class="p">});</span>
         </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>When a document does not have the __iguana_type property,
 it will be set automatically.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should create an instance of the class and set the __iguana_type if the __iguana_type is not set&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...</p></div></div><div class="code"><div class="wrapper">            <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="nx">ItemType1</span><span class="p">.</span><span class="k">new</span><span class="p">({});</span>
