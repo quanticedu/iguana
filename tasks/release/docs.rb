@@ -15,13 +15,13 @@ unless File.exists?('bower.json') && File.exists?('Gruntfile.js')
 end
 
 def run(cmd, &on_error)
+  puts cmd
   stdin, stdout, stderr = Open3.popen3(cmd)
   err_message = stderr.read
   unless err_message == ""
     if block_given?
       yield(err_message)
     else
-      puts err_message
       exit
     end
   end
@@ -47,12 +47,14 @@ Dir.mktmpdir do |tmpdir|
   run("git checkout -b gh-pages origin/gh-pages") do |err_message|
     if err_message.match(/A branch named 'gh-pages' already exists/)
       run("git checkout gh-pages")
+      puts "done1"
     else
-      puts "ERROR!!!!!!!!!!!!!!!"
       puts err_message
       exit
-    end    
+    end   
+    puts "done2" 
   end
+  puts "done3"
   
   
   # copy the docs to the right place an add a link to the index file
