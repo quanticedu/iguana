@@ -56,7 +56,7 @@ Dir.mktmpdir do |tmpdir|
   FileUtils.mv(tmp_doc_dir, "docs/#{version}")
   unless File.read("index.html").match("docs/#{version}")
     File.open("index.html", "a+") do |f|
-      f.write("\n<a href=\"docs/#{version}\">Version #{version}</a>\n")
+      f.write("\n<a href=\"docs/#{version}\">Version #{version}</a><br/>")
     end
   end
   
