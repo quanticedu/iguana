@@ -61,7 +61,7 @@ Dir.mktmpdir do |tmpdir|
   
   run("git add .")
   run("git commit -m\"Adding version #{version} docs\"")
-  run("git push origin gh-pages")
-  run("git checkout #{orig_branch}")
+  run("git push origin gh-pages", false)
+  run("git checkout #{orig_branch}", false)
   
 end
