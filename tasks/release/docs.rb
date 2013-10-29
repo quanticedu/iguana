@@ -14,22 +14,14 @@ unless File.exists?('bower.json') && File.exists?('Gruntfile.js')
   raise "release/docs must be run from package root"
 end
 
-def run(cmd, &on_error)
+def run(cmd, raise_on_error = true)
   puts cmd
   stdin, stdout, stderr = Open3.popen3(cmd)
-  err_message = stderr.read
-  puts "1 #{err_message} - #{cmd}"
-  unless err_message == ""
-    puts "2 #{err_message} - #{cmd}"
-    if block_given?
-      yield(err_message)
-    else
-      puts "3 #{err_message} - #{cmd}"
-      exit
-    end
+  out, err = stdout.read, stderr.read
+  if err != "" && raise_on_error
+    raise RuntimeError.new(err)
   end
-  puts "4 #{err_message} - #{cmd}"
-  stdout.read
+  [out, err]
 end
 
 orig_working_dir = Dir.pwd
@@ -48,18 +40,14 @@ Dir.mktmpdir do |tmpdir|
   run("git fetch origin")
   
   # switch to gh-pages branch
-  run("git checkout -b gh-pages origin/gh-pages") do |err_message|
-    if err_message.match(/A branch named 'gh-pages' already exists/)
-      puts "runnit"
-      run("git checkout gh-pages")
-      puts "done1"
-    else
-      puts err_message
-      exit
-    end   
-    puts "done2" 
+  out, err = run("git checkout -b gh-pages origin/gh-pages"), false
+  if err.match(/A branch named 'gh-pages' already exists/)
+    out, err =  run("git checkout gh-pages", false)
   end
-  puts "done3"
+  
+  if err != "" && !err.match(/Switched to branch/)
+    raise RuntimeError.new(err)
+  end
   
   
   # copy the docs to the right place an add a link to the index file
