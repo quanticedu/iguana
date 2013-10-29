@@ -51,17 +51,14 @@ Dir.mktmpdir do |tmpdir|
   
   # copy the docs to the right place an add a link to the index file
   FileUtils.mv(tmp_doc_dir, "docs/#{version}")
+  unless File.read("index.html").match("docs/#{version}")
   File.open("index.html", "a+") do |f|
-    f.write(
-%q|
-<a href="docs/#{version}">Version #{version}</a>
-|
-    )
+    f.write("<a href=\"docs/#{version}\">Version #{version}</a>")
   end
   
-  run("git add .")
-  run("git commit -m\"Adding version #{version} docs\"")
-  run("git push origin gh-pages", false)
-  run("git checkout #{orig_branch}", false)
+  #run("git add .")
+  #run("git commit -m\"Adding version #{version} docs\"")
+  #run("git push origin gh-pages", false)
+  #run("git checkout #{orig_branch}", false)
   
 end
