@@ -35,9 +35,15 @@ version = ENV['version'] || ARGV[0]
 run("grunt groc")
 
 Dir.mktmpdir do |tmpdir| 
+  
+  # copy the docs to a temporary location
   tmp_doc_dir = "#{tmpdir}/doc"
   FileUtils.cp_r('doc', tmp_doc_dir)
+  
+  # fetch all branches
   run("git fetch origin")
+  
+  # switch to gh-pages branch
   run("git checkout -b gh-pages origin/gh-pages") do |err_message|
     if err_message.match(/A branch named 'gh-pages' already exists/)
       run("git checkout gh-pages")
@@ -47,8 +53,10 @@ Dir.mktmpdir do |tmpdir|
     end    
   end
   
-  # FileUtils.mv(tmp_doc_dir, "doc/#{version}")
-  # File.open("index.html", "a+") do |f|
-  #   f.write(%q|\n<a href="docs/#{version}">Version #{version}</a>\n|)
-  # end
+  
+  # copy the docs to the right place an add a link to the index file
+  FileUtils.mv(tmp_doc_dir, "doc/#{version}")
+  File.open("index.html", "a+") do |f|
+    f.write(%q|\n<a href="docs/#{version}">Version #{version}</a>\n|)
+  end
 end
