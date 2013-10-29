@@ -48,6 +48,7 @@ Dir.mktmpdir do |tmpdir|
     if err_message.match(/A branch named 'gh-pages' already exists/)
       run("git checkout gh-pages")
     else
+      puts "ERROR!!!!!!!!!!!!!!!"
       puts err_message
       exit
     end    
