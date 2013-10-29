@@ -18,14 +18,18 @@ def run(cmd, &on_error)
   puts cmd
   stdin, stdout, stderr = Open3.popen3(cmd)
   err_message = stderr.read
+  puts "1 #{err_message} - #{cmd}"
   unless err_message == ""
+    puts "2 #{err_message} - #{cmd}"
     if block_given?
       yield(err_message)
     else
+      puts "3 #{err_message} - #{cmd}"
       exit
     end
   end
-  stdout
+  puts "4 #{err_message} - #{cmd}"
+  stdout.read
 end
 
 orig_working_dir = Dir.pwd
@@ -46,6 +50,7 @@ Dir.mktmpdir do |tmpdir|
   # switch to gh-pages branch
   run("git checkout -b gh-pages origin/gh-pages") do |err_message|
     if err_message.match(/A branch named 'gh-pages' already exists/)
+      puts "runnit"
       run("git checkout gh-pages")
       puts "done1"
     else
