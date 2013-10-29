@@ -51,9 +51,8 @@ Dir.mktmpdir do |tmpdir|
   
   
   # copy the docs to the right place an add a link to the index file
-  puts "copy #{tmp_doc_dir} to docs/#{version}"
-  # FileUtils.mv(tmp_doc_dir, "docs/#{version}")
-  # File.open("index.html", "a+") do |f|
-  #   f.write(%q|\n<a href="docs/#{version}">Version #{version}</a>\n|)
-  # end
+  FileUtils.mv(tmp_doc_dir, "docs/#{version}")
+  File.open("index.html", "a+") do |f|
+    f.write(%q|\n<a href="docs/#{version}">Version #{version}</a>\n|)
+  end
 end
