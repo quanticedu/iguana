@@ -24,10 +24,9 @@ def run(cmd, raise_on_error = true)
   [out, err]
 end
 
-orig_working_dir = Dir.pwd
-
 version = ENV['version'] || ARGV[0]
 
+orig_branch = run("git rev-parse --abbrev-ref HEAD")[0]
 run("grunt groc")
 
 Dir.mktmpdir do |tmpdir| 
@@ -53,6 +52,16 @@ Dir.mktmpdir do |tmpdir|
   # copy the docs to the right place an add a link to the index file
   FileUtils.mv(tmp_doc_dir, "docs/#{version}")
   File.open("index.html", "a+") do |f|
-    f.write(%q|\n<a href="docs/#{version}">Version #{version}</a>\n|)
+    f.write(
+%q|
+<a href="docs/#{version}">Version #{version}</a>
+|
+    )
   end
+  
+  run("git add .")
+  run("git commit -m\"Adding version #{version} docs\"")
+  run("git push origin master")
+  run("git checkout #{orig_branch}")
+  
 end
