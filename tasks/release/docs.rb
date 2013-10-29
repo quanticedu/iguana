@@ -14,11 +14,16 @@ unless File.exists?('bower.json') && File.exists?('Gruntfile.js')
   raise "release/docs must be run from package root"
 end
 
-def run(cmd)
-  puts "`#{cmd}`"
+def run(cmd, &on_error)
   stdin, stdout, stderr = Open3.popen3(cmd)
-  if stderr
-    raise RuntimeError(stderr)
+  err_message = stderr.read
+  unless err_message == ""
+    if block_given?
+      yield(err_message)
+    else
+      puts err_message
+      exit
+    end
   end
   stdout
 end
@@ -33,14 +38,13 @@ Dir.mktmpdir do |tmpdir|
   tmp_doc_dir = "#{tmpdir}/doc"
   FileUtils.cp_r('doc', tmp_doc_dir)
   run("git fetch origin")
-  begin
-    run("git checkout -b gh-pages origin/gh-pages")
-  rescue RuntimeError => e
-    if e.message.match(/A branch named 'gh-pages' already exists/)
+  run("git checkout -b gh-pages origin/gh-pages") do |err_message|
+    if err_message.match(/A branch named 'gh-pages' already exists/)
       run("git checkout gh-pages")
     else
-      raise e
-    end
+      puts err_message
+      exit
+    end    
   end
   
   # FileUtils.mv(tmp_doc_dir, "doc/#{version}")
