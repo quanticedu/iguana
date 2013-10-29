@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="en"><head><title>scripts/single_collection_inheritance</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="scripts/single_collection_inheritance"><meta name="groc-project-path" content="scripts/single_collection_inheritance.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">scripts/single_collection_inheritance.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;Iguana&#39;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Iguana.SingleCollectionInheritance&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            
+            <span class="nx">included</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if the class has an alias, but the type property is 
+not set, then set it to the alias.</p></div></div><div class="code"><div class="wrapper">                <span class="nx">Iguana</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;after&#39;</span><span class="p">,</span> <span class="s1">&#39;copyAttrs&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="kd">var</span> <span class="nx">sciProperty</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">sciProperty</span><span class="p">;</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">alias</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">sciProperty</span><span class="p">))</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">[</span><span class="nx">sciProperty</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">alias</span><span class="p">();</span>
+                    <span class="p">}</span>
+                <span class="p">});</span>
+                
+                <span class="nx">Iguana</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;copyAttrsOnInitialize&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$$sourceAttrs</span><span class="p">;</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">attrs</span> <span class="o">||</span> <span class="o">!</span><span class="nx">attrs</span><span class="p">.</span><span class="nx">$instantiatedWithNew</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()&quot;</span><span class="p">);</span>
+                    <span class="p">}</span>
+                    
+                    <span class="k">delete</span> <span class="nx">attrs</span><span class="p">.</span><span class="nx">$instantiatedWithNew</span><span class="p">;</span>
+                <span class="p">});</span>
+            <span class="p">},</span>
+            
+            <span class="nx">classMixin</span><span class="o">:</span> <span class="p">{</span>
+                
+                <span class="nx">sciProperty</span><span class="o">:</span> <span class="s1">&#39;__iguana_type&#39;</span><span class="p">,</span>
+                
+                <span class="nx">setSciProperty</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">prop</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span><span class="nx">sciProperty</span><span class="o">:</span> <span class="nx">prop</span><span class="p">});</span>
+                <span class="p">},</span>
+
+                <span class="k">new</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attrs</span><span class="p">,</span> <span class="nx">raiseOnFailure</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="c1">//clone the provided attrs object</span>
+                    <span class="nx">attrs</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">({},</span> <span class="nx">attrs</span><span class="p">);</span>
+                    
+                    <span class="k">if</span> <span class="p">(</span><span class="nx">raiseOnFailure</span> <span class="o">!==</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nx">raiseOnFailure</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nx">attrs</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{};</span>
+                    <span class="p">}</span>
+                    
+                    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">attrs</span> <span class="o">!==</span> <span class="s1">&#39;object&#39;</span> <span class="o">||</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span> <span class="nx">attrs</span> <span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;[object Array]&#39;</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Expecting to instantiate Iguana class with object, got &#39;&quot;</span><span class="o">+</span><span class="nx">attrs</span><span class="o">+</span><span class="s2">&quot;&#39;&quot;</span><span class="p">);</span>
+                    <span class="p">}</span>
+                    
+                    <span class="c1">//Ensure that all instances are created with Iguana.new rather than &#39;new Iguana&#39;</span>
+                    <span class="c1">//See after copyAttrs callback above</span>
+                    <span class="nx">attrs</span><span class="p">.</span><span class="nx">$instantiatedWithNew</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+                    
+                    <span class="kd">var</span> <span class="nx">instance</span><span class="p">;</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">attrs</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sciProperty</span><span class="p">))</span> <span class="p">{</span>
+                        <span class="k">return</span> <span class="k">new</span> <span class="k">this</span><span class="p">(</span><span class="nx">attrs</span><span class="p">);</span>
+                    <span class="p">}</span>
+                    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">attrs</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">sciProperty</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">attrs</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">sciProperty</span><span class="p">]</span> <span class="o">===</span> <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="k">this</span><span class="p">(</span><span class="nx">attrs</span><span class="p">);</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">subclasses</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="kd">var</span> <span class="nx">subclass</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">subclasses</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+                            <span class="nx">instance</span> <span class="o">=</span> <span class="nx">subclass</span><span class="p">.</span><span class="k">new</span><span class="p">(</span><span class="nx">attrs</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="nx">instance</span><span class="p">)</span> <span class="p">{</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="nx">instance</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">return</span> <span class="nx">instance</span><span class="p">;</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">raiseOnFailure</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;No class could be found for &#39;</span><span class="o">+</span><span class="k">this</span><span class="p">.</span><span class="nx">sciProperty</span><span class="o">+</span><span class="s1">&#39;=&quot;&#39;</span><span class="o">+</span><span class="nx">attrs</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">sciProperty</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;&quot;.&#39;</span><span class="p">);</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">};</span>
+    <span class="p">});</span></div></div></div></div></body></html>
