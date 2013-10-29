@@ -23,7 +23,7 @@ From the bower.json file
     {
 	    "...
 	    "dependencies": {
-	        "iguana": "0.0.1"
+	        "iguana": "0.0.2"
 	    },
 		...
 	}
