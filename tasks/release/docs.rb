@@ -40,7 +40,7 @@ Dir.mktmpdir do |tmpdir|
   run("git fetch origin")
   
   # switch to gh-pages branch
-  out, err = run("git checkout -b gh-pages origin/gh-pages"), false
+  out, err = run("git checkout -b gh-pages origin/gh-pages", false)
   if err.match(/A branch named 'gh-pages' already exists/)
     out, err =  run("git checkout gh-pages", false)
   end
