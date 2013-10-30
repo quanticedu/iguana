@@ -92,15 +92,6 @@
             <span class="nx">assertFiresErrorCallbackOnSave</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">);</span>
         <span class="p">});</span>
         
-        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should support callbacks&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">called</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-                <span class="nx">called</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-            <span class="p">});</span>
-            <span class="nx">assertSavesAndFiresSuccessCallback</span><span class="p">(</span><span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({}),</span> <span class="s1">&#39;create&#39;</span><span class="p">);</span>          
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">called</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
-        <span class="p">});</span>
-        
         <span class="kd">function</span> <span class="nx">assertSavesAndFiresSuccessCallback</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">toBeSpiedOn</span> <span class="o">=</span> <span class="p">{</span><span class="nx">onSuccess</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
                 <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">item</span><span class="p">);</span>

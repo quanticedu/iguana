@@ -510,6 +510,63 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
+            "sourcePath": "/Users/nbrustein/code/iguana/spec/callbacks_spec.js",
+            "projectPath": "spec/callbacks_spec.js",
+            "targetPath": "spec/callbacks_spec",
+            "pageTitle": "spec/callbacks_spec",
+            "title": "callbacks_spec"
+          },
+          "depth": 2,
+          "outline": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 1,
+                "title": "Callbacks",
+                "slug": "callbacks"
+              },
+              "depth": 1,
+              "children": [
+                {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
+                    "title": "save",
+                    "slug": "save"
+                  },
+                  "depth": 3
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
+                    "title": "copyAttrs",
+                    "slug": "copyattrs"
+                  },
+                  "depth": 3
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
+                    "title": "copyAttrsOnInitialize",
+                    "slug": "copyattrsoninitialize"
+                  },
+                  "depth": 3
+                }
+              ]
+            }
+          ]
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
             "sourcePath": "/Users/nbrustein/code/iguana/spec/crud_spec.js",
             "projectPath": "spec/crud_spec.js",
             "targetPath": "spec/crud_spec",
