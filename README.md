@@ -47,4 +47,6 @@ in those projects for more information.
 
 ### Documentation
 
-[0.0.3](http://www.pedago.com/iguana/docs/0.0.3)[0.0.2](http://www.pedago.com/iguana/docs/0.0.2)[0.0.1](http://www.pedago.com/iguana/docs/0.0.1)
+[0.0.3](http://www.pedago.com/iguana/docs/0.0.3)  
+[0.0.2](http://www.pedago.com/iguana/docs/0.0.2)  
+[0.0.1](http://www.pedago.com/iguana/docs/0.0.1)  
