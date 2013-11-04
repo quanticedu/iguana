@@ -31,6 +31,7 @@ def commit_and_push(branch, message)
 end
 
 version = ENV['version'] || ARGV[0]
+raise("No version provided") unless version
 
 orig_branch = run("git rev-parse --abbrev-ref HEAD")[0]
 run("grunt groc")
