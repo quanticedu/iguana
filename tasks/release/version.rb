@@ -33,7 +33,7 @@ end
 version = ENV['version'] || ARGV[0]
 raise("No version provided") unless version
 
-orig_branch = run("git rev-parse --abbrev-ref HEAD")[0]
+orig_branch = run("git rev-parse --abbrev-ref HEAD")[0].strip
 run("grunt groc")
 commit_and_push(orig_branch, "Updating docs")
 
