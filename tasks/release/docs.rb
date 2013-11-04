@@ -63,12 +63,12 @@ Dir.mktmpdir do |tmpdir|
   rescue; end
   FileUtils.mv(tmp_doc_dir, "docs/#{version}")
       
-  versions = Dir.glob("#{tmp_doc_dir}/*").map do |dir| 
+  versions = Dir.glob("docs/*").map do |dir| 
     dir.match(/\/([\d\.]+)$/)[1] 
   end.compact.sort.reverse    
   
-  puts "#{tmp_doc_dir}/*"
-  puts Dir.glob("#{tmp_doc_dir}/*").inspect
+  puts "docs/*"
+  puts Dir.glob("docs/*").inspect
   puts versions.inspect
       
   # add links to index file
