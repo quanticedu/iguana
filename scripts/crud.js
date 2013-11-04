@@ -52,11 +52,19 @@ angular.module('Iguana')
                 },
                 
                 create: function(obj) {
-                    return this._callAdapterMethAndInstantiateResult('create', true, [obj]);
+                    var instance = this.new(obj);
+                    if (!instance.isNew()) {
+                        throw new Error("Cannot call create on instance that is already saved.");
+                    }
+                    return instance.save();
                 },
                 
                 update: function(obj) {
-                    return this._callAdapterMethAndInstantiateResult('update', true, [obj]);
+                    var instance = this.new(obj);
+                    if (instance.isNew()) {
+                        throw new Error("Cannot call update on instance that is not already saved.");
+                    }
+                    return instance.save();
                 },
                 
                 destroy: function(id) {
@@ -126,17 +134,17 @@ angular.module('Iguana')
                     return returnValue;
                 },
                 
+                isNew: function() {
+                    var id = this[this.idProperty()];
+                    return !id;
+                },
+                
                 _save: function() {
-                    var action = this[this.idProperty()] ? "update" : "create"; 
+                    var action = this.isNew() ? "create" : "update"; 
                     
                     return this.constructor.saveWithoutInstantiating(action, this.asJson()).then(function(response){
                         var attrs = angular.extend({}, response.result);
                         
-                        //Breaking encapsulation a bit here, but single collection inheritance
-                        //enforces that we don't create instance with 'new Item()', because then
-                        //we would skip the class selection stuff.  Setting the $loadedFromApi
-                        //flag tells sci that this object is okay.
-                        attrs.$loadedFromApi = true;
                         this.copyAttrs(attrs);
                         return {
                             result: this,

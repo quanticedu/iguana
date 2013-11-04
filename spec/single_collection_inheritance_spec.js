@@ -160,6 +160,29 @@ describe('Iguana.SingleCollectionInheritance', function() {
         });
         
     });
+    
+    describe('create', function() {
+        
+        // ### create class method
+        // Calling the create method on a subclass will
+        // automatically set the appropriate class
+        it('should set the sciProperty', function() {
+            var Item = Iguana.subclass(function() {
+                this.alias('item');
+                this.setCollection('items');
+            });
+            
+            var ItemType1 = Item.subclass(function() {
+                this.alias('item_type_1');
+            });
+            
+            var expectedObject = {'__iguana_type': 'item_type_1'}
+            ItemType1.adapter().expect('create', 'items', expectedObject, {result: [expectedObject]});
+            ItemType1.create({});
+            ItemType1.adapter().flush('create');
+        });
+        
+    });
 
     
 });

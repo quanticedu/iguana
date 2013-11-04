@@ -103,19 +103,18 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
         // as required by Iguana.Adapter.Base, create expects a document
         // as it's only argument
         it('should make an api call and process the result', function() {
-            var attrs = {id: 'id'};
-            $httpBackend.expectPOST('/items.json', {record: {}}).respond(200, {contents: {items: [attrs]}, meta: 'meta'});
-            spyOn(Item, '_instantiateFromResponse');
-            Item.create({});
+            var attrs = {prop: 'value'};
+            var returnAttrs = angular.extend({}, attrs, {id: 'id'});
+            $httpBackend.expectPOST('/items.json', {record: attrs}).respond(200, {contents: {items: [returnAttrs]}, meta: 'meta'});
+            var callbacks = {success: function(response){
+                expect(response.result.constructor).toBe(Item);
+                expect(response.result.asJson()).toEqual(returnAttrs);
+                expect(response.meta).toBe('meta');
+            }};
+            spyOn(callbacks, 'success').andCallThrough();
+            Item.create(attrs).then(callbacks.success);
             $httpBackend.flush();
-            expect(Item._instantiateFromResponse.calls.length).toBe(1);
-            var response = Item._instantiateFromResponse.calls[0].args[1];
-            
-            //Returning an iguana-formatted response
-            expect(response).toEqual({
-                result: [attrs],
-                meta: 'meta'
-            });
+            expect(callbacks.success).toHaveBeenCalled();
         });
         
     });
@@ -126,19 +125,17 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
         // as required by Iguana.Adapter.Base, update expects a document
         // as it's only argument
         it('should make an api call and process the result', function() {
-            var attrs = {id: 'id'};
+            var attrs = {id: 'id', prop: 'value'};
             $httpBackend.expectPUT('/items.json', {record: attrs}).respond(200, {contents: {items: [attrs]}, meta: 'meta'});
-            spyOn(Item, '_instantiateFromResponse');
-            Item.update(attrs);
+            var callbacks = {success: function(response){
+                expect(response.result.constructor).toBe(Item);
+                expect(response.result.asJson()).toEqual(attrs);
+                expect(response.meta).toBe('meta');
+            }};
+            spyOn(callbacks, 'success').andCallThrough();
+            Item.update(attrs).then(callbacks.success);
             $httpBackend.flush();
-            expect(Item._instantiateFromResponse.calls.length).toBe(1);
-            var response = Item._instantiateFromResponse.calls[0].args[1];
-            
-            //Returning an iguana-formatted response
-            expect(response).toEqual({
-                result: [attrs],
-                meta: 'meta'
-            });
+            expect(callbacks.success).toHaveBeenCalled();
         });
         
     });

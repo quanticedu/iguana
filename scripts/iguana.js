@@ -40,7 +40,6 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                                                         
                     return {
                         initialize: function(attrs) {
-                            this.$$sourceAttrs = attrs;
                             if (attrs === undefined) {
                                 attrs = {};
                             }
@@ -53,12 +52,16 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                         },
                         
                         copyAttrsOnInitialize: function(attrs) {
+                            this.$$sourceAttrs = attrs;
                             this.runCallbacks('copyAttrsOnInitialize', function() {
                                 this.copyAttrs();
                             });
                         },
                         
                         copyAttrs: function(attrs) {
+                            if (attrs) {
+                                this.$$sourceAttrs = attrs;
+                            }
                             this.runCallbacks('copyAttrs', function() {
                                 angular.extend(this, this.$$sourceAttrs);
                             });
