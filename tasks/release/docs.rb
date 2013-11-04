@@ -65,6 +65,10 @@ Dir.mktmpdir do |tmpdir|
   versions = Dir.glob("#{tmp_doc_dir}/*").map do |dir| 
     dir.match(/\/([\d\.]+)$/)[1] 
   end.compact.sort.reverse    
+  
+  puts "#{tmp_doc_dir}/*"
+  puts Dir.glob("#{tmp_doc_dir}/*").inspect
+  puts versions.inspect
       
   # add links to index file
   File.open("index.html", "w+") do |f|
