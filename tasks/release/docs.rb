@@ -79,10 +79,10 @@ Dir.mktmpdir do |tmpdir|
     end
   end
   
-  # # commit gh-pages branch and switch back to master
-  # commit_and_push("gh-pages", "Adding version #{version} docs\"")
-  # run("git checkout #{orig_branch}", false)
-  # 
+  # commit gh-pages branch and switch back to master
+  commit_and_push("gh-pages", "Adding version #{version} docs\"")
+  run("git checkout #{orig_branch}", false)
+  
   # # add links to the readme
   # # add links to readme file
   # readme = File.read("README.md")
