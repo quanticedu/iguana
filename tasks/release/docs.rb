@@ -74,13 +74,13 @@ Dir.mktmpdir do |tmpdir|
   # add links to index file
   File.open("index.html", "w+") do |f|
     f.write("<h1>Iguana Docs</h1>\n\n")
-    versions.each do |version|
-      f.write("<a href=\"docs/#{version}\">Version #{version}</a><br/>\n")
+    versions.each do |_version|
+      f.write("<a href=\"docs/#{_version}\">Version #{_version}</a><br/>\n")
     end
   end
   
   # commit gh-pages branch and switch back to master
-  commit_and_push("gh-pages", "Adding version #{version} docs\"")
+  commit_and_push("gh-pages", "Adding version #{version} docs")
   run("git checkout #{orig_branch}", false)
   
   # # add links to the readme
@@ -91,8 +91,8 @@ Dir.mktmpdir do |tmpdir|
   # File.open("README.md", "w+") do |f|
   #   f.write(head)
   #   f.write("#{header}\n\n")
-  #   versions.each do |version|
-  #     f.write("[#{version}](http://www.pedago.com/iguana/docs/#{version})")
+  #   versions.each do |_version|
+  #     f.write("[#{_version}](http://www.pedago.com/iguana/docs/#{_version})")
   #   end
   # end
   # run("git add .")
