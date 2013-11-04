@@ -27,7 +27,7 @@ end
 def commit_and_push(branch, message)
   run("git add .")
   run("git commit -m\"#{message}\"")
-  run("git push origin #{branch}")
+  run("git push origin #{branch}", false)
 end
 
 version = ENV['version'] || ARGV[0]
