@@ -92,9 +92,15 @@ Dir.mktmpdir do |tmpdir|
     f.write(head)
     f.write("#{header}\n\n")
     versions.each do |_version|
-      f.write("[#{_version}](http://www.pedago.com/iguana/docs/#{_version})\n")
+      f.write("[#{_version}](http://www.pedago.com/iguana/docs/#{_version})")
     end
   end
+  
+  puts "docs have been taken care of, but you still need to:"
+  puts "* update the version in package.json"
+  puts "* update the version in bower.json"
+  puts "* update the version in the Installation section of README.md"
+  
   # run("git add .")
   # run("git commit -m\"Updating README for #{version}\"")
   # run("git push origin #{orig_branch}")
