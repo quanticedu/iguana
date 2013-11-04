@@ -141,6 +141,28 @@ class used to instantiate the document.</p></div></div><div class="code"><div cl
         <span class="p">});</span>
         
     <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="create-class-method">create class method</h3>
+
+<p>Calling the create method on a subclass will
+automatically set the appropriate class</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should set the sciProperty&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;item&#39;</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+            
+            <span class="kd">var</span> <span class="nx">ItemType1</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;item_type_1&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+            
+            <span class="kd">var</span> <span class="nx">expectedObject</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;__iguana_type&#39;</span><span class="o">:</span> <span class="s1">&#39;item_type_1&#39;</span><span class="p">}</span>
+            <span class="nx">ItemType1</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="nx">expectedObject</span><span class="p">,</span> <span class="p">{</span><span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">expectedObject</span><span class="p">]});</span>
+            <span class="nx">ItemType1</span><span class="p">.</span><span class="nx">create</span><span class="p">({});</span>
+            <span class="nx">ItemType1</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+        
+    <span class="p">});</span>
 
     
 <span class="p">});</span></div></div></div></div></body></html>

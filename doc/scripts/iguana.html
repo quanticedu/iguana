@@ -40,7 +40,6 @@
                                                         
                     <span class="k">return</span> <span class="p">{</span>
                         <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="k">this</span><span class="p">.</span><span class="nx">$$sourceAttrs</span> <span class="o">=</span> <span class="nx">attrs</span><span class="p">;</span>
                             <span class="k">if</span> <span class="p">(</span><span class="nx">attrs</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
                                 <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{};</span>
                             <span class="p">}</span>
@@ -53,12 +52,16 @@
                         <span class="p">},</span>
                         
                         <span class="nx">copyAttrsOnInitialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="nx">$$sourceAttrs</span> <span class="o">=</span> <span class="nx">attrs</span><span class="p">;</span>
                             <span class="k">this</span><span class="p">.</span><span class="nx">runCallbacks</span><span class="p">(</span><span class="s1">&#39;copyAttrsOnInitialize&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
                                 <span class="k">this</span><span class="p">.</span><span class="nx">copyAttrs</span><span class="p">();</span>
                             <span class="p">});</span>
                         <span class="p">},</span>
                         
                         <span class="nx">copyAttrs</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+                                <span class="k">this</span><span class="p">.</span><span class="nx">$$sourceAttrs</span> <span class="o">=</span> <span class="nx">attrs</span><span class="p">;</span>
+                            <span class="p">}</span>
                             <span class="k">this</span><span class="p">.</span><span class="nx">runCallbacks</span><span class="p">(</span><span class="s1">&#39;copyAttrs&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
                                 <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">$$sourceAttrs</span><span class="p">);</span>
                             <span class="p">});</span>

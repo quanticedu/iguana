@@ -24,10 +24,17 @@ def run(cmd, raise_on_error = true)
   [out, err]
 end
 
+def commit_and_push(branch, message)
+  run("git add .")
+  run("git commit -m\"#{message}\"")
+  run("git push origin #{branch}")
+end
+
 version = ENV['version'] || ARGV[0]
 
 orig_branch = run("git rev-parse --abbrev-ref HEAD")[0]
 run("grunt groc")
+commit_and_push(orig_branch, "Updating docs")
 
 Dir.mktmpdir do |tmpdir| 
   
@@ -68,9 +75,7 @@ Dir.mktmpdir do |tmpdir|
   end
   
   # # commit gh-pages branch and switch back to master
-  # run("git add .")
-  # run("git commit -m\"Adding version #{version} docs\"")
-  # run("git push origin gh-pages", false)
+  # commit_and_push("gh-pages", "Adding version #{version} docs\"")
   # run("git checkout #{orig_branch}", false)
   # 
   # # add links to the readme
