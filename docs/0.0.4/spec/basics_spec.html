@@ -1,0 +1,397 @@
+<!DOCTYPE html><html lang="en"><head><title>spec/basics_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/basics_spec"><meta name="groc-project-path" content="spec/basics_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/basics_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Iguana&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    
+    <span class="kd">var</span> <span class="nx">myApp</span><span class="p">;</span>
+    
+    <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="basics">Basics</h1></div></div><div class="code"><div class="wrapper">        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="include-iguana-in-your-app-and-configure-it">Include Iguana in your app and configure it.</h3>
+
+<p>Set the adapter and baseUrl in your app's config method.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">myApp</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Iguana&#39;</span><span class="p">])</span>
+            <span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">IguanaProvider</span><span class="p">)</span> <span class="p">{</span>
+                
+                <span class="c1">//Adapters allow Iguana to work with any crud api by translating</span>
+                <span class="c1">//between the api&#39;s expected format and Iguana&#39;s expected format.  Iguana</span>
+                <span class="c1">//currently ships with one built-in adapter, Iguana.Adapters.RestfulIdStyle,</span>
+                <span class="c1">//and one mock adapter for use in tests.  We&#39;re using the mock adapter here.</span>
+                <span class="nx">IguanaProvider</span><span class="p">.</span><span class="nx">setAdapter</span><span class="p">(</span><span class="s1">&#39;Iguana.Mock.Adapter&#39;</span><span class="p">);</span>
+                
+                <span class="c1">//Set the baseUrl for your api.  By default this id &#39;&#39;, </span>
+                <span class="c1">//so if you don&#39;t override it then it will </span>
+                <span class="c1">//hit your site&#39;s domain.</span>
+                <span class="nx">IguanaProvider</span><span class="p">.</span><span class="nx">setBaseUrl</span><span class="p">(</span><span class="s1">&#39;http:://baseurl&#39;</span><span class="p">);</span>
+                
+        <span class="p">});</span>
+        
+    <span class="p">});</span>
+    
+    
+    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should show an item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="create-an-iguana-class">Create an Iguana class</h3>
+
+<p>Create one Iguana class for each type of data you want to load up from your api.
+Iguana classes are based on <a href="https://github.com/pedago/a-class-above">a-class-above</a>'s OOP structure.
+Here, this.setCollection is calling a class method on our new Item class.</p>
+
+<p>The collection name is used for building urls when hitting the
+api. In this case, the urls for this class will be
+http:://baseurl/items.json or http:://baseurl/items/SOME_ID.json</p></div></div><div class="code"><div class="wrapper">        <span class="nx">myApp</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">){</span>
+            
+            <span class="k">return</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                
+                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">);</span>
+            <span class="p">});</span>
+            
+        <span class="p">});</span>  
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="fetch-something-from-your-api">Fetch something from your api</h3>
+
+<p>Create a controller that will load up a model from the api and use it
+for something</p></div></div><div class="code"><div class="wrapper">        <span class="c1">//Create controller</span>
+        <span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ShowItemController&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">$scope</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Here we are calling 'show' to load up a single item from the database,
+and then stick it onto the scope once it is loaded.  </p>
+
+<h3 id="aidqueryingaquerying"><a id='querying'></a>Querying</h3>
+
+<p>This example shows us passing an id to 'show', but what if you needed
+to run a more complex query?  The supported querying functionality for 'show' and
+'index' is defined by the adapter that you are using.  Check the documentation
+for your adapter for information on how to query.</p></div></div><div class="code"><div class="wrapper">            <span class="c1">//Call Item.show</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">itemId</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+                <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+            <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+        
+        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>        
+        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">MockIguana</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">,</span> <span class="nx">$controller</span><span class="p">,</span> <span class="nx">Item</span><span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">itemId</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">;</span>
+            
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[{</span>
+                    <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> 
+                    <span class="nx">someString</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
+                    <span class="nx">someNumber</span><span class="o">:</span> <span class="mf">1.4</span><span class="p">,</span>
+                    <span class="nx">someArray</span><span class="o">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+                    <span class="nx">someObject</span><span class="o">:</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">}</span>
+                    <span class="p">}],</span>
+                <span class="nx">meta</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>
+            <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;ShowItemController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">);</span>
+            
+            <span class="kd">var</span> <span class="nx">loadedItem</span> <span class="o">=</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">;</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The value of response.result is an instance of Item,
+and all of the properties that came over the api
+have been copied onto it.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">id</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">someString</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">someNumber</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mf">1.4</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">someArray</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">someObject</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">});</span>
+            
+        <span class="p">});</span>
+        
+    <span class="p">});</span>
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="setting-the-id-property">setting the id property</h3>
+
+<p>By default, Iguana assumes that your documents have a property called 'id'
+which includes a unique id for your document.  You can change the name of 
+the property that is used as the unique identifier with the <em>setIdProperty</em> class method.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">it</span> <span class="p">(</span><span class="s1">&#39;should allow the idProperty to be overridden&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        
+        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>        
+        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">setIdProperty</span><span class="p">(</span><span class="s1">&#39;customIdProp&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+            
+            <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span>
+                <span class="nx">customIdProp</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+        
+        
+        
+    <span class="p">});</span>
+    
+    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should add instance methods onto our model&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="add-instance-methods-to-your-class">Add instance methods to your class</h3>
+
+<p><a href="https://github.com/pedago/a-class-above">a-class-above</a> allows
+us to add instance methods to our class.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">myApp</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">){</span>
+            
+            <span class="k">return</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                                
+                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">);</span>
+                
+                <span class="c1">//We return an instance mixin that will be mixed in</span>
+                <span class="c1">//to our class.</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="nx">awesomeness</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">quality</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">});</span>
+            
+        <span class="p">});</span> 
+        
+        <span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ShowItemController&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">$scope</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
+            
+            <span class="c1">//Call Item.show</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">itemId</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+                <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+                <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;You loaded an item with an awesomeness level of &#39;</span><span class="o">+</span><span class="nx">item</span><span class="p">.</span><span class="nx">awesomeness</span><span class="p">());</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+        
+        <span class="c1">//This is the object that will come back from the api.  So we</span>
+        <span class="c1">//should expect to see an awesomeness level of 3 * 4 = 12</span>
+        <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="nx">size</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span> <span class="nx">quality</span><span class="o">:</span> <span class="mi">4</span><span class="p">};</span>
+        
+        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>        
+        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$rootScope</span><span class="p">,</span> <span class="nx">$controller</span><span class="p">,</span> <span class="nx">Item</span><span class="p">,</span> <span class="nx">$window</span><span class="p">,</span> <span class="nx">MockIguana</span><span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">itemId</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">;</span>
+            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">$window</span><span class="p">,</span> <span class="s1">&#39;alert&#39;</span><span class="p">);</span>
+            
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">attrs</span><span class="p">],</span>
+                <span class="nx">meta</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>
+            <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;ShowItemController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">);</span>
+            
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s1">&#39;You loaded an item with an awesomeness level of 12&#39;</span><span class="p">);</span>
+            
+        <span class="p">});</span>
+        
+    <span class="p">});</span>
+    
+    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should show many items&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+        <span class="nx">myApp</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">){</span>
+            
+            <span class="k">return</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                
+                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">);</span>
+            <span class="p">});</span>
+            
+        <span class="p">});</span>  
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="fetch-many-things-from-your-api">Fetch many things from your api</h3>
+
+<p>Create a controller that will load up models from the api</p></div></div><div class="code"><div class="wrapper">        <span class="c1">//Create controller</span>
+        <span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ListItemsController&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">$scope</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Call 'index' to load up a list of items from the database.  As with show,
+supported querying functionality is defined by the adapter (<a href="#querying">see note above</a>)</p></div></div><div class="code"><div class="wrapper">            <span class="c1">//Call Item.index</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">index</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+                <span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+            <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+        
+        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>        
+        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">MockIguana</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">,</span> <span class="nx">$controller</span><span class="p">,</span> <span class="nx">Item</span><span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
+            
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id1&#39;</span><span class="p">},</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id2&#39;</span><span class="p">}],</span>
+                <span class="nx">meta</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>
+            <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;ListItemsController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">);</span>
+            
+            <span class="kd">var</span> <span class="nx">loadedItems</span> <span class="o">=</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">items</span><span class="p">;</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItems</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItems</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
+            
+        <span class="p">});</span>
+        
+    <span class="p">});</span>
+    
+    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should let us save things, too&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        
+        <span class="nx">myApp</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">){</span>
+            
+            <span class="k">return</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                
+                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">);</span>
+            <span class="p">});</span>
+            
+        <span class="p">});</span>  
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="save-something">Save something</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        <span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;EditItemController&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">$scope</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If an itemId is passed into our controller, then it will
+load up the item so we can update it (Imagine there is a form
+on the screen with form elements found to properties on our item.)</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">itemId</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">itemId</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+                    <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+                <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+                <span class="p">});</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If no itemId is passed in then we will create a new one</p></div></div><div class="code"><div class="wrapper">                <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">();</span>
+            <span class="p">}</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Respond to some user action by calling item.save() and then 
+responding to success and failure conditions.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">$scope</span><span class="p">.</span><span class="nx">save</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">save</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Saved!&quot;</span><span class="p">);</span>
+                    <span class="p">},</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+                    <span class="p">});</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">});</span> 
+        
+        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>        
+        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">MockIguana</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">,</span> <span class="nx">$controller</span><span class="p">,</span> <span class="nx">Item</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
+            <span class="c1">//Creating a new item</span>
+            <span class="kd">var</span> <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
+            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">$window</span><span class="p">,</span> <span class="s1">&#39;alert&#39;</span><span class="p">);</span>
+            <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;EditItemController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The object that gets sent to the api will be the
+jsonified version of our instance (following the rules of
+angular.toJson).  This means that any property whose name does
+not start with '$' and whose value is not a function will be sent
+to the api's 'save' method.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">some</span> <span class="o">=</span> <span class="s2">&quot;value&quot;</span><span class="p">;</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">someNumber</span> <span class="o">=</span> <span class="mf">1.4</span><span class="p">;</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">someArray</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">];</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">someObject</span> <span class="o">=</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">};</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">ignoreThisFunction</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{};</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">$$ignoreThisProperty</span> <span class="o">=</span> <span class="s2">&quot;ignored&quot;</span><span class="p">;</span>
+            
+            <span class="kd">var</span> <span class="nx">expectedObject</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="nx">someString</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
+                <span class="nx">someNumber</span><span class="o">:</span> <span class="mf">1.4</span><span class="p">,</span>
+                <span class="nx">someArray</span><span class="o">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+                <span class="nx">someObject</span><span class="o">:</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">}</span>
+            <span class="p">}</span>
+            
+            <span class="c1">//Since the item does not have an id, we will call the &quot;create&quot;</span>
+            <span class="c1">//method on our api.</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">asJson</span><span class="p">(),</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">expectedObject</span><span class="p">],</span>
+                <span class="nx">meta</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">)</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s1">&#39;Saved!&#39;</span><span class="p">);</span>
+            
+            <span class="c1">//Updating an existing item</span>
+            <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">itemId</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">;</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="nx">prop</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">}],</span>
+                <span class="nx">meta</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>
+            <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;EditItemController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">prop</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">);</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">prop</span> <span class="o">=</span> <span class="s2">&quot;reset&quot;</span><span class="p">;</span>   
+            <span class="c1">//Since the item already has an id, we will call the &quot;update&quot;</span>
+            <span class="c1">//method on our api.</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">asJson</span><span class="p">(),</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()],</span>
+                <span class="nx">meta</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>         
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+            
+        <span class="p">});</span>      
+    <span class="p">});</span>
+    
+    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should event let us delete things&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        
+        <span class="nx">myApp</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">){</span>
+            
+            <span class="k">return</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                
+                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">);</span>
+            <span class="p">});</span>
+            
+        <span class="p">});</span>  
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="delete-something">Delete something</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        <span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;EditItemController&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">$scope</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If an itemId is passed into our controller, then it will
+load up the item so we can update it (Imagine there is a form
+on the screen with form elements found to properties on our item.)</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">itemId</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">itemId</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+                    <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+                <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+                <span class="p">});</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If no itemId is passed in then we will create a new one</p></div></div><div class="code"><div class="wrapper">                <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Item</span><span class="p">();</span>
+            <span class="p">}</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Respond to some user action by calling item.destroy() and then 
+responding to success and failure conditions.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">$scope</span><span class="p">.</span><span class="nx">destroy</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">destroy</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Destroyed!&quot;</span><span class="p">);</span>
+                    <span class="p">},</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+                    <span class="p">});</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">});</span> 
+        
+        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>        
+        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">MockIguana</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">,</span> <span class="nx">$controller</span><span class="p">,</span> <span class="nx">Item</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
+            
+            <span class="c1">//Deleting an existing item</span>
+            <span class="kd">var</span> <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
+            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">$window</span><span class="p">,</span> <span class="s1">&#39;alert&#39;</span><span class="p">);</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">itemId</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">;</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="nx">prop</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">}],</span>
+                <span class="nx">meta</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>
+            <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;EditItemController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">);</span>
+            
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">,</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[],</span>
+                <span class="nx">meta</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>         
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">destroy</span><span class="p">();</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s1">&#39;Destroyed!&#39;</span><span class="p">)</span>
+            
+        <span class="p">});</span>      
+    <span class="p">});</span>
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="testing">Testing</h3>
+
+<p>The dist folder of iguana includes a file for use in testing called iguana-mock.js.
+You will need to include that file when running tests in order to use the features 
+described here.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should be testable&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        
+        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Inject MockIguana into your test        </p></div></div><div class="code"><div class="wrapper">        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">MockIguana</span><span class="p">,</span> <span class="nx">Iguana</span><span class="p">){</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>set the adapter to Iguana.Mock.Adapter</p></div></div><div class="code"><div class="wrapper">            <span class="nx">Iguana</span><span class="p">.</span><span class="nx">setAdapter</span><span class="p">(</span><span class="s1">&#39;Iguana.Mock.Adapter&#39;</span><span class="p">);</span>
+            
+            <span class="kd">var</span> <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+            
+            <span class="kd">var</span> <span class="nx">itemLoaded</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Call 'expect' with the following args: <br />
+<strong>meth</strong> - can be any of: show, index, create, update, or destroy <br />
+<strong>args</strong> - an array of arguments that will be passed to the method <br />
+<strong>response</strong> - an object with <em>result</em> and <em>meta</em> keys. Values in <em>result</em> can be either vanilla objects or Iguana instances </p></div></div><div class="code"><div class="wrapper">            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="nx">prop</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">}],</span>
+                <span class="nx">meta</span><span class="o">:</span> <span class="p">{</span><span class="s1">&#39;some&#39;</span><span class="o">:</span> <span class="s1">&#39;metadata&#39;</span><span class="p">}</span>
+            <span class="p">});</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run some code that calls the expected method, in this case 'show'</p></div></div><div class="code"><div class="wrapper">            <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">itemLoaded</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">prop</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">);</span>
+            <span class="p">})</span>
+            
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">itemLoaded</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Call 'flush' to simulate the api call returning a response</p></div></div><div class="code"><div class="wrapper">            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">);</span>
+            
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">itemLoaded</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+        <span class="p">});</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>See all of the previous examples in this file for more examples on using
+MockIguana, expect, and flush in tests.</p></div></div><div class="code"><div class="wrapper">        
+    <span class="p">});</span>
+    
+<span class="p">});</span></div></div></div></div></body></html>
