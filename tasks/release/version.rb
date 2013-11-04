@@ -100,7 +100,8 @@ Dir.mktmpdir do |tmpdir|
   puts "* update the version in package.json"
   puts "* update the version in bower.json"
   puts "* update the version in the Installation section of README.md"
-  puts "* commit it: `git add .`; `git commit -m'version #{version}`; `git push origin #{orig_branch}`"
+  puts "* build it: `grunt build`"
+  puts "* commit it: `git add .`; `git commit -m'version #{version}'`; `git push origin #{orig_branch}`"
   puts "* tag it: `git tag -a v#{version} -m 'version #{version}'`; `git push origin --tags`"
   
   # run("git add .")
