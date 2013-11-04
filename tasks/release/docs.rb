@@ -83,18 +83,18 @@ Dir.mktmpdir do |tmpdir|
   commit_and_push("gh-pages", "Adding version #{version} docs")
   run("git checkout #{orig_branch}", false)
   
-  # # add links to the readme
-  # # add links to readme file
-  # readme = File.read("README.md")
-  # header = "### Documentation"
-  # head, tail = readme.split(header)
-  # File.open("README.md", "w+") do |f|
-  #   f.write(head)
-  #   f.write("#{header}\n\n")
-  #   versions.each do |_version|
-  #     f.write("[#{_version}](http://www.pedago.com/iguana/docs/#{_version})")
-  #   end
-  # end
+  # add links to the readme
+  # add links to readme file
+  readme = File.read("README.md")
+  header = "### Documentation"
+  head, tail = readme.split(header)
+  File.open("README.md", "w+") do |f|
+    f.write(head)
+    f.write("#{header}\n\n")
+    versions.each do |_version|
+      f.write("[#{_version}](http://www.pedago.com/iguana/docs/#{_version})")
+    end
+  end
   # run("git add .")
   # run("git commit -m\"Updating README for #{version}\"")
   # run("git push origin #{orig_branch}")
