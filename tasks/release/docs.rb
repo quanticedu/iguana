@@ -49,20 +49,44 @@ Dir.mktmpdir do |tmpdir|
   end
   
   
-  # copy the docs to the right place an add a link to the index file
+  # copy the docs to the right place
   begin
     FileUtils.rm_r("docs/#{version}")
   rescue; end
   FileUtils.mv(tmp_doc_dir, "docs/#{version}")
-  unless File.read("index.html").match("docs/#{version}")
-    File.open("index.html", "a+") do |f|
-      f.write("<br/>\n<a href=\"docs/#{version}\">Version #{version}</a>")
+      
+  versions = Dir.glob("#{tmp_doc_dir}/*").map do |dir| 
+    dir.match(/\/([\d\.]+)$/)[1] 
+  end.compact.sort.reverse    
+      
+  # add links to index file
+  File.open("index.html", "w+") do |f|
+    f.write("<h1>Iguana Docs</h1>\n\n")
+    versions.each do |version|
+      f.write("<a href=\"docs/#{version}\">Version #{version}</a><br/>\n")
     end
   end
   
-  run("git add .")
-  run("git commit -m\"Adding version #{version} docs\"")
-  run("git push origin gh-pages", false)
-  run("git checkout #{orig_branch}", false)
+  # # commit gh-pages branch and switch back to master
+  # run("git add .")
+  # run("git commit -m\"Adding version #{version} docs\"")
+  # run("git push origin gh-pages", false)
+  # run("git checkout #{orig_branch}", false)
+  # 
+  # # add links to the readme
+  # # add links to readme file
+  # readme = File.read("README.md")
+  # header = "### Documentation"
+  # head, tail = readme.split(header)
+  # File.open("README.md", "w+") do |f|
+  #   f.write(head)
+  #   f.write("#{header}\n\n")
+  #   versions.each do |version|
+  #     f.write("[#{version}](http://www.pedago.com/iguana/docs/#{version})")
+  #   end
+  # end
+  # run("git add .")
+  # run("git commit -m\"Updating README for #{version}\"")
+  # run("git push origin #{orig_branch}")
   
 end
