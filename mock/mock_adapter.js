@@ -8,7 +8,7 @@ angular.module('Iguana')
                     this.meth = meth;
                     this.adapter = adapter;
                     this.mockedResult = result;
-                    this.mockedMeta = {};
+                    this.mockedMeta = null;
                     this.mockedError = null;
                     try {
                         //We need a try/catch because, if expect is called multiple times,
@@ -45,14 +45,22 @@ angular.module('Iguana')
                     }
                     
                     if (response.meta) {
-                        this.mockedMeta = response.meta;
+                        this.returnsMeta(response.meta);
                     }
                     
                     if (response.error) {
-                        this.mockedError = response.error;
+                        this.fails(response.error);
                     }
                     
                     return this;
+                },
+                
+                fails: function(err) {
+                    this.mockedError = err;
+                },
+                
+                returnsMeta: function(meta) {
+                    this.mockedMeta = meta;
                 },
                 
                 mockCalled: function() {

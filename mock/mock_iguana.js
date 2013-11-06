@@ -16,6 +16,8 @@ angular.module('Iguana')
             
             if (response) {
                 expectation.returns(response);
+            } else {
+                expectation.returns(this.new());
             }
             
             return expectation;
