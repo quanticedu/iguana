@@ -6,25 +6,19 @@ angular.module('Iguana')
     Iguana.extend({
         
         expect: function(meth, args, response) {
-            if( Object.prototype.toString.call( args ) !== '[object Array]' ) {
-                args = [args];
+            var expectation = this.adapter().expect(meth).withCollection(this.collection);
+            
+            // we really shouldn't accept args and response, but supporting
+            // some old tests
+            if (args) {
+                expectation.toBeCalledWith(args);
+            }            
+            
+            if (response) {
+                expectation.returns(response);
             }
             
-            var result = response.result;
-            if( Object.prototype.toString.call( result ) !== '[object Array]' ) {
-                result = [result];
-            }
-            
-            var _result = [];
-            angular.forEach(result, function(instance){
-                _result.push(instance.asJson ? instance.asJson() : instance);
-            });
-            this.adapter().expect(
-                meth, 
-                this.collection, 
-                args, 
-                {result: _result, meta: response.meta}
-            );
+            return expectation;
         },
         
         flush: function() {

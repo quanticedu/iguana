@@ -20,6 +20,7 @@ angular.module('Iguana')
                 
                 withCollection: function(collection) {
                     this.collection = collection;
+                    return this;
                 },
                 
                 toBeCalledWith: function(args) {
@@ -27,6 +28,7 @@ angular.module('Iguana')
                         args = [args];
                     }
                     this.expectedArgs = args;
+                    return this;
                 },
                 
                 returns: function(response) {
@@ -39,7 +41,7 @@ angular.module('Iguana')
                     }
                     
                     if (this.mockedResult && Object.prototype.toString.call( this.mockedResult ) !== '[object Array]') {
-                        throw new Error("result should be an array, as adapters always return an array of results");
+                        this.mockedResult = [this.mockedResult];
                     }
                     
                     if (response.meta) {
@@ -49,6 +51,8 @@ angular.module('Iguana')
                     if (response.error) {
                         this.mockedError = response.error;
                     }
+                    
+                    return this;
                 },
                 
                 mockCalled: function() {
@@ -119,6 +123,9 @@ angular.module('Iguana')
                 },
                 
                 expect: function(meth, collection, expectedArgs, response) {
+                    // we really shouldn't accept collection, expectedArgs or response, but supporting
+                    // some old tests
+                    
                     var expectation = new Expectation(this, meth);
                     if (collection) {
                         expectation.withCollection(collection);
@@ -132,6 +139,8 @@ angular.module('Iguana')
                     }
                     
                     this._pendingExpectations()[meth].push(expectation);
+                    
+                    return expectation;
                 },
                 
                 flush: function(meth) {
