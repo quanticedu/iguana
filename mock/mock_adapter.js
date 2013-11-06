@@ -1,5 +1,97 @@
 angular.module('Iguana')
-.factory('Iguana.Mock.Adapter', ['Iguana.Adapters.AdapterBase', '$q', '$rootScope', function(AdapterBase, $q, $rootScope){
+.factory('Iguana.Mock.Adapter', ['Iguana.Adapters.AdapterBase', '$q', '$rootScope', 'AClassAbove', function(AdapterBase, $q, $rootScope, AClassAbove){
+    
+        var Expectation = AClassAbove.subclass(function() {
+            
+            return {
+                initialize: function(adapter, meth, result) {
+                    this.meth = meth;
+                    this.adapter = adapter;
+                    this.mockedResult = result;
+                    this.mockedMeta = {};
+                    this.mockedError = null;
+                    try {
+                        //We need a try/catch because, if expect is called multiple times,
+                        //then spyOn will complain about being called twice on the same
+                        //method.
+                        spyOn(adapter, meth).andCallThrough();
+                    } catch(e) {}
+                },
+                
+                withCollection: function(collection) {
+                    this.collection = collection;
+                },
+                
+                toBeCalledWith: function(args) {
+                    if (Object.prototype.toString.call( args ) !== '[object Array]') {
+                        args = [args];
+                    }
+                    this.expectedArgs = args;
+                },
+                
+                returns: function(response) {
+                    if (!response.result && !response.meta && !response.error) {
+                        this.mockedResult = response;
+                    }
+                    
+                    if (response.result) {
+                        this.mockedResult = response.result;
+                    }
+                    
+                    if (this.mockedResult && Object.prototype.toString.call( this.mockedResult ) !== '[object Array]') {
+                        throw new Error("result should be an array, as adapters always return an array of results");
+                    }
+                    
+                    if (response.meta) {
+                        this.mockedMeta = response.meta;
+                    }
+                    
+                    if (response.error) {
+                        this.mockedError = response.error;
+                    }
+                },
+                
+                mockCalled: function() {
+                    this.deferred = $q.defer();
+                    return this.deferred.promise;
+                },
+                
+                resolve: function() {
+                    var meth = this.adapter[this.meth]
+                    if (!meth.calls || meth.calls.length < 1) {
+                        throw new Error('Expected '+this.meth+' to have been called, but it was not.');
+                    }
+                    
+                    var call = meth.calls[0];
+                    var args = call.args;
+                    var collection = args.shift();
+                    
+                    if (this.collection) {
+                        if (collection != this.collection) {
+                            throw new Error('Expected '+this.meth+' to have been called on the collection '+this.collection+' but it was called on '+collection+'.');
+                        }
+                    }
+                    
+                    if (this.expectedArgs) {
+                        expect(args).toEqual(this.expectedArgs);
+                    }
+                    
+                    if (this.mockedError) {
+                        this.deferred.reject(this.mockedError);
+                    } else {
+                        this.deferred.resolve({
+                            result: this.mockedResult,
+                            meta: this.mockedMeta
+                        });
+                    }
+                    
+                }
+            };
+            
+        });    
+        
+        
+        
         
         return AdapterBase.subclass(function() {
             
@@ -27,48 +119,32 @@ angular.module('Iguana')
                 },
                 
                 expect: function(meth, collection, expectedArgs, response) {
-                    var error = response.error;
-                    expectedArgs = [collection].concat(expectedArgs);
-                    delete response.error;
-                    try {
-                        //We need a try/catch because, if expect is called multiple times,
-                        //then spyOn will complain about being called twice on the same
-                        //method.
-                        spyOn(this, meth).andCallThrough();
-                    } catch(e) {}
-                    
-                    if (response.result && Object.prototype.toString.call( response.result ) !== '[object Array]') {
-                        throw new Error("response.result should be an array, as adapters always return an array of results");
+                    var expectation = new Expectation(this, meth);
+                    if (collection) {
+                        expectation.withCollection(collection);
                     }
-                    this._pendingResponses()[meth].push({
-                        response: response,
-                        expectedArgs: expectedArgs,
-                        error: error
-                    });
+                    if (expectedArgs) {
+                        
+                        expectation.toBeCalledWith(expectedArgs);
+                    }
+                    if (response) {
+                        expectation.returns(response);
+                    }
+                    
+                    this._pendingExpectations()[meth].push(expectation);
                 },
                 
                 flush: function(meth) {
                     if (!meth) {
                         throw new Error("You must pass a meth (i.e. show, index, ...) to flush()");
                     }
-                    var deferred = this._pendingQs()[meth] && this._pendingQs()[meth].shift();
-                    if (!deferred) {
+                    var expectation = this._pendingExpectations()[meth] && this._pendingExpectations()[meth].shift();
+                    if (!expectation) {
                         throw new Error('No '+meth+' requests pending.');
                     }
-                    if (deferred) {
-                        var _pendingResponses = this._pendingResponses()[meth].shift();
-                        if (!_pendingResponses) {
-                            throw new Error('No result pending for '+meth+'.  You need to call expect("'+meth+', EXPECTED_RESULT")');
-                        }                        
-                        var expectation = expect(this[meth]);
-                        expectation.toHaveBeenCalledWith.apply(expectation, _pendingResponses.expectedArgs);
-                        if (_pendingResponses.error) {
-                            deferred.reject(_pendingResponses.error);
-                        } else {
-                            deferred.resolve(_pendingResponses.response);
-                        }                        
-                        $rootScope.$apply();
-                    }
+                    
+                    expectation.resolve(); 
+                    $rootScope.$apply();
                 },
                 
                 _pendingQs: function() {
@@ -78,20 +154,19 @@ angular.module('Iguana')
                     return this.__pendingQs;
                 },
                 
-                _pendingResponses: function() {
-                    if (!this.__pendingResponses) { 
-                        this.__pendingResponses = this._initialPendingHash();
+                _pendingExpectations: function() {
+                    if (!this.__pendingExpectations) { 
+                        this.__pendingExpectations = this._initialPendingHash();
                     }
-                    return this.__pendingResponses;
+                    return this.__pendingExpectations;
                 },
                 
                 _makeApiCall: function(collection, meth) {
-                    var deferred = $q.defer();
-                    if (!this._pendingResponses()[meth][0]) {
-                        throw new Error('Unexpected call to '+meth+'.  You need to call expect()');
+                    var expectation = this._pendingExpectations()[meth][0]
+                    if (!expectation) {
+                        throw new Error('Unexpected call to '+meth+'.  You need to call expect("'+meth+'")');
                     };                 
-                    this._pendingQs()[meth].push(deferred);
-                    return deferred.promise;
+                    return expectation.mockCalled();
                 },
                 
                 _initialPendingHash: function() {

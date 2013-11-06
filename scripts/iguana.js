@@ -34,6 +34,12 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                         }
                     }.bind(this));
                     
+                    this.extend({
+                        expect: function() {
+                            throw new Error("There is no 'expect' method.  Make sure to include iguana-mock.js and inject MockIguana.")
+                        }
+                    });
+                    
                     //We always want to call the superclass's initialize so 
                     //that we can have initialize callbacks.
                     var subclassWithoutIguana = this.subclass;
