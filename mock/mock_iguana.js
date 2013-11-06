@@ -16,7 +16,9 @@ angular.module('Iguana')
             
             if (response) {
                 expectation.returns(response);
-            } else {
+            } else if (meth == "index") {
+                expectation.returns([this.new()]);
+            } else if (meth == "show" || meth == "update" || meth == "create") {
                 expectation.returns(this.new());
             }
             

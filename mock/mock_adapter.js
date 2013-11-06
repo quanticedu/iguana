@@ -32,17 +32,32 @@ angular.module('Iguana')
                 },
                 
                 returns: function(response) {
-                    if (!response.result && !response.meta && !response.error) {
+                    console.log(1, response);
+                    if (Object.prototype.toString.call( response ) == '[object Array]') {
+                        this.mockedResult = response;
+                    } else if (!response.result && !response.meta && !response.error) {
                         this.mockedResult = response;
                     }
+                    console.log(' 2 ---> ', this.mockedResult);
                     
                     if (response.result) {
                         this.mockedResult = response.result;
                     }
                     
+                    console.log(' 3 ---> ', this.mockedResult);
+                    
                     if (this.mockedResult && Object.prototype.toString.call( this.mockedResult ) !== '[object Array]') {
+                        console.log('here!!! ', this.mockedResult);
                         this.mockedResult = [this.mockedResult];
                     }
+                    
+                    // is this necessary?
+                    // if (this.mockedResult) {
+                    //     angular.forEach(this.mockedResult, function(item, i) {
+                    //         this.mockedResult[i] = item.asJson ? item.asJson() : item;
+                    //     }.bind(this));
+                    // }
+                    // 
                     
                     if (response.meta) {
                         this.returnsMeta(response.meta);

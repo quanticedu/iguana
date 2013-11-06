@@ -44,8 +44,8 @@ describe('IguanaMock', function() {
                 );
             };
             
-            this.index = function() {
-                return Item.index().then(
+            this.index = function(query) {
+                return Item.index(query).then(
                     // success callback
                     function(response){
                         $scope.itemList = response.result;
@@ -129,7 +129,7 @@ describe('IguanaMock', function() {
             expect(scope.item.constructor).toBe(Item);
         });
         
-        // ## toBeCalledWith
+        // ### toBeCalledWith
         // You can indicate the arguments you expect to be passed to the
         // method with _toBeCalledWith_
         it('should work with toBeCalledWith', function() {
@@ -141,7 +141,7 @@ describe('IguanaMock', function() {
             expect(scope.item.constructor).toBe(Item);
         });
         
-        // ## returns
+        // ### returns
         // You can indicate the response that comes back from the server
         it('should work with returns and a full response', function() {
             var controller = $controller("ItemController", {$scope: scope});
@@ -187,6 +187,7 @@ describe('IguanaMock', function() {
             expect(scope.item).toEqual(item);
         });
         
+        // ## returnsMeta
         // If you just care about the metadata, then you can set it with
         // _returnsMeta_
         it('should work with returnsMeta', function() {
@@ -199,6 +200,7 @@ describe('IguanaMock', function() {
             expect($window.alert).toHaveBeenCalledWith('some metadata came back');
         });
         
+        // ## fails
         // If you want the api call to fail, you can call _fail_
         it('should work with fail', function() {
             var controller = $controller("ItemController", {$scope: scope});
@@ -211,7 +213,104 @@ describe('IguanaMock', function() {
         
     });
     
-    
+    // ## Mocking Index
+    describe('mocking index', function() {
+        
+        // ### Basics
+        it('should work with no special features set', function() {
+            // In most cases, making mock api calls will involve 3 steps.     
+            var controller = $controller("ItemController", {$scope: scope});
+            Item.expect('index');
+            controller.index();
+            Item.flush('index');
+            expect(scope.itemList).not.toEqual([]);
+            expect(scope.itemList[0].constructor).toBe(Item);
+        });
+        
+        // ### toBeCalledWith
+        // You can indicate the arguments you expect to be passed to the
+        // method with _toBeCalledWith_
+        it('should work with toBeCalledWith', function() {
+            var controller = $controller("ItemController", {$scope: scope});
+            Item.expect('index').toBeCalledWith('someQuery');
+            controller.index('someQuery');
+            Item.flush('index');
+            expect(scope.itemList).not.toEqual([]);
+            expect(scope.itemList[0].constructor).toBe(Item);
+        });
+        
+        // ### returns
+        // You can indicate the response that comes back from the server
+        it('should work with returns and a full response', function() {
+            var controller = $controller("ItemController", {$scope: scope});
+            Item.expect('index').returns({
+                result: [{foo: 'bar'}], 
+                meta: {message: 'some metadata came back'}
+            });
+            controller.index();
+            Item.flush('index');
+            expect(scope.itemList).not.toEqual([]);
+            expect(scope.itemList[0].constructor).toBe(Item);
+            expect(scope.itemList[0].foo).toBe('bar');
+            expect($window.alert).toHaveBeenCalledWith('some metadata came back');
+        });
+        
+        // If you don't expect any metadata, then you can just pass the result
+        // to _returns_
+        it('should work with returns and just a result hash', function() {
+            var controller = $controller("ItemController", {$scope: scope});
+            Item.expect('index').returns([{foo: 'bar'}]);
+            controller.index('id');
+            Item.flush('index');
+            expect(scope.itemList).not.toEqual([]);
+            expect(scope.itemList[0].constructor).toBe(Item);
+            expect(scope.itemList[0].foo).toBe('bar');
+            expect($window.alert).not.toHaveBeenCalled();
+        });        
+        
+        // You can pass a list of instances instead of a hash to returns
+        it('should work with returns and just a list of result instances', function() {
+            var controller = $controller("ItemController", {$scope: scope});
+            var items = [Item.new({foo: 'bar'})];
+            var ex = Item.expect('index').returns(items);
+            controller.index();
+            Item.flush('index');
+            expect(scope.itemList).not.toEqual([]);
+            expect(scope.itemList[0].constructor).toBe(Item);
+            expect(scope.itemList[0].foo).toBe('bar');
+            
+            // Note: the instance that comes back has the same attributes
+            // as the instance that was passed in, but it is not
+            // the same object.
+            expect(scope.itemList[0]).not.toBe(items[0]);
+            expect(scope.itemList[0]).toEqual(items[0]);
+        });
+        
+        // ## returnsMeta
+        // If you just care about the metadata, then you can set it with
+        // _returnsMeta_
+        it('should work with returnsMeta', function() {
+            var controller = $controller("ItemController", {$scope: scope});
+            Item.expect('index').returnsMeta({message: 'some metadata came back'});
+            controller.index();
+            Item.flush('index');
+            expect(scope.itemList).not.toEqual([]);
+            expect(scope.itemList[0].constructor).toBe(Item);
+            expect($window.alert).toHaveBeenCalledWith('some metadata came back');
+        });
+        
+        // ## fails
+        // If you want the api call to fail, you can call _fail_
+        it('should work with fail', function() {
+            var controller = $controller("ItemController", {$scope: scope});
+            Item.expect('index').fails({message: 'An Error'});
+            controller.index();
+            Item.flush('index');
+            expect(scope.itemList).toEqual([]);
+            expect($window.alert).toHaveBeenCalledWith('An Error');
+        });
+        
+    });    
     
     
 });
