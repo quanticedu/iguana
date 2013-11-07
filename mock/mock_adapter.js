@@ -32,17 +32,6 @@ angular.module('Iguana')
                     
                 },
                 
-                spyOn: function(meth) {
-                    try {
-                        //We need a try/catch because, 
-                        //if expect is called multiple times,
-                        //then spyOn will complain about being 
-                        //called twice on the same
-                        //method.
-                        spyOn(this.adapter, meth).andCallThrough();
-                    } catch(e) {}
-                },
-                
                 withCollection: function(collection) {
                     this.collection = collection;
                     return this;
@@ -79,10 +68,6 @@ angular.module('Iguana')
                         this.fails(response.error);
                     }
                     
-                    if (this.meth == "destroy" && this.mockedResult && angular.toJson(this.mockedResult) != "[]") {
-                        throw new Error("destroy always returns an empty result, so you cannot mock out a different result.")
-                    }
-                    
                     return this;
                 },
                 
@@ -99,25 +84,20 @@ angular.module('Iguana')
                     return this.deferred.promise;
                 },
                 
-                methIs: function() {
-                    return Array.prototype.slice.call(arguments, 0).indexOf(this.meth) > -1
-                },
-                
-                resolve: function() {
-                    var methName = this.meth;
-                    var meth = this.adapter[methName];
-                    if (this.meth == "save") {
-                        if (this.adapter.update.calls.length > 0 ) {
-                            meth = this.adapter.update;
-                            methName = "save/update";
-                        } else if (this.adapter.create.calls.length > 0 ) {
-                            meth = this.adapter.create;
-                            methName = "save/create";
-                        }
+                resolve: function(actualMeth, displayName) {
+                    //see Save class below
+                    if (!actualMeth) {
+                        actualMeth = this.meth; 
                     }
                     
+                    //see Save class below
+                    if (!displayName) {
+                        displayName = this.meth;
+                    }
+                    var meth = this.adapter[actualMeth];
+                                        
                     if (!meth || !meth.calls || meth.calls.length < 1) {
-                        throw new Error('Expected '+methName+' to have been called, but it was not.');
+                        throw new Error('Expected '+displayName+' to have been called, but it was not.');
                     }
                     
                     var call = meth.calls.shift();
@@ -126,16 +106,12 @@ angular.module('Iguana')
                     
                     if (this.collection) {
                         if (collection != this.collection) {
-                            throw new Error('Expected '+methName+' to have been called on the collection '+this.collection+' but it was called on '+collection+'.');
+                            throw new Error('Expected '+displayName+' to have been called on the collection '+this.collection+' but it was called on '+collection+'.');
                         }
                     }
-                                
-                    if (this.methIs('create', 'update', 'save') && !this.mockedResult) {
-                        this.returns(args[0]);
-                    } else if (this.methIs('show', 'index') && !this.mockedResult) {
-                        this.returns({});
-                    } else if(this.methIs('destroy')) {
-                        this.returns([]);
+                    
+                    if (!this.mockedResult) {
+                        this.returns(this.defaultResult(args));
                     }
                     
                     if (this.expectedArgs) {
@@ -151,12 +127,35 @@ angular.module('Iguana')
                         });
                     }
                     
+                },
+                
+                //private
+                spyOn: function(meth) {
+                    try {
+                        //We need a try/catch because, 
+                        //if expect is called multiple times,
+                        //then spyOn will complain about being 
+                        //called twice on the same
+                        //method.
+                        spyOn(this.adapter, meth).andCallThrough();
+                    } catch(e) {}
+                },
+                
+                //private
+                methIs: function() {
+                    return Array.prototype.slice.call(arguments, 0).indexOf(this.meth) > -1
                 }
             };
             
         });   
         
-        Expectation.Show = Expectation.subclass({
+        Expectation.SuperGet = Expectation.subclass({
+            defaultResult: function(args) {
+                return {};
+            }
+        });
+        
+        Expectation.Show = Expectation.SuperGet.subclass({
             
             initialize: function($super, adapter, result) {
                 $super(adapter, 'show', result);
@@ -164,7 +163,7 @@ angular.module('Iguana')
             }
         });
         
-        Expectation.Index = Expectation.subclass({
+        Expectation.Index = Expectation.SuperGet.subclass({
             
             initialize: function($super, adapter, result) {
                 $super(adapter, 'index', result);
@@ -172,7 +171,13 @@ angular.module('Iguana')
             }
         });
         
-        Expectation.Create = Expectation.subclass({
+        Expectation.SuperSave = Expectation.subclass({
+            defaultResult: function(args) {
+                return args[0];
+            }
+        });
+        
+        Expectation.Create = Expectation.SuperSave.subclass({
             
             initialize: function($super, adapter, result) {
                 $super(adapter, 'create', result);
@@ -180,7 +185,7 @@ angular.module('Iguana')
             }
         });
         
-        Expectation.Update = Expectation.subclass({
+        Expectation.Update = Expectation.SuperSave.subclass({
             
             initialize: function($super, adapter, result) {
                 $super(adapter, 'update', result);
@@ -188,12 +193,22 @@ angular.module('Iguana')
             }
         });
         
-        Expectation.Save = Expectation.subclass({
+        Expectation.Save = Expectation.SuperSave.subclass({
             
             initialize: function($super, adapter, result) {
                 $super(adapter, 'save', result);
                 this.spyOn('create');
                 this.spyOn('update');
+            },
+            
+            resolve: function($super) {
+                if (this.adapter.update.calls.length > 0 ) {
+                    $super('update', 'save/update');
+                } else if (this.adapter.create.calls.length > 0 ) {
+                    $super('create', 'save/create');
+                } else {
+                    throw new Error('Expected create or update to have been called, but neither was.');
+                }
             }
         });
         
@@ -202,6 +217,18 @@ angular.module('Iguana')
             initialize: function($super, adapter, result) {
                 $super(adapter, 'destroy', result);
                 this.spyOn('destroy');
+            },
+            
+            returns: function($super, response) {
+                $super(response);
+                
+                if (this.mockedResult && angular.toJson(this.mockedResult) != "[]") {
+                    throw new Error("destroy always returns an empty result, so you cannot mock out a different result.")
+                }
+            },
+            
+            defaultResult: function(args) {
+                return [];
             }
         });
         
