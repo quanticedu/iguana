@@ -3,18 +3,43 @@ angular.module('Iguana')
     
         var Expectation = AClassAbove.subclass(function() {
             
+            this.extend({
+                new: function(adapter, meth, result) {
+                    var klass = {
+                        'show': this.Show,
+                        'index': this.Index,
+                        'create': this.Create,
+                        'update': this.Update,
+                        'save': this.Save,
+                        'destroy':  this.Destroy
+                    }[meth];
+                    if (!klass) {
+                        throw new Error('Unexpected meth "'+meth+'"');
+                    }
+                    return new klass(adapter, result);
+                }
+            });
+            
             return {
                 initialize: function(adapter, meth, result) {
                     this.meth = meth;
                     this.adapter = adapter;
-                    this.mockedResult = result;
+                    if (result) {
+                        this.returns(result);
+                    };
                     this.mockedMeta = null;
                     this.mockedError = null;
+                    
+                },
+                
+                spyOn: function(meth) {
                     try {
-                        //We need a try/catch because, if expect is called multiple times,
-                        //then spyOn will complain about being called twice on the same
+                        //We need a try/catch because, 
+                        //if expect is called multiple times,
+                        //then spyOn will complain about being 
+                        //called twice on the same
                         //method.
-                        spyOn(adapter, meth).andCallThrough();
+                        spyOn(this.adapter, meth).andCallThrough();
                     } catch(e) {}
                 },
                 
@@ -32,32 +57,19 @@ angular.module('Iguana')
                 },
                 
                 returns: function(response) {
-                    console.log(1, response);
                     if (Object.prototype.toString.call( response ) == '[object Array]') {
                         this.mockedResult = response;
                     } else if (!response.result && !response.meta && !response.error) {
                         this.mockedResult = response;
                     }
-                    console.log(' 2 ---> ', this.mockedResult);
                     
                     if (response.result) {
                         this.mockedResult = response.result;
                     }
-                    
-                    console.log(' 3 ---> ', this.mockedResult);
-                    
+                                        
                     if (this.mockedResult && Object.prototype.toString.call( this.mockedResult ) !== '[object Array]') {
-                        console.log('here!!! ', this.mockedResult);
                         this.mockedResult = [this.mockedResult];
                     }
-                    
-                    // is this necessary?
-                    // if (this.mockedResult) {
-                    //     angular.forEach(this.mockedResult, function(item, i) {
-                    //         this.mockedResult[i] = item.asJson ? item.asJson() : item;
-                    //     }.bind(this));
-                    // }
-                    // 
                     
                     if (response.meta) {
                         this.returnsMeta(response.meta);
@@ -65,6 +77,10 @@ angular.module('Iguana')
                     
                     if (response.error) {
                         this.fails(response.error);
+                    }
+                    
+                    if (this.meth == "destroy" && this.mockedResult && angular.toJson(this.mockedResult) != "[]") {
+                        throw new Error("destroy always returns an empty result, so you cannot mock out a different result.")
                     }
                     
                     return this;
@@ -83,20 +99,43 @@ angular.module('Iguana')
                     return this.deferred.promise;
                 },
                 
+                methIs: function() {
+                    return Array.prototype.slice.call(arguments, 0).indexOf(this.meth) > -1
+                },
+                
                 resolve: function() {
-                    var meth = this.adapter[this.meth]
-                    if (!meth.calls || meth.calls.length < 1) {
-                        throw new Error('Expected '+this.meth+' to have been called, but it was not.');
+                    var methName = this.meth;
+                    var meth = this.adapter[methName];
+                    if (this.meth == "save") {
+                        if (this.adapter.update.calls.length > 0 ) {
+                            meth = this.adapter.update;
+                            methName = "save/update";
+                        } else if (this.adapter.create.calls.length > 0 ) {
+                            meth = this.adapter.create;
+                            methName = "save/create";
+                        }
                     }
                     
-                    var call = meth.calls[0];
+                    if (!meth || !meth.calls || meth.calls.length < 1) {
+                        throw new Error('Expected '+methName+' to have been called, but it was not.');
+                    }
+                    
+                    var call = meth.calls.shift();
                     var args = call.args;
                     var collection = args.shift();
                     
                     if (this.collection) {
                         if (collection != this.collection) {
-                            throw new Error('Expected '+this.meth+' to have been called on the collection '+this.collection+' but it was called on '+collection+'.');
+                            throw new Error('Expected '+methName+' to have been called on the collection '+this.collection+' but it was called on '+collection+'.');
                         }
+                    }
+                                
+                    if (this.methIs('create', 'update', 'save') && !this.mockedResult) {
+                        this.returns(args[0]);
+                    } else if (this.methIs('show', 'index') && !this.mockedResult) {
+                        this.returns({});
+                    } else if(this.methIs('destroy')) {
+                        this.returns([]);
                     }
                     
                     if (this.expectedArgs) {
@@ -115,7 +154,56 @@ angular.module('Iguana')
                 }
             };
             
-        });    
+        });   
+        
+        Expectation.Show = Expectation.subclass({
+            
+            initialize: function($super, adapter, result) {
+                $super(adapter, 'show', result);
+                this.spyOn('show');
+            }
+        });
+        
+        Expectation.Index = Expectation.subclass({
+            
+            initialize: function($super, adapter, result) {
+                $super(adapter, 'index', result);
+                this.spyOn('index');
+            }
+        });
+        
+        Expectation.Create = Expectation.subclass({
+            
+            initialize: function($super, adapter, result) {
+                $super(adapter, 'create', result);
+                this.spyOn('create');
+            }
+        });
+        
+        Expectation.Update = Expectation.subclass({
+            
+            initialize: function($super, adapter, result) {
+                $super(adapter, 'update', result);
+                this.spyOn('update');
+            }
+        });
+        
+        Expectation.Save = Expectation.subclass({
+            
+            initialize: function($super, adapter, result) {
+                $super(adapter, 'save', result);
+                this.spyOn('create');
+                this.spyOn('update');
+            }
+        });
+        
+        Expectation.Destroy = Expectation.subclass({
+            
+            initialize: function($super, adapter, result) {
+                $super(adapter, 'destroy', result);
+                this.spyOn('destroy');
+            }
+        });
         
         
         
@@ -149,7 +237,7 @@ angular.module('Iguana')
                     // we really shouldn't accept collection, expectedArgs or response, but supporting
                     // some old tests
                     
-                    var expectation = new Expectation(this, meth);
+                    var expectation = Expectation.new(this, meth);
                     if (collection) {
                         expectation.withCollection(collection);
                     }
@@ -161,6 +249,9 @@ angular.module('Iguana')
                         expectation.returns(response);
                     }
                     
+                    if (!this._pendingExpectations()[meth]) {
+                        throw new Error('"'+ meth +'" is not a supported method.  Supported methods are show/index/create/update/save/destroy');
+                    }
                     this._pendingExpectations()[meth].push(expectation);
                     
                     return expectation;
@@ -195,6 +286,9 @@ angular.module('Iguana')
                 
                 _makeApiCall: function(collection, meth) {
                     var expectation = this._pendingExpectations()[meth][0]
+                    if (!expectation && (meth == "create" || meth == "update")) {
+                        expectation = this._pendingExpectations()['save'][0];
+                    }
                     if (!expectation) {
                         throw new Error('Unexpected call to '+meth+'.  You need to call expect("'+meth+'")');
                     };                 
@@ -207,6 +301,7 @@ angular.module('Iguana')
                         index: [],
                         create: [],
                         update: [],
+                        save: [],
                         destroy: []
                     };
                 }

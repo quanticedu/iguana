@@ -486,14 +486,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                     "slug": "delete-something"
                   },
                   "depth": 3
-                }, {
-                  "type": "heading",
-                  "data": {
-                    "level": 3,
-                    "title": "Testing",
-                    "slug": "testing"
-                  },
-                  "depth": 3
                 }
               ]
             }
@@ -652,6 +644,157 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           },
           "depth": 2,
           "outline": []
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
+            "sourcePath": "/Users/nbrustein/code/iguana/spec/mocks_spec.js",
+            "projectPath": "spec/mocks_spec.js",
+            "targetPath": "spec/mocks_spec",
+            "pageTitle": "spec/mocks_spec",
+            "title": "mocks_spec"
+          },
+          "depth": 2,
+          "outline": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 1,
+                "title": "Testing",
+                "slug": "testing"
+              },
+              "depth": 1,
+              "children": [
+                {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
+                    "title": "Setup",
+                    "slug": "setup"
+                  },
+                  "depth": 3
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Mocking Basics",
+                    "slug": "mocking-basics"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Show",
+                    "slug": "show"
+                  },
+                  "depth": 2,
+                  "children": [
+                    {
+                      "type": "heading",
+                      "data": {
+                        "level": 3,
+                        "title": "Basic expect/call/flush",
+                        "slug": "basic-expectcallflush"
+                      },
+                      "depth": 3
+                    }, {
+                      "type": "heading",
+                      "data": {
+                        "level": 3,
+                        "title": "toBeCalledWith",
+                        "slug": "tobecalledwith"
+                      },
+                      "depth": 3
+                    }, {
+                      "type": "heading",
+                      "data": {
+                        "level": 3,
+                        "title": "returns",
+                        "slug": "returns"
+                      },
+                      "depth": 3
+                    }
+                  ]
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "returnsMeta",
+                    "slug": "returnsmeta"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "fails",
+                    "slug": "fails"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Mocking Index",
+                    "slug": "mocking-index"
+                  },
+                  "depth": 2,
+                  "children": [
+                    {
+                      "type": "heading",
+                      "data": {
+                        "level": 3,
+                        "title": "Basic expect/call/flush",
+                        "slug": "basic-expectcallflush"
+                      },
+                      "depth": 3
+                    }, {
+                      "type": "heading",
+                      "data": {
+                        "level": 3,
+                        "title": "toBeCalledWith",
+                        "slug": "tobecalledwith"
+                      },
+                      "depth": 3
+                    }, {
+                      "type": "heading",
+                      "data": {
+                        "level": 3,
+                        "title": "returns",
+                        "slug": "returns"
+                      },
+                      "depth": 3
+                    }
+                  ]
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "returnsMeta",
+                    "slug": "returnsmeta"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "fails",
+                    "slug": "fails"
+                  },
+                  "depth": 2
+                }
+              ]
+            }
+          ]
         }, {
           "type": "file",
           "data": {

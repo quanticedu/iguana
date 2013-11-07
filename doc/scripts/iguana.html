@@ -34,6 +34,12 @@
                         <span class="p">}</span>
                     <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
                     
+                    <span class="k">this</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+                        <span class="nx">expect</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;There is no &#39;expect&#39; method.  Make sure to include iguana-mock.js and inject MockIguana.&quot;</span><span class="p">)</span>
+                        <span class="p">}</span>
+                    <span class="p">});</span>
+                    
                     <span class="c1">//We always want to call the superclass&#39;s initialize so </span>
                     <span class="c1">//that we can have initialize callbacks.</span>
                     <span class="kd">var</span> <span class="nx">subclassWithoutIguana</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">subclass</span><span class="p">;</span>
