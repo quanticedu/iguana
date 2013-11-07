@@ -41,7 +41,10 @@ angular.module('Iguana')
                     if (Object.prototype.toString.call( args ) !== '[object Array]') {
                         args = [args];
                     }
-                    this.expectedArgs = args;
+                    this.expectedArgs = [];
+                    angular.forEach(args, function(arg){
+                        this.expectedArgs.push(arg.asJson ? arg.asJson() : arg);
+                    }.bind(this));
                     return this;
                 },
                 
