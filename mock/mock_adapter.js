@@ -97,9 +97,9 @@ angular.module('Iguana')
                     if (!displayName) {
                         displayName = this.meth;
                     }
-                    var meth = this.adapter[actualMeth];
+                    var meth = this.adapter.getCalledMethod(actualMeth);
                                         
-                    if (!meth || !meth.calls || meth.calls.length < 1) {
+                    if (!meth) {
                         throw new Error('Expected '+displayName+' to have been called, but it was not.');
                     }
                     
@@ -117,6 +117,8 @@ angular.module('Iguana')
                         this.returns(this.defaultResult(args));
                     }
                     
+                    console.log(this.mockedResult);
+                    
                     if (this.expectedArgs) {
                         expect(args).toEqual(this.expectedArgs);
                     }
@@ -130,18 +132,6 @@ angular.module('Iguana')
                         });
                     }
                     
-                },
-                
-                //private
-                spyOn: function(meth) {
-                    try {
-                        //We need a try/catch because, 
-                        //if expect is called multiple times,
-                        //then spyOn will complain about being 
-                        //called twice on the same
-                        //method.
-                        spyOn(this.adapter, meth).andCallThrough();
-                    } catch(e) {}
                 },
                 
                 //private
@@ -162,7 +152,6 @@ angular.module('Iguana')
             
             initialize: function($super, adapter, result) {
                 $super(adapter, 'show', result);
-                this.spyOn('show');
             }
         });
         
@@ -170,7 +159,6 @@ angular.module('Iguana')
             
             initialize: function($super, adapter, result) {
                 $super(adapter, 'index', result);
-                this.spyOn('index');
             }
         });
         
@@ -184,7 +172,6 @@ angular.module('Iguana')
             
             initialize: function($super, adapter, result) {
                 $super(adapter, 'create', result);
-                this.spyOn('create');
             }
         });
         
@@ -192,7 +179,6 @@ angular.module('Iguana')
             
             initialize: function($super, adapter, result) {
                 $super(adapter, 'update', result);
-                this.spyOn('update');
             }
         });
         
@@ -200,8 +186,6 @@ angular.module('Iguana')
             
             initialize: function($super, adapter, result) {
                 $super(adapter, 'save', result);
-                this.spyOn('create');
-                this.spyOn('update');
             },
             
             resolve: function($super) {
@@ -219,7 +203,6 @@ angular.module('Iguana')
             
             initialize: function($super, adapter, result) {
                 $super(adapter, 'destroy', result);
-                this.spyOn('destroy');
             },
             
             returns: function($super, response) {
@@ -243,7 +226,19 @@ angular.module('Iguana')
             return {
                 name: 'Iguana.Mock.Adapter',
                 
+                initialize: function($super, iguanaKlass) {
+                    $super(iguanaKlass);
+                    this.setSpies();
+                },
+                
+                setSpies: function() {
+                    angular.forEach(['show', 'index', 'create', 'update', 'destroy'], function(meth){
+                        spyOn(this, meth).andCallThrough();
+                    }.bind(this));
+                },
+                
                 show: function(collection, arg1, arg2) {
+                    console.log('show called on ', this.iguanaKlass.alias());
                     return this._makeApiCall(collection, 'show');                    
                 },
                 
@@ -279,10 +274,7 @@ angular.module('Iguana')
                         expectation.returns(response);
                     }
                     
-                    if (!this._pendingExpectations()[meth]) {
-                        throw new Error('"'+ meth +'" is not a supported method.  Supported methods are show/index/create/update/save/destroy');
-                    }
-                    this._pendingExpectations()[meth].push(expectation);
+                    this._pendingExpectations(meth).push(expectation);
                     
                     return expectation;
                 },
@@ -291,7 +283,9 @@ angular.module('Iguana')
                     if (!meth) {
                         throw new Error("You must pass a meth (i.e. show, index, ...) to flush()");
                     }
-                    var expectation = this._pendingExpectations()[meth] && this._pendingExpectations()[meth].shift();
+                    
+                    
+                    var expectation = this.shiftPendingExpectation(meth);
                     if (!expectation) {
                         throw new Error('No '+meth+' requests pending.');
                     }
@@ -300,24 +294,82 @@ angular.module('Iguana')
                     $rootScope.$apply();
                 },
                 
-                _pendingQs: function() {
-                    if (!this.__pendingQs) { 
-                        this.__pendingQs = this._initialPendingHash();
+                getCalledMethod: function(methName) {
+                    var meth = this[methName];
+                    if (!meth || !meth.calls || meth.calls.length == 0) {
+                        //If any subclasses have called this method, then 
+                        //that counts
+                        var subMeth;
+                        angular.forEach(this.subAdapters(), function(adapter){
+                            subMeth = adapter.getCalledMethod(methName);
+                        });
+                        if (subMeth) { return subMeth; }
+                    } else {
+                        return meth;
                     }
-                    return this.__pendingQs;
+                    
+                    return null;
                 },
                 
-                _pendingExpectations: function() {
+                getPendingExpectation: function(meth) {
+                    var expectations = this._pendingExpectations(meth);
+                    if (expectations.length > 0) {
+                        return expectations[0];
+                    } else if (this.superAdapter()) {
+                        return this.superAdapter().getPendingExpectation(meth);
+                    }
+                    
+                    return null;
+                },
+                
+                shiftPendingExpectation: function(meth) {
+                    var expectations = this._pendingExpectations(meth);
+                    if (expectations.length > 0) {
+                        return expectations.shift();
+                    } else if (this.superAdapter()) {
+                        return this.superAdapter().shiftPendingExpectation();
+                    }
+                    
+                    return null;
+                },
+                
+                superAdapter: function() {
+                    var superAdapter;
+                    if (this.iguanaKlass.superclass && this.iguanaKlass.superclass.adapter){
+                        superAdapter = this.iguanaKlass.superclass.adapter();
+                    };
+                    if (superAdapter && superAdapter.constructor == this.constructor) {
+                        return superAdapter;
+                    }
+                },
+                
+                subAdapters: function() {
+                    var adapters = [];
+                    angular.forEach(this.iguanaKlass.subclasses, function(subclass){
+                        adapters.push(subclass.adapter());
+                    });
+                    return adapters;
+                },
+                
+                _pendingExpectations: function(meth) {
                     if (!this.__pendingExpectations) { 
                         this.__pendingExpectations = this._initialPendingHash();
                     }
+                    if (meth) {
+                        var expectations = this.__pendingExpectations[meth];
+                        if (!expectations) {
+                            throw new Error('"'+ meth +'" is not a supported method.  Supported methods are show/index/create/update/save/destroy');
+                        }
+                        return expectations;
+                    }
+                    
                     return this.__pendingExpectations;
                 },
                 
                 _makeApiCall: function(collection, meth) {
-                    var expectation = this._pendingExpectations()[meth][0]
+                    var expectation = this.getPendingExpectation(meth);
                     if (!expectation && (meth == "create" || meth == "update")) {
-                        expectation = this._pendingExpectations()['save'][0];
+                        expectation = this.getPendingExpectation('save');
                     }
                     if (!expectation) {
                         throw new Error('Unexpected call to '+meth+'.  You need to call expect("'+meth+'")');

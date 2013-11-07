@@ -15,6 +15,7 @@ describe('IguanaMock', function() {
         myApp.factory('Item', function(Iguana){
             
             return Iguana.subclass(function() {
+                this.alias('Item');
                 this.setCollection('items');
             });
             
@@ -518,5 +519,30 @@ describe('IguanaMock', function() {
         });
         
     });  
+    
+    it('should work with sci on a show call', function() {
+        console.log("**************************");
+        var Subclass = Item.subclass(function() {
+            this.alias('Subclass');
+        });
+        
+        Item.expect('show');
+        Subclass.show();
+        Item.flush('show');
+        
+    });
+    
+    
+    it('should work with sci on a save call', function() {
+        expect(1).toBe(0);
+        
+    });
+    
+    it('should work with sci on a destroy call', function() {
+        expect(1).toBe(0);
+        
+    });
+    
+    
     
 });
