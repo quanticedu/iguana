@@ -39,10 +39,6 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                             throw new Error("There is no 'expect' method.  Make sure to include iguana-mock.js and inject MockIguana.")
                         }
                     });
-                    
-                    //We always want to call the superclass's initialize so 
-                    //that we can have initialize callbacks.
-                    var subclassWithoutIguana = this.subclass;
                                                         
                     return {
                         initialize: function(attrs) {
@@ -71,10 +67,7 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                             this.runCallbacks('copyAttrs', function() {
                                 angular.extend(this, this.$$sourceAttrs);
                             });
-                        },
-                        
-                        //see subclass extension above
-                        _initialize: function() {}
+                        }
                     }
                 
                 });
