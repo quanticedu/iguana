@@ -166,13 +166,13 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
                 
                 name: 'Iguana.Adapters.RestfulIdStyle',
                 
-                index: function(collection) {
-                    return this._makeApiCall(collection, 'index', {});
+                index: function(collection, params) {
+                    return this._makeApiCall(collection, 'index', params);
                 },
 
-                show: function(collection, id) {
+                show: function(collection, id, params) {
                     if (!id) throw new Error("No id provided");
-                    var params = {};
+                    params = params || {};
                     params[this.idProperty] = id;
                     return this._makeApiCall(collection, 'show', params);
                 },

@@ -49,17 +49,14 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
         // ### show
         // Show accepts a single argument, which is the id of a document.  
         //   
-        // Eventually, show should support other arguments in order to
-        // implement querying functionality (although this should probably
-        // be implemented in subclasses of RestfulIdStyle, since different apis
-        // could share this general structure but support different querying interfaces.)
+        // The second argument can be any object, and will be passed through to the server-side api
         it('should make an api call and process the result', function() {
             var attrs = {id: 'id'};
-            $httpBackend.expectGET('/items/id.json').respond(200, {contents: {items: [attrs]}, meta: 'meta'});
+            $httpBackend.expectGET('/items/id.json?queryParam=1').respond(200, {contents: {items: [attrs]}, meta: 'meta'});
             spyOn(Item, '_instantiateFromResponse');
             
             //Calling show with an id 
-            Item.show('id');
+            Item.show('id', {queryParam: 1});
             $httpBackend.flush();
             expect(Item._instantiateFromResponse.calls.length).toBe(1);
             var response = Item._instantiateFromResponse.calls[0].args[1];
@@ -76,14 +73,14 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
     describe('index', function() {
         
         // ### index
-        // index does not accept any arguments.  It always returns the entire collection.   
+        // index can accept any query parameters that your server-side api supports.   
         //   
         // As with show (see above), index should eventually support querying functionality.
         it('should make an api call and process the result', function() {
             var attrsList = [{id: 'id1'}, {id: 'id2'}];
-            $httpBackend.expectGET('/items.json').respond(200, {contents: {items: attrsList}, meta: 'meta'});
+            $httpBackend.expectGET('/items.json?queryParam=1').respond(200, {contents: {items: attrsList}, meta: 'meta'});
             spyOn(Item, '_instantiateFromResponse');
-            Item.index();
+            Item.index({queryParam: 1});
             $httpBackend.flush();
             expect(Item._instantiateFromResponse.calls.length).toBe(1);
             var response = Item._instantiateFromResponse.calls[0].args[1];
