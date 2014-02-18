@@ -600,16 +600,24 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                   "type": "heading",
                   "data": {
                     "level": 3,
-                    "title": "Embedded arrays",
-                    "slug": "embedded-arrays"
+                    "title": "Embedded arrays using embedsMany",
+                    "slug": "embedded-arrays-using-embedsmany"
                   },
                   "depth": 3
                 }, {
                   "type": "heading",
                   "data": {
                     "level": 3,
-                    "title": "Embedded objects",
-                    "slug": "embedded-objects"
+                    "title": "Embedded objects using embedsMany",
+                    "slug": "embedded-objects-using-embedsmany"
+                  },
+                  "depth": 3
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
+                    "title": "Embedded items using embedsOne",
+                    "slug": "embedded-items-using-embedsone"
                   },
                   "depth": 3
                 }, {

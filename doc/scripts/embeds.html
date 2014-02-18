@@ -39,6 +39,16 @@ a function that will let us fetch the klass just in time.</p></div></div><div cl
             
         <span class="p">});</span>
         
+        <span class="kd">var</span> <span class="nx">EmbedOneRelationship</span> <span class="o">=</span> <span class="nx">EmbedRelationship</span><span class="p">.</span><span class="nx">subclass</span><span class="p">({</span>
+            
+            <span class="nx">_instantiate</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">parent</span><span class="p">,</span> <span class="nx">sourceValue</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">klassFetcher</span><span class="p">().</span><span class="k">new</span><span class="p">(</span><span class="nx">sourceValue</span><span class="p">);</span>
+                <span class="nx">instance</span><span class="p">.</span><span class="nx">$embeddedIn</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">;</span>
+                <span class="k">return</span> <span class="nx">instance</span><span class="p">;</span>
+            <span class="p">}</span>
+            
+        <span class="p">});</span>
+        
         <span class="k">return</span> <span class="p">{</span>
             
             <span class="nx">included</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">)</span> <span class="p">{</span>                
@@ -51,6 +61,13 @@ a function that will let us fetch the klass just in time.</p></div></div><div cl
                 <span class="nx">embedsMany</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="nx">classAlias</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="nx">embedRelationships</span><span class="p">().</span><span class="nx">set</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="k">new</span> <span class="nx">EmbedManyRelationship</span><span class="p">(</span>
                         <span class="nx">propName</span><span class="p">,</span> 
+                        <span class="k">this</span><span class="p">.</span><span class="nx">getAliasedKlass</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">classAlias</span><span class="p">)</span>
+                    <span class="p">));</span>
+                <span class="p">},</span>
+                
+                <span class="nx">embedsOne</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="nx">classAlias</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">embedRelationships</span><span class="p">().</span><span class="nx">set</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="k">new</span> <span class="nx">EmbedOneRelationship</span><span class="p">(</span>
+                        <span class="nx">propName</span><span class="p">,</span>
                         <span class="k">this</span><span class="p">.</span><span class="nx">getAliasedKlass</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">classAlias</span><span class="p">)</span>
                     <span class="p">));</span>
                 <span class="p">},</span>

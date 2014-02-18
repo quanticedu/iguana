@@ -26,6 +26,7 @@ and to each of the items in the 'subItems' array.</p>
 <p>You will need to call 'embedsMany' on the 'item' class
 and 'alias' on the 'subItems' class.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">Iguana</span> <span class="o">=</span> <span class="nx">_Iguana_</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...</p></div></div><div class="code"><div class="wrapper">            <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The first argument to 'embedsMany' is the name of the property; the
 second is the alias of the embedded document's class.</p></div></div><div class="code"><div class="wrapper">                <span class="k">this</span><span class="p">.</span><span class="nx">embedsMany</span><span class="p">(</span><span class="s1">&#39;subItems&#39;</span><span class="p">,</span> <span class="s1">&#39;SubItem&#39;</span><span class="p">);</span>
+                </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>'embedsOne' looks the same as embedsMany</p></div></div><div class="code"><div class="wrapper">                <span class="k">this</span><span class="p">.</span><span class="nx">embedsOne</span><span class="p">(</span><span class="s1">&#39;subItem&#39;</span><span class="p">,</span> <span class="s1">&#39;SubItem&#39;</span><span class="p">);</span>
             <span class="p">});</span>
             
             <span class="nx">SubItem</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This embedded class must be aliased so that Iguana can find it
@@ -39,7 +40,7 @@ will return the parent document. See <a href="#embeddedIn">below</a></p></div></
     <span class="p">});</span>
     
     <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;embedsMany&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="embedded-arrays">Embedded arrays</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should instantiate instances of expected classes in an array&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="embedded-arrays-using-embedsmany">Embedded arrays using embedsMany</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should instantiate instances of expected classes in an array&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="nx">subItems</span><span class="o">:</span> <span class="p">[{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">}]</span>
             <span class="p">};</span>
@@ -52,7 +53,7 @@ matching the object that came over the api.</p></div></div><div class="code"><di
                 <span class="nx">expect</span><span class="p">(</span><span class="nx">subitem</span><span class="p">.</span><span class="nx">a</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
             <span class="p">});</span>
         <span class="p">});</span>
-        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="embedded-objects">Embedded objects</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should instantiate instances of expected classes in an object&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="embedded-objects-using-embedsmany">Embedded objects using embedsMany</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should instantiate instances of expected classes in an object&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="nx">subItems</span><span class="o">:</span> <span class="p">{</span>
                     <span class="nx">one</span><span class="o">:</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="s1">&#39;one&#39;</span><span class="p">},</span> 
@@ -69,6 +70,20 @@ matching the object that came over the api.</p></div></div><div class="code"><di
             <span class="p">});</span>
         <span class="p">});</span>
     
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;embedsOne&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="embedded-items-using-embedsone">Embedded items using embedsOne</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should instantiate an instance of the expected class&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="nx">subItem</span><span class="o">:</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">0</span><span class="p">}</span>
+            <span class="p">};</span>
+            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">(</span><span class="nx">attrs</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">subitem</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">subItem</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The 'subItem' should be
+an instance of SubItem, and should have properties
+matching the object that came over the api.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">expect</span><span class="p">(</span><span class="nx">subitem</span><span class="p">).</span><span class="nx">not</span><span class="p">.</span><span class="nx">toBeUndefined</span><span class="p">();</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">subitem</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">SubItem</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">subitem</span><span class="p">.</span><span class="nx">a</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="p">});</span>
     <span class="p">});</span>
     </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><a id="embeddedIn"></a></p>
 
