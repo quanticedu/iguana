@@ -320,7 +320,7 @@ angular.module('Iguana')
                         expectation = this._pendingExpectations()['save'][0];
                     }
                     if (!expectation) {
-                        throw new Error('Unexpected call to '+meth+'.  You need to call expect("'+meth+'")');
+                        throw new Error('Unexpected call to '+collection+'.'+meth+'.  You need to call expect("'+meth+'")');
                     };                 
                     return expectation.mockCalled();
                 },

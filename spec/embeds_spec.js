@@ -31,6 +31,9 @@ describe('Iguana.Embeds', function() {
                 // The first argument to 'embedsMany' is the name of the property; the
                 // second is the alias of the embedded document's class.
                 this.embedsMany('subItems', 'SubItem');
+                
+                // 'embedsOne' looks the same as embedsMany
+                this.embedsOne('subItem', 'SubItem');
             });
             
             SubItem = Iguana.subclass(function() {
@@ -49,7 +52,7 @@ describe('Iguana.Embeds', function() {
     
     describe('embedsMany', function() {
         
-        // ### Embedded arrays
+        // ### Embedded arrays using embedsMany
         it('should instantiate instances of expected classes in an array', function() {
             var attrs = {
                 subItems: [{a: 0}, {a: 1}]
@@ -66,7 +69,7 @@ describe('Iguana.Embeds', function() {
             });
         });
         
-        // ### Embedded objects
+        // ### Embedded objects using embedsMany
         it('should instantiate instances of expected classes in an object', function() {
             var attrs = {
                 subItems: {
@@ -86,6 +89,24 @@ describe('Iguana.Embeds', function() {
             });
         });
     
+    });
+    
+    describe('embedsOne', function() {
+        
+        // ### Embedded items using embedsOne
+        it('should instantiate an instance of the expected class', function() {
+            var attrs = {
+                subItem: {a: 0}
+            };
+            var item = Item.new(attrs);
+            var subitem = item.subItem;
+            // The 'subItem' should be
+            // an instance of SubItem, and should have properties
+            // matching the object that came over the api.
+            expect(subitem).not.toBeUndefined();
+            expect(subitem.constructor).toBe(SubItem);
+            expect(subitem.a).toEqual(0);
+        });
     });
     
     // <a id="embeddedIn"></a>

@@ -498,6 +498,16 @@ angular.module('Iguana')
             
         });
         
+        var EmbedOneRelationship = EmbedRelationship.subclass({
+            
+            _instantiate: function(parent, sourceValue) {
+                var instance = this.klassFetcher().new(sourceValue);
+                instance.$embeddedIn = parent;
+                return instance;
+            }
+            
+        });
+        
         return {
             
             included: function(Iguana) {                
@@ -510,6 +520,13 @@ angular.module('Iguana')
                 embedsMany: function(propName, classAlias) {
                     this.embedRelationships().set(propName, new EmbedManyRelationship(
                         propName, 
+                        this.getAliasedKlass.bind(this, classAlias)
+                    ));
+                },
+                
+                embedsOne: function(propName, classAlias) {
+                    this.embedRelationships().set(propName, new EmbedOneRelationship(
+                        propName,
                         this.getAliasedKlass.bind(this, classAlias)
                     ));
                 },
