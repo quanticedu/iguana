@@ -2,35 +2,52 @@
 
 describe('Iguana.Alias', function() {
 
-    var Iguana, Item;
+    var Iguana, Item, $injector;
 
     beforeEach(function() {
         module('Iguana');
 
-        inject(function(_Iguana_) {
+        inject(function(_Iguana_, _$injector_) {
             Iguana = _Iguana_;
+            $injector = _$injector_;
             Item = Iguana.subclass(function() {
                 this.alias('item');
             });
         });
 
     });
-    
+
     describe('alias', function() {
         it('should return the alias if no arg is passed in', function() {
             expect(Item.alias()).toBe('item');
         });
     });
-    
+
     describe('getAliasedKlass', function() {
-       it('should find an aliased class', function() {
-           expect(Iguana.getAliasedKlass('item')).toBe(Item);
-       });
-       
-       it('should find an aliased class when called on a subclass', function() {
-           expect(Item.getAliasedKlass('item')).toBe(Item);
-       });
+        it('should find an aliased class', function() {
+            expect(Iguana.getAliasedKlass('item')).toBe(Item);
+        });
+
+        it('should find an aliased class when called on a subclass', function() {
+            expect(Item.getAliasedKlass('item')).toBe(Item);
+        });
+
+        it('should use the injectorMap to find a class that has not yet been loaded', function() {
+            var mockClass = Iguana.subclass();
+            var get = $injector.get;
+            spyOn($injector, 'get').andCallFake(function(path) {
+                if (path === 'MyClass') {
+                    return mockClass;
+                } else {
+                    return get(path);
+                }
+            });
+            Iguana.mapInjectables({
+                alias: 'MyClass'
+            });
+            expect(Iguana.getAliasedKlass('alias')).toBe(mockClass);
+        });
     });
 
-    
+
 });
