@@ -1,21 +1,21 @@
 {
-  "name": "iguana",
-  "version": "0.0.10",
-  "description": "Object-Document Mapper (ODM) for angular",
-  "repository": {
-    "url": "https://github.com/pedago/iguana.git",
-    "type": "git"
-  },
-  "devDependencies": {
-    "karma": "0.10.2",
-    "grunt": "*",
-    "grunt-karma": "*",
-    "karma-phantomjs-launcher": "~0.1.0",
-    "phantomjs": "~1.9.2",
-    "grunt-groc": "~0.4.0",
-    "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-clean": "~0.4.1",
-    "grunt-contrib-concat": "~0.3.0"
-  },
-  "author": "Nate Brustein"
+    "name": "iguana",
+    "version": "0.0.11",
+    "description": "Object-Document Mapper (ODM) for angular",
+    "repository": {
+        "url": "https://github.com/pedago/iguana.git",
+        "type": "git"
+    },
+    "devDependencies": {
+        "karma": "0.10.2",
+        "grunt": "*",
+        "grunt-karma": "*",
+        "karma-phantomjs-launcher": "~0.1.0",
+        "phantomjs": "~1.9.2",
+        "grunt-groc": "~0.4.0",
+        "grunt-contrib-uglify": "~0.2.0",
+        "grunt-contrib-clean": "~0.4.1",
+        "grunt-contrib-concat": "~0.3.0"
+    },
+    "author": "Nate Brustein"
 }
