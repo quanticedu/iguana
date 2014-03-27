@@ -54,6 +54,27 @@ a function that will let us fetch the klass just in time.</p></div></div><div cl
             <span class="nx">included</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">)</span> <span class="p">{</span>                
                 <span class="nx">Iguana</span><span class="p">.</span><span class="nx">extendableObject</span><span class="p">(</span><span class="s1">&#39;embedRelationships&#39;</span><span class="p">);</span>
                 <span class="nx">Iguana</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;copyAttrs&#39;</span><span class="p">,</span> <span class="s1">&#39;processEmbeds&#39;</span><span class="p">);</span>
+                
+                <span class="nx">Iguana</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;around&#39;</span><span class="p">,</span> <span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">save</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kd">var</span> <span class="nx">wrapped</span> <span class="o">=</span> <span class="nx">save</span><span class="p">;</span>
+                    
+                    <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">embedRelationships</span><span class="p">(),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">relationship</span><span class="p">,</span> <span class="nx">propName</span><span class="p">){</span>
+                        <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">[</span><span class="nx">propName</span><span class="p">];</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">return</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="kd">var</span> <span class="nx">isArray</span> <span class="o">=</span> <span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;[object Array]&#39;</span><span class="p">);</span>
+                        <span class="kd">var</span> <span class="nx">values</span> <span class="o">=</span> <span class="nx">isArray</span> <span class="o">?</span> <span class="nx">value</span> <span class="o">:</span> <span class="p">[</span><span class="nx">value</span><span class="p">];</span>
+                        <span class="nx">values</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">){</span>
+                            <span class="kd">var</span> <span class="nx">reWrapped</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">wrapped</span><span class="p">)</span> <span class="p">{</span>
+                                <span class="nx">item</span><span class="p">.</span><span class="nx">runCallbacks</span><span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="nx">wrapped</span><span class="p">);</span>
+                            <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">wrapped</span><span class="p">);</span>
+                            <span class="nx">wrapped</span> <span class="o">=</span> <span class="nx">reWrapped</span><span class="p">;</span>
+                        <span class="p">});</span>
+                    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+                    
+                    <span class="nx">wrapped</span><span class="p">();</span>
+                <span class="p">});</span>
             <span class="p">},</span>
             
             <span class="nx">classMixin</span><span class="o">:</span> <span class="p">{</span>
