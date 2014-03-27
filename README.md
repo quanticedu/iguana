@@ -23,7 +23,7 @@ From the bower.json file
     {
 	    "...
 	    "dependencies": {
-	        "iguana": "0.0.13"
+	        "iguana": "0.0.14"
 	    },
 		...
 	}
@@ -55,6 +55,7 @@ in those projects for more information.
 [0.0.4](http://pedago.github.io/iguana/docs/0.0.4)  
 [0.0.3](http://pedago.github.io/iguana/docs/0.0.3)  
 [0.0.2](http://pedago.github.io/iguana/docs/0.0.2)  
+[0.0.14](http://pedago.github.io/iguana/docs/0.0.14)  
 [0.0.13](http://pedago.github.io/iguana/docs/0.0.13)  
 [0.0.12](http://pedago.github.io/iguana/docs/0.0.12)  
 [0.0.11](http://pedago.github.io/iguana/docs/0.0.11)  
