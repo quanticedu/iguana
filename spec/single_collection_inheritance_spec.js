@@ -1,3 +1,4 @@
+
 'use strict';
 
 describe('Iguana.SingleCollectionInheritance', function() {
@@ -141,7 +142,7 @@ describe('Iguana.SingleCollectionInheritance', function() {
             var instance = Item.new({
                 __iguana_type: 'lazy_loaded_item'
             });
-            expect(Item.getAliasedKlass).toHaveBeenCalledWith('lazy_loaded_item');
+            expect(Item.getAliasedKlass).toHaveBeenCalledWith('lazy_loaded_item', false);
             expect(instance.constructor).toBe(mockClass);
         });
 

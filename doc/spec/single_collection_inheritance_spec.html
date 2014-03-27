@@ -121,7 +121,7 @@ as instance of the appropriate class.</p></div></div><div class="code"><div clas
             <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span>
                 <span class="nx">__iguana_type</span><span class="o">:</span> <span class="s1">&#39;lazy_loaded_item&#39;</span>
             <span class="p">});</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">Item</span><span class="p">.</span><span class="nx">getAliasedKlass</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s1">&#39;lazy_loaded_item&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">Item</span><span class="p">.</span><span class="nx">getAliasedKlass</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s1">&#39;lazy_loaded_item&#39;</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
             <span class="nx">expect</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">mockClass</span><span class="p">);</span>
         <span class="p">});</span>
 

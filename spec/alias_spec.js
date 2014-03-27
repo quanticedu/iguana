@@ -33,7 +33,9 @@ describe('Iguana.Alias', function() {
         });
 
         it('should use the injectorMap to find a class that has not yet been loaded', function() {
-            var mockClass = Iguana.subclass();
+            var mockClass = Iguana.subclass(function() {
+                this.alias('alias');
+            });
             var get = $injector.get;
             spyOn($injector, 'get').andCallFake(function(path) {
                 if (path === 'MyClass') {
@@ -46,6 +48,28 @@ describe('Iguana.Alias', function() {
                 alias: 'MyClass'
             });
             expect(Iguana.getAliasedKlass('alias')).toBe(mockClass);
+        });
+        
+        it('should throw if class in injector map has unexpected alias', function() {
+            var mockClass = Iguana.subclass(function(){
+                this.alias('unexpected');
+            });
+            var get = $injector.get;
+            spyOn($injector, 'get').andCallFake(function(path) {
+                if (path === 'MyClass') {
+                    return mockClass;
+                } else {
+                    return get(path);
+                }
+            });
+            Iguana.mapInjectables({
+                alias: 'MyClass'
+            });
+            // setting second argument to false because this should
+            // throw even if throwOnUnfound is false
+            expect(function() {
+                Iguana.getAliasedKlass('alias', false)
+            }).toThrow('Class included in injectablesMap does not have the expected alias: "unexpected" != "alias"');
         });
     });
 

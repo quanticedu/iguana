@@ -263,7 +263,10 @@ angular.module('Iguana')
                         return this._alias;
                     },
 
-                    getAliasedKlass: function(alias) {
+                    getAliasedKlass: function(alias, throwIfUnfound) {
+                        if (angular.isUndefined(throwIfUnfound)) {
+                            throwIfUnfound = true;
+                        }
                         if (!this._aliasedKlasses[alias]) {
                             var path = this.injectablesMap[alias];
                             if (path) {
@@ -272,10 +275,14 @@ angular.module('Iguana')
                                     klass = $injector.get(path);
                                 } catch (e) {}
                                 this._aliasedKlasses[alias] = klass;
+                                if (alias !== klass.alias()) {
+                                    var message = 'Class included in injectablesMap does not have the expected alias: "' + klass.alias() + '" != "' + alias + '"';
+                                    throw new Error(message);
+                                }
                             }
                         }
 
-                        if (!this._aliasedKlasses[alias]) {
+                        if (!this._aliasedKlasses[alias] && throwIfUnfound) {
                             throw new Error('No class aliased to "' + alias + '".');
                         }
                         return this._aliasedKlasses[alias];
@@ -650,14 +657,12 @@ angular.module('Iguana')
                     // sense, since we'll always be loading things from the db with SomeItem.show() or 
                     // whatever.
                     if (!attrs.hasOwnProperty(this.sciProperty)) {
-                        return new this(attrs);
+                        instance = new this(attrs);
                     } else if (attrs[this.sciProperty] && attrs[this.sciProperty] === this.alias()) {
                         instance = new this(attrs);
                     } else {
                         var klass
-                        try {
-                            klass = this.getAliasedKlass(attrs[this.sciProperty]);
-                        } catch (e) {}
+                        klass = this.getAliasedKlass(attrs[this.sciProperty], false);
 
                         if (klass && !klass.inheritsFrom(this)) {
                             throw new Error('Cannot instantiate because class "' + klass.alias() + '" does not inherit from "' + this.alias() + '."');

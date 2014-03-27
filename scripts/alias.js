@@ -18,7 +18,10 @@ angular.module('Iguana')
                         return this._alias;
                     },
 
-                    getAliasedKlass: function(alias) {
+                    getAliasedKlass: function(alias, throwIfUnfound) {
+                        if (angular.isUndefined(throwIfUnfound)) {
+                            throwIfUnfound = true;
+                        }
                         if (!this._aliasedKlasses[alias]) {
                             var path = this.injectablesMap[alias];
                             if (path) {
@@ -27,10 +30,14 @@ angular.module('Iguana')
                                     klass = $injector.get(path);
                                 } catch (e) {}
                                 this._aliasedKlasses[alias] = klass;
+                                if (alias !== klass.alias()) {
+                                    var message = 'Class included in injectablesMap does not have the expected alias: "' + klass.alias() + '" != "' + alias + '"';
+                                    throw new Error(message);
+                                }
                             }
                         }
 
-                        if (!this._aliasedKlasses[alias]) {
+                        if (!this._aliasedKlasses[alias] && throwIfUnfound) {
                             throw new Error('No class aliased to "' + alias + '".');
                         }
                         return this._aliasedKlasses[alias];

@@ -18,7 +18,10 @@
                         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_alias</span><span class="p">;</span>
                     <span class="p">},</span>
 
-                    <span class="nx">getAliasedKlass</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">alias</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">getAliasedKlass</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">alias</span><span class="p">,</span> <span class="nx">throwIfUnfound</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="nx">angular</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">throwIfUnfound</span><span class="p">))</span> <span class="p">{</span>
+                            <span class="nx">throwIfUnfound</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+                        <span class="p">}</span>
                         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">alias</span><span class="p">])</span> <span class="p">{</span>
                             <span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">injectablesMap</span><span class="p">[</span><span class="nx">alias</span><span class="p">];</span>
                             <span class="k">if</span> <span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
@@ -27,10 +30,14 @@
                                     <span class="nx">klass</span> <span class="o">=</span> <span class="nx">$injector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">path</span><span class="p">);</span>
                                 <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{}</span>
                                 <span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">alias</span><span class="p">]</span> <span class="o">=</span> <span class="nx">klass</span><span class="p">;</span>
+                                <span class="k">if</span> <span class="p">(</span><span class="nx">alias</span> <span class="o">!==</span> <span class="nx">klass</span><span class="p">.</span><span class="nx">alias</span><span class="p">())</span> <span class="p">{</span>
+                                    <span class="kd">var</span> <span class="nx">message</span> <span class="o">=</span> <span class="s1">&#39;Class included in injectablesMap does not have the expected alias: &quot;&#39;</span> <span class="o">+</span> <span class="nx">klass</span><span class="p">.</span><span class="nx">alias</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&quot; != &quot;&#39;</span> <span class="o">+</span> <span class="nx">alias</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">;</span>
+                                    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+                                <span class="p">}</span>
                             <span class="p">}</span>
                         <span class="p">}</span>
 
-                        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">alias</span><span class="p">])</span> <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">alias</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">throwIfUnfound</span><span class="p">)</span> <span class="p">{</span>
                             <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;No class aliased to &quot;&#39;</span> <span class="o">+</span> <span class="nx">alias</span> <span class="o">+</span> <span class="s1">&#39;&quot;.&#39;</span><span class="p">);</span>
                         <span class="p">}</span>
                         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">alias</span><span class="p">];</span>

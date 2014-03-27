@@ -58,14 +58,12 @@ angular.module('Iguana')
                     // sense, since we'll always be loading things from the db with SomeItem.show() or 
                     // whatever.
                     if (!attrs.hasOwnProperty(this.sciProperty)) {
-                        return new this(attrs);
+                        instance = new this(attrs);
                     } else if (attrs[this.sciProperty] && attrs[this.sciProperty] === this.alias()) {
                         instance = new this(attrs);
                     } else {
                         var klass
-                        try {
-                            klass = this.getAliasedKlass(attrs[this.sciProperty]);
-                        } catch (e) {}
+                        klass = this.getAliasedKlass(attrs[this.sciProperty], false);
 
                         if (klass && !klass.inheritsFrom(this)) {
                             throw new Error('Cannot instantiate because class "' + klass.alias() + '" does not inherit from "' + this.alias() + '."');
