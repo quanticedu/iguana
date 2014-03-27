@@ -58,6 +58,27 @@
             included: function(Iguana) {                
                 Iguana.extendableObject('embedRelationships');
                 Iguana.setCallback('before', 'copyAttrs', 'processEmbeds');
+                
+                Iguana.setCallback('around', 'save', function(save) {
+                    var wrapped = save;
+                    
+                    angular.forEach(this.embedRelationships(), function(relationship, propName){
+                        var value = this[propName];
+                        if (!value) {
+                            return;
+                        }
+                        var isArray = (Object.prototype.toString.call(value) === '[object Array]');
+                        var values = isArray ? value : [value];
+                        values.forEach(function(item){
+                            var reWrapped = function(wrapped) {
+                                item.runCallbacks('save', wrapped);
+                            }.bind(item, wrapped);
+                            wrapped = reWrapped;
+                        });
+                    }.bind(this));
+                    
+                    wrapped();
+                });
             },
             
             classMixin: {

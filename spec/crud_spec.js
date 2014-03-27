@@ -15,29 +15,29 @@ describe('Iguana.Crud', function() {
         });
     });
     
-    // describe('ClassMethod show', function() {
-    //     
-    //     it('should make an api call and process the result', function() {
-    //         assertMakesApiCallAndReturnsASingleInstance('show', ['arg1', 'arg2']);
-    //     });
-    //     
-    //     it('should make an api call and handle an error', function() {
-    //         assertMakesApiCallAndFiresErrorCallback('show', ['arg1', 'arg2']);
-    //     });
-    //     
-    // });
-    // 
-    // describe('ClassMethod index', function() {
-    //     
-    //     it('should make an api call and process the result', function() {
-    //         assertMakesApiCallAndReturnsAnArrayOfInstances('index', ['arg1', 'arg2']);
-    //     });
-    //     
-    //     it('should make an api call and handle an error', function() {
-    //         assertMakesApiCallAndFiresErrorCallback('index', ['arg1', 'arg2']);
-    //     });
-    // });
-    // 
+    describe('ClassMethod show', function() {
+        
+        it('should make an api call and process the result', function() {
+            assertMakesApiCallAndReturnsASingleInstance('show', ['arg1', 'arg2']);
+        });
+        
+        it('should make an api call and handle an error', function() {
+            assertMakesApiCallAndFiresErrorCallback('show', ['arg1', 'arg2']);
+        });
+        
+    });
+    
+    describe('ClassMethod index', function() {
+        
+        it('should make an api call and process the result', function() {
+            assertMakesApiCallAndReturnsAnArrayOfInstances('index', ['arg1', 'arg2']);
+        });
+        
+        it('should make an api call and handle an error', function() {
+            assertMakesApiCallAndFiresErrorCallback('index', ['arg1', 'arg2']);
+        });
+    });
+    
     describe('ClassMethod create', function() {
         
         it('should make an api call and process the result', function() {
@@ -48,110 +48,110 @@ describe('Iguana.Crud', function() {
             assertMakesApiCallAndFiresErrorCallback('create', [{}]);
         });
     });
-    // 
-    // describe('ClassMethod update', function() {
-    //     
-    //     it('should make an api call and process the result', function() {
-    //         assertMakesApiCallAndReturnsASingleInstance('update', [{id: 'id'}]);
-    //     });
-    //     
-    //     it('should make an api call and handle an error', function() {
-    //         assertMakesApiCallAndFiresErrorCallback('update', [{id: 'id'}]);
-    //     });
-    // });
-    // 
-    // describe('ClassMethod destroy', function() {
-    //     
-    //     it('should make an api call and process the result', function() {
-    //         assertMakesApiCallAndReturnsNothing('destroy', ['id']);
-    //     });
-    //     
-    //     it('should make an api call and handle an error', function() {
-    //         assertMakesApiCallAndFiresErrorCallback('destroy', ['id']);
-    //     });
-    // });
-    // 
-    // describe('InstanceMethod save', function() {
-    //     it('should create a new item', function() {
-    //         var item = Item.new({});
-    //         assertSavesAndFiresSuccessCallback(item, 'create');            
-    //     });
-    //     
-    //     it('should update an existing item', function() {
-    //         var item = Item.new({id: 'id'});
-    //         assertSavesAndFiresSuccessCallback(item, 'update');
-    //     });
-    //     
-    //     it('should fire error when creating a new item', function() {
-    //         var item = Item.new({});
-    //         assertFiresErrorCallbackOnSave(item, 'create');
-    //     });
-    //     
-    //     it('should fire error when updating an existing item', function() {
-    //         var item = Item.new({id: 'id'});
-    //         assertFiresErrorCallbackOnSave(item, 'update');
-    //     });
-    //     
-    //     function assertSavesAndFiresSuccessCallback(item, action) {
-    //         var toBeSpiedOn = {onSuccess: function(response){
-    //             expect(response.result).toBe(item);
-    //             expect(response.meta).toBe('meta');
-    //         }};                        
-    //         spyOn(toBeSpiedOn, 'onSuccess').andCallThrough();
-    // 
-    //         Item.adapter().expect(action, 'items', [item.asJson()], {result: [item.asJson()], meta: 'meta'});
-    // 
-    //         item.save().then(toBeSpiedOn.onSuccess);
-    //         expect(toBeSpiedOn.onSuccess).not.toHaveBeenCalled(); // results have not come back from the server yet
-    //         Item.adapter().flush(action);
-    //         expect(toBeSpiedOn.onSuccess).toHaveBeenCalled();
-    //     }
-    //     
-    //     function assertFiresErrorCallbackOnSave(item, action) {
-    //         var error = {message: 'message'};
-    //         var toBeSpiedOn = {onError: null};                        
-    //         spyOn(toBeSpiedOn, 'onError');
-    // 
-    //         Item.adapter().expect(action, 'items', [item.asJson()], {error: error});
-    // 
-    //         item.save().catch(toBeSpiedOn.onError);
-    //         expect(toBeSpiedOn.onError).not.toHaveBeenCalled(); // results have not come back from the server yet
-    //         Item.adapter().flush(action);
-    //         expect(toBeSpiedOn.onError).toHaveBeenCalled();
-    //     }
-    // });
-    // 
-    // describe('InstanceMethod destroy', function() {
-    //     it('should destroy an instance and call success', function() {
-    //         var toBeSpiedOn = {onSuccess: function(response){
-    //             expect(response.result).toBe(null);
-    //             expect(response.meta).toBe('meta');
-    //         }};                        
-    //         spyOn(toBeSpiedOn, 'onSuccess').andCallThrough();
-    // 
-    //         var item = Item.new({id: 'id'});
-    //         Item.adapter().expect('destroy', 'items', ['id'], {result: [], meta: 'meta'});            
-    //         item.destroy().then(toBeSpiedOn.onSuccess);
-    //         
-    //         expect(toBeSpiedOn.onSuccess).not.toHaveBeenCalled(); // results have not come back from the server yet
-    //         Item.adapter().flush('destroy');
-    //         expect(toBeSpiedOn.onSuccess).toHaveBeenCalled();
-    //     });
-    //     
-    //     it('should fire an error when failing to destroy', function() {
-    //         var error = {message: 'message'};
-    //         var toBeSpiedOn = {onError: null};                        
-    //         spyOn(toBeSpiedOn, 'onError');
-    // 
-    //         var item = Item.new({id: 'id'});
-    //         Item.adapter().expect('destroy', 'items', ['id'], {error: 'error'});            
-    //         item.destroy().catch(toBeSpiedOn.onError);
-    //         
-    //         expect(toBeSpiedOn.onError).not.toHaveBeenCalled(); // results have not come back from the server yet
-    //         Item.adapter().flush('destroy');
-    //         expect(toBeSpiedOn.onError).toHaveBeenCalledWith('error');
-    //     });
-    // });
+    
+    describe('ClassMethod update', function() {
+        
+        it('should make an api call and process the result', function() {
+            assertMakesApiCallAndReturnsASingleInstance('update', [{id: 'id'}]);
+        });
+        
+        it('should make an api call and handle an error', function() {
+            assertMakesApiCallAndFiresErrorCallback('update', [{id: 'id'}]);
+        });
+    });
+    
+    describe('ClassMethod destroy', function() {
+        
+        it('should make an api call and process the result', function() {
+            assertMakesApiCallAndReturnsNothing('destroy', ['id']);
+        });
+        
+        it('should make an api call and handle an error', function() {
+            assertMakesApiCallAndFiresErrorCallback('destroy', ['id']);
+        });
+    });
+    
+    describe('InstanceMethod save', function() {
+        it('should create a new item', function() {
+            var item = Item.new({});
+            assertSavesAndFiresSuccessCallback(item, 'create');            
+        });
+        
+        it('should update an existing item', function() {
+            var item = Item.new({id: 'id'});
+            assertSavesAndFiresSuccessCallback(item, 'update');
+        });
+        
+        it('should fire error when creating a new item', function() {
+            var item = Item.new({});
+            assertFiresErrorCallbackOnSave(item, 'create');
+        });
+        
+        it('should fire error when updating an existing item', function() {
+            var item = Item.new({id: 'id'});
+            assertFiresErrorCallbackOnSave(item, 'update');
+        });
+        
+        function assertSavesAndFiresSuccessCallback(item, action) {
+            var toBeSpiedOn = {onSuccess: function(response){
+                expect(response.result).toBe(item);
+                expect(response.meta).toBe('meta');
+            }};                        
+            spyOn(toBeSpiedOn, 'onSuccess').andCallThrough();
+    
+            Item.adapter().expect(action, 'items', [item.asJson()], {result: [item.asJson()], meta: 'meta'});
+    
+            item.save().then(toBeSpiedOn.onSuccess);
+            expect(toBeSpiedOn.onSuccess).not.toHaveBeenCalled(); // results have not come back from the server yet
+            Item.adapter().flush(action);
+            expect(toBeSpiedOn.onSuccess).toHaveBeenCalled();
+        }
+        
+        function assertFiresErrorCallbackOnSave(item, action) {
+            var error = {message: 'message'};
+            var toBeSpiedOn = {onError: null};                        
+            spyOn(toBeSpiedOn, 'onError');
+    
+            Item.adapter().expect(action, 'items', [item.asJson()], {error: error});
+    
+            item.save().catch(toBeSpiedOn.onError);
+            expect(toBeSpiedOn.onError).not.toHaveBeenCalled(); // results have not come back from the server yet
+            Item.adapter().flush(action);
+            expect(toBeSpiedOn.onError).toHaveBeenCalled();
+        }
+    });
+    
+    describe('InstanceMethod destroy', function() {
+        it('should destroy an instance and call success', function() {
+            var toBeSpiedOn = {onSuccess: function(response){
+                expect(response.result).toBe(null);
+                expect(response.meta).toBe('meta');
+            }};                        
+            spyOn(toBeSpiedOn, 'onSuccess').andCallThrough();
+    
+            var item = Item.new({id: 'id'});
+            Item.adapter().expect('destroy', 'items', ['id'], {result: [], meta: 'meta'});            
+            item.destroy().then(toBeSpiedOn.onSuccess);
+            
+            expect(toBeSpiedOn.onSuccess).not.toHaveBeenCalled(); // results have not come back from the server yet
+            Item.adapter().flush('destroy');
+            expect(toBeSpiedOn.onSuccess).toHaveBeenCalled();
+        });
+        
+        it('should fire an error when failing to destroy', function() {
+            var error = {message: 'message'};
+            var toBeSpiedOn = {onError: null};                        
+            spyOn(toBeSpiedOn, 'onError');
+    
+            var item = Item.new({id: 'id'});
+            Item.adapter().expect('destroy', 'items', ['id'], {error: 'error'});            
+            item.destroy().catch(toBeSpiedOn.onError);
+            
+            expect(toBeSpiedOn.onError).not.toHaveBeenCalled(); // results have not come back from the server yet
+            Item.adapter().flush('destroy');
+            expect(toBeSpiedOn.onError).toHaveBeenCalledWith('error');
+        });
+    });
     
     function assertMakesApiCallAndReturnsNothing(meth, args) {
         assertMakesApiCallAndFiresSuccessCallback(meth, args, [], function(response){

@@ -6,7 +6,7 @@ describe('Iguana.Embeds', function() {
 
     beforeEach(function() {
         module('Iguana');
-        inject(function($injector, _Iguana_) {
+        inject(function($injector, _Iguana_, MockIguana) {
             
             /* # Embedding documents
             You have an 'item' document that looks like this ...
@@ -34,6 +34,8 @@ describe('Iguana.Embeds', function() {
                 
                 // 'embedsOne' looks the same as embedsMany
                 this.embedsOne('subItem', 'SubItem');
+                
+                this.setCollection('items');
             });
             
             SubItem = Iguana.subclass(function() {
@@ -107,6 +109,54 @@ describe('Iguana.Embeds', function() {
             expect(subitem.constructor).toBe(SubItem);
             expect(subitem.a).toEqual(0);
         });
+    });
+    
+    describe('saveCallbacks', function() {
+        
+        beforeEach(function() {
+            Item.expect('save');
+            SubItem.embedsOne('subItem', 'SubItem');
+            SubItem.embedsMany('subItems', 'SubItem');
+        });
+        
+        it('should fire on items embedded with embedsOne when saving parent', function() {
+            var item = Item.new({id: 0});
+            var subItem = SubItem.new({id: 1});
+            var evenMoreSubItem = SubItem.new({id: 2});
+            item.subItem = subItem;
+            subItem.subItem = evenMoreSubItem;
+            
+            var calledOn = [];
+            var callback = jasmine.createSpy('callback');
+            callback.andCallFake(function() {
+                 calledOn.push(this.id);
+            });
+            Item.setCallback('before', 'save', callback);
+            SubItem.setCallback('before', 'save', callback);
+            item.save();
+            expect(callback.calls.length).toBe(3);
+            expect(calledOn).toEqual([item.id, subItem.id, evenMoreSubItem.id]);
+        });
+        
+        it('should fire on items embedded with embedsMany when saving parent', function() {
+            var item = Item.new({id: 0});
+            var subItem = SubItem.new({id: 1});
+            var evenMoreSubItem = SubItem.new({id: 2});
+            item.subItems = [subItem];
+            subItem.subItems = [evenMoreSubItem];
+            
+            var calledOn = [];
+            var callback = jasmine.createSpy('callback');
+            callback.andCallFake(function() {
+                 calledOn.push(this.id);
+            });
+            Item.setCallback('before', 'save', callback);
+            SubItem.setCallback('before', 'save', callback);
+            item.save();
+            expect(callback.calls.length).toBe(3);
+            expect(calledOn).toEqual([item.id, subItem.id, evenMoreSubItem.id]);
+        });
+        
     });
     
     // <a id="embeddedIn"></a>
