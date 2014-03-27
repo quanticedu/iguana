@@ -1,0 +1,150 @@
+<!DOCTYPE html><html lang="en"><head><title>spec/adapters/restful_id_style_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="spec/adapters/restful_id_style_spec"><meta name="groc-project-path" content="spec/adapters/restful_id_style_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/adapters/restful_id_style_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Iguana.Adapters.RestfulIdStyle&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">Item</span><span class="p">,</span> <span class="nx">$httpBackend</span><span class="p">,</span> <span class="nx">myApp</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="restfulidstyle-adapter">RestfulIdStyle Adapter</h1>
+
+<p>This adapter is based on the <a href="https://gist.github.com/wycats/5500104">id-style json api</a> described by Yehuda Katz.</p>
+
+<p>To the api described there, RestfulIdStyle adds the ability to include 
+metadata in responses, as expected by Iguana.  The relationships described in that document
+are not yet supported in RestfulIdStyle, but could be one day.</p></div></div><div class="code"><div class="wrapper">    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="setup">Setup</h3>
+
+<p>Add Iguana and Iguana.Adapters.RestfulIdStyle as dependencies to your app and
+set it the default adapter for Iguana.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...        </p></div></div><div class="code"><div class="wrapper">        
+        <span class="nx">myApp</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Iguana&#39;</span><span class="p">,</span> <span class="s1">&#39;Iguana.Adapters.RestfulIdStyle&#39;</span><span class="p">])</span>
+            <span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">IguanaProvider</span><span class="p">){</span>
+                <span class="nx">IguanaProvider</span><span class="p">.</span><span class="nx">setAdapter</span><span class="p">(</span><span class="s1">&#39;Iguana.Adapters.RestfulIdStyle&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+        
+        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>
+        
+        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$injector</span><span class="p">,</span> <span class="nx">_Iguana_</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">$httpBackend</span> <span class="o">=</span> <span class="nx">$injector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;$httpBackend&#39;</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">Iguana</span> <span class="o">=</span> <span class="nx">_Iguana_</span><span class="p">;</span>
+            <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+    
+    <span class="nx">afterEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">verifyNoOutstandingExpectation</span><span class="p">();</span>
+        <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">verifyNoOutstandingRequest</span><span class="p">();</span>
+    <span class="p">});</span>
+    
+    
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="show">show</h3>
+
+<p>Show accepts a single argument, which is the id of a document.  </p>
+
+<p>The second argument can be any object, and will be passed through to the server-side api</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">};</span>
+            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">expectGET</span><span class="p">(</span><span class="s1">&#39;/items/id.json?queryParam=1&#39;</span><span class="p">).</span><span class="nx">respond</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="nx">contents</span><span class="o">:</span> <span class="p">{</span><span class="nx">items</span><span class="o">:</span> <span class="p">[</span><span class="nx">attrs</span><span class="p">]},</span> <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">});</span>
+            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="s1">&#39;_instantiateFromResponse&#39;</span><span class="p">);</span>
+            
+            <span class="c1">//Calling show with an id </span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">queryParam</span><span class="o">:</span> <span class="mi">1</span><span class="p">});</span>
+            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">Item</span><span class="p">.</span><span class="nx">_instantiateFromResponse</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="nx">_instantiateFromResponse</span><span class="p">.</span><span class="nx">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">args</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+            
+            <span class="c1">//Returning an iguana-formatted response</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">attrs</span><span class="p">],</span>
+                <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+        
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="index">index</h3>
+
+<p>index can accept any query parameters that your server-side api supports.   </p>
+
+<p>As with show (see above), index should eventually support querying functionality.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">attrsList</span> <span class="o">=</span> <span class="p">[{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id1&#39;</span><span class="p">},</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id2&#39;</span><span class="p">}];</span>
+            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">expectGET</span><span class="p">(</span><span class="s1">&#39;/items.json?queryParam=1&#39;</span><span class="p">).</span><span class="nx">respond</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="nx">contents</span><span class="o">:</span> <span class="p">{</span><span class="nx">items</span><span class="o">:</span> <span class="nx">attrsList</span><span class="p">},</span> <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">});</span>
+            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="s1">&#39;_instantiateFromResponse&#39;</span><span class="p">);</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">index</span><span class="p">({</span><span class="nx">queryParam</span><span class="o">:</span> <span class="mi">1</span><span class="p">});</span>
+            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">Item</span><span class="p">.</span><span class="nx">_instantiateFromResponse</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="nx">_instantiateFromResponse</span><span class="p">.</span><span class="nx">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">args</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+            
+            <span class="c1">//Returning an iguana-formatted response</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="nx">attrsList</span><span class="p">,</span>
+                <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+        
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="create">create</h3>
+
+<p>as required by Iguana.Adapter.Base, create expects a document
+as it's only argument</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="nx">prop</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">};</span>
+            <span class="kd">var</span> <span class="nx">returnAttrs</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">({},</span> <span class="nx">attrs</span><span class="p">,</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">});</span>
+            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">expectPOST</span><span class="p">(</span><span class="s1">&#39;/items.json&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">record</span><span class="o">:</span> <span class="nx">attrs</span><span class="p">}).</span><span class="nx">respond</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="nx">contents</span><span class="o">:</span> <span class="p">{</span><span class="nx">items</span><span class="o">:</span> <span class="p">[</span><span class="nx">returnAttrs</span><span class="p">]},</span> <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">});</span>
+            <span class="kd">var</span> <span class="nx">callbacks</span> <span class="o">=</span> <span class="p">{</span><span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">returnAttrs</span><span class="p">);</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">meta</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;meta&#39;</span><span class="p">);</span>
+            <span class="p">}};</span>
+            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">callbacks</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">).</span><span class="nx">andCallThrough</span><span class="p">();</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">attrs</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">callbacks</span><span class="p">.</span><span class="nx">success</span><span class="p">);</span>
+            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">callbacks</span><span class="p">.</span><span class="nx">success</span><span class="p">).</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span>
+        <span class="p">});</span>
+        
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="update">update</h3>
+
+<p>as required by Iguana.Adapter.Base, update expects a document
+as it's only argument</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="nx">prop</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">};</span>
+            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">expectPUT</span><span class="p">(</span><span class="s1">&#39;/items.json&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">record</span><span class="o">:</span> <span class="nx">attrs</span><span class="p">}).</span><span class="nx">respond</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="nx">contents</span><span class="o">:</span> <span class="p">{</span><span class="nx">items</span><span class="o">:</span> <span class="p">[</span><span class="nx">attrs</span><span class="p">]},</span> <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">});</span>
+            <span class="kd">var</span> <span class="nx">callbacks</span> <span class="o">=</span> <span class="p">{</span><span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">attrs</span><span class="p">);</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">meta</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;meta&#39;</span><span class="p">);</span>
+            <span class="p">}};</span>
+            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">callbacks</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">).</span><span class="nx">andCallThrough</span><span class="p">();</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">attrs</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">callbacks</span><span class="p">.</span><span class="nx">success</span><span class="p">);</span>
+            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">callbacks</span><span class="p">.</span><span class="nx">success</span><span class="p">).</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span>
+        <span class="p">});</span>
+        
+    <span class="p">});</span>
+    
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="destroy">destroy</h3>
+
+<p>as required by Iguana.Adapter.Base, destroy expects an id
+as it's only argument.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">};</span>
+            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">expectDELETE</span><span class="p">(</span><span class="s1">&#39;/items/id.json&#39;</span><span class="p">).</span><span class="nx">respond</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="nx">contents</span><span class="o">:</span> <span class="p">{},</span> <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">});</span>
+            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="s1">&#39;_prepareEmptyResponse&#39;</span><span class="p">);</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">destroy</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">);</span>
+            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">Item</span><span class="p">.</span><span class="nx">_prepareEmptyResponse</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="nx">_prepareEmptyResponse</span><span class="p">.</span><span class="nx">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">args</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+            
+            <span class="c1">//Returning an iguana-formatted response</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[],</span>
+                <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+        
+    <span class="p">});</span>
+
+    
+<span class="p">});</span></div></div></div></div></body></html>
