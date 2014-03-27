@@ -1,6 +1,6 @@
 {
     "name": "iguana",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "description": "Object-Document Mapper (ODM) for angular",
     "repository": {
         "url": "https://github.com/pedago/iguana.git",
