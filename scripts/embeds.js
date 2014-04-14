@@ -62,21 +62,32 @@
                 Iguana.setCallback('around', 'save', function(save) {
                     var wrapped = save;
                     
-                    angular.forEach(this.embedRelationships(), function(relationship, propName){
-                        var value = this[propName];
-                        if (!value) {
-                            return;
+                    /*
+                        We do not use angular.forEach here because it can lead to 
+                        Max Call Stack errors in Chrome.  Apparently this looks
+                        like one bug call stack if you use 
+                        angular.forEach(this.embedRelationships(), but like
+                        a bunch of little ones if you use for propName in relationships
+                    */
+                    var relationships = this.embedRelationships();
+                    for (var propName in relationships) {
+                        if (!relationships.hasOwnProperty(propName)) { 
+                            continue
                         }
-                        var isArray = (Object.prototype.toString.call(value) === '[object Array]');
-                        var values = isArray ? value : [value];
-                        values.forEach(function(item){
-                            var reWrapped = function(wrapped) {
-                                item.runCallbacks('save', wrapped);
-                            }.bind(item, wrapped);
-                            wrapped = reWrapped;
-                        });
-                    }.bind(this));
-                    
+                        var relationship = relationships[propName];
+                        var value = this[propName];
+                        if (value) {
+                            var isArray = (Object.prototype.toString.call(value) === '[object Array]');
+                            var values = isArray ? value : [value];
+                            values.forEach(function(item) {
+                                var reWrapped = function(wrapped) {
+                                    item.runCallbacks('save', wrapped);
+                                }.bind(item, wrapped);
+                                wrapped = reWrapped;
+                            });
+                        }
+                    }
+            
                     wrapped();
                 });
             },
