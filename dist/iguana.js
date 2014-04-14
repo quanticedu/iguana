@@ -552,20 +552,19 @@ angular.module('Iguana')
                     */
                     var relationships = this.embedRelationships();
                     for (var propName in relationships) {
-                        if (!relationships.hasOwnProperty(propName)) { 
-                            continue
-                        }
-                        var relationship = relationships[propName];
-                        var value = this[propName];
-                        if (value) {
-                            var isArray = (Object.prototype.toString.call(value) === '[object Array]');
-                            var values = isArray ? value : [value];
-                            values.forEach(function(item) {
-                                var reWrapped = function(wrapped) {
-                                    item.runCallbacks('save', wrapped);
-                                }.bind(item, wrapped);
-                                wrapped = reWrapped;
-                            });
+                        if (relationships.hasOwnProperty(propName)) { 
+                            var relationship = relationships[propName];
+                            var value = this[propName];
+                            if (value) {
+                                var isArray = (Object.prototype.toString.call(value) === '[object Array]');
+                                var values = isArray ? value : [value];
+                                values.forEach(function(item) {
+                                    var reWrapped = function(wrapped) {
+                                        item.runCallbacks('save', wrapped);
+                                    }.bind(item, wrapped);
+                                    wrapped = reWrapped;
+                                });
+                            }
                         }
                     }
             
