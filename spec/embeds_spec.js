@@ -110,54 +110,56 @@ describe('Iguana.Embeds', function() {
             expect(subitem.a).toEqual(0);
         });
     });
-    
-    describe('saveCallbacks', function() {
-        
-        beforeEach(function() {
-            Item.expect('save');
-            SubItem.embedsOne('subItem', 'SubItem');
-            SubItem.embedsMany('subItems', 'SubItem');
-        });
-        
-        it('should fire on items embedded with embedsOne when saving parent', function() {
-            var item = Item.new({id: 0});
-            var subItem = SubItem.new({id: 1});
-            var evenMoreSubItem = SubItem.new({id: 2});
-            item.subItem = subItem;
-            subItem.subItem = evenMoreSubItem;
-            
-            var calledOn = [];
-            var callback = jasmine.createSpy('callback');
-            callback.andCallFake(function() {
-                 calledOn.push(this.id);
-            });
-            Item.setCallback('before', 'save', callback);
-            SubItem.setCallback('before', 'save', callback);
-            item.save();
-            expect(callback.calls.length).toBe(3);
-            expect(calledOn).toEqual([item.id, subItem.id, evenMoreSubItem.id]);
-        });
-        
-        it('should fire on items embedded with embedsMany when saving parent', function() {
-            var item = Item.new({id: 0});
-            var subItem = SubItem.new({id: 1});
-            var evenMoreSubItem = SubItem.new({id: 2});
-            item.subItems = [subItem];
-            subItem.subItems = [evenMoreSubItem];
-            
-            var calledOn = [];
-            var callback = jasmine.createSpy('callback');
-            callback.andCallFake(function() {
-                 calledOn.push(this.id);
-            });
-            Item.setCallback('before', 'save', callback);
-            SubItem.setCallback('before', 'save', callback);
-            item.save();
-            expect(callback.calls.length).toBe(3);
-            expect(calledOn).toEqual([item.id, subItem.id, evenMoreSubItem.id]);
-        });
-        
-    });
+
+    // See comment in included: method.  We had to remove this, but would
+    // like to bring it back one day if possible
+    // describe('saveCallbacks', function() {
+    //     
+    //     beforeEach(function() {
+    //         Item.expect('save');
+    //         SubItem.embedsOne('subItem', 'SubItem');
+    //         SubItem.embedsMany('subItems', 'SubItem');
+    //     });
+    //     
+    //     it('should fire on items embedded with embedsOne when saving parent', function() {
+    //         var item = Item.new({id: 0});
+    //         var subItem = SubItem.new({id: 1});
+    //         var evenMoreSubItem = SubItem.new({id: 2});
+    //         item.subItem = subItem;
+    //         subItem.subItem = evenMoreSubItem;
+    //         
+    //         var calledOn = [];
+    //         var callback = jasmine.createSpy('callback');
+    //         callback.andCallFake(function() {
+    //              calledOn.push(this.id);
+    //         });
+    //         Item.setCallback('before', 'save', callback);
+    //         SubItem.setCallback('before', 'save', callback);
+    //         item.save();
+    //         expect(callback.calls.length).toBe(3);
+    //         expect(calledOn).toEqual([item.id, subItem.id, evenMoreSubItem.id]);
+    //     });
+    //     
+    //     it('should fire on items embedded with embedsMany when saving parent', function() {
+    //         var item = Item.new({id: 0});
+    //         var subItem = SubItem.new({id: 1});
+    //         var evenMoreSubItem = SubItem.new({id: 2});
+    //         item.subItems = [subItem];
+    //         subItem.subItems = [evenMoreSubItem];
+    //         
+    //         var calledOn = [];
+    //         var callback = jasmine.createSpy('callback');
+    //         callback.andCallFake(function() {
+    //              calledOn.push(this.id);
+    //         });
+    //         Item.setCallback('before', 'save', callback);
+    //         SubItem.setCallback('before', 'save', callback);
+    //         item.save();
+    //         expect(callback.calls.length).toBe(3);
+    //         expect(calledOn).toEqual([item.id, subItem.id, evenMoreSubItem.id]);
+    //     });
+    //     
+    // });
     
     // <a id="embeddedIn"></a>
     // ### embeddedIn

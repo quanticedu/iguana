@@ -59,52 +59,35 @@
                 Iguana.extendableObject('embedRelationships');
                 Iguana.setCallback('before', 'copyAttrs', 'processEmbeds');
 
-                Iguana.setCallback('around', 'save', function(save) {
-                    var wrapped = save;
-
-                    /*
-                    We do not use angular.forEach here because it can lead to 
-                    Max Call Stack errors in Chrome.  Apparently this looks
-                    like one bug call stack if you use 
-                    angular.forEach(this.embedRelationships(), but like
-                    a bunch of little ones if you use for propName in relationships
-                */
-                    var relationships = this.embedRelationships();
-                    for (var propName in relationships) {
-                        var relationship = relationships[propName];
-                        var value = this[propName];
-                        if (relationship.hasOwnProperty(propName) && value) {
-                            var isArray = (Object.prototype.toString.call(value) === '[object Array]');
-                            var values = isArray ? value : [value];
-                            values.forEach(function(item) {
-                                var reWrapped = function(wrapped) {
-                                    item.runCallbacks('save', wrapped);
-                                }.bind(item, wrapped);
-                                wrapped = reWrapped;
-                            });
-                        }
-                    }
-                    // var relationships = this.embedRelationships();
-                    // for (var propName in relationships) {
-                    //     if (!relationships.hasOwnProperty(propName)) { 
-                    //         continue
-                    //     }
-                    //     var relationship = relationships[propName];
-                    //     var value = this[propName];
-                    //     if (value) {
-                    //         var isArray = (Object.prototype.toString.call(value) === '[object Array]');
-                    //         var values = isArray ? value : [value];
-                    //         values.forEach(function(item) {
-                    //             var reWrapped = function(wrapped) {
-                    //                 item.runCallbacks('save', wrapped);
-                    //             }.bind(item, wrapped);
-                    //             wrapped = reWrapped;
-                    //         });
-                    //     }
-                    // }
-
-                    wrapped();
-                });
+                // // We would like to bring this back, but it can
+                // // case MaxCallStack errors in Chrome.  Maybe
+                // // we can eventually find a solution
+                // Iguana.setCallback('around', 'save', function(save) {
+                //     var wrapped = save;
+                // 
+                //     
+                //     
+                //     // var relationships = this.embedRelationships();
+                //     // for (var propName in relationships) {
+                //     //     if (!relationships.hasOwnProperty(propName)) { 
+                //     //         continue
+                //     //     }
+                //     //     var relationship = relationships[propName];
+                //     //     var value = this[propName];
+                //     //     if (value) {
+                //     //         var isArray = (Object.prototype.toString.call(value) === '[object Array]');
+                //     //         var values = isArray ? value : [value];
+                //     //         values.forEach(function(item) {
+                //     //             var reWrapped = function(wrapped) {
+                //     //                 item.runCallbacks('save', wrapped);
+                //     //             }.bind(item, wrapped);
+                //     //             wrapped = reWrapped;
+                //     //         });
+                //     //     }
+                //     // }
+                // 
+                //     wrapped();
+                // });
             },
             
             classMixin: {

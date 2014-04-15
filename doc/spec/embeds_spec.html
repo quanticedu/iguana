@@ -86,55 +86,54 @@ matching the object that came over the api.</p></div></div><div class="code"><di
             <span class="nx">expect</span><span class="p">(</span><span class="nx">subitem</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">SubItem</span><span class="p">);</span>
             <span class="nx">expect</span><span class="p">(</span><span class="nx">subitem</span><span class="p">.</span><span class="nx">a</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
         <span class="p">});</span>
-    <span class="p">});</span>
-    
-    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;saveCallbacks&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        
-        <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">);</span>
-            <span class="nx">SubItem</span><span class="p">.</span><span class="nx">embedsOne</span><span class="p">(</span><span class="s1">&#39;subItem&#39;</span><span class="p">,</span> <span class="s1">&#39;SubItem&#39;</span><span class="p">);</span>
-            <span class="nx">SubItem</span><span class="p">.</span><span class="nx">embedsMany</span><span class="p">(</span><span class="s1">&#39;subItems&#39;</span><span class="p">,</span> <span class="s1">&#39;SubItem&#39;</span><span class="p">);</span>
-        <span class="p">});</span>
-        
-        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should fire on items embedded with embedsOne when saving parent&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="mi">0</span><span class="p">});</span>
-            <span class="kd">var</span> <span class="nx">subItem</span> <span class="o">=</span> <span class="nx">SubItem</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">});</span>
-            <span class="kd">var</span> <span class="nx">evenMoreSubItem</span> <span class="o">=</span> <span class="nx">SubItem</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="mi">2</span><span class="p">});</span>
-            <span class="nx">item</span><span class="p">.</span><span class="nx">subItem</span> <span class="o">=</span> <span class="nx">subItem</span><span class="p">;</span>
-            <span class="nx">subItem</span><span class="p">.</span><span class="nx">subItem</span> <span class="o">=</span> <span class="nx">evenMoreSubItem</span><span class="p">;</span>
-            
-            <span class="kd">var</span> <span class="nx">calledOn</span> <span class="o">=</span> <span class="p">[];</span>
-            <span class="kd">var</span> <span class="nx">callback</span> <span class="o">=</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">createSpy</span><span class="p">(</span><span class="s1">&#39;callback&#39;</span><span class="p">);</span>
-            <span class="nx">callback</span><span class="p">.</span><span class="nx">andCallFake</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-                 <span class="nx">calledOn</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
-            <span class="p">});</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
-            <span class="nx">SubItem</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
-            <span class="nx">item</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">callback</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">calledOn</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">([</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">subItem</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">evenMoreSubItem</span><span class="p">.</span><span class="nx">id</span><span class="p">]);</span>
-        <span class="p">});</span>
-        
-        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should fire on items embedded with embedsMany when saving parent&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="mi">0</span><span class="p">});</span>
-            <span class="kd">var</span> <span class="nx">subItem</span> <span class="o">=</span> <span class="nx">SubItem</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">});</span>
-            <span class="kd">var</span> <span class="nx">evenMoreSubItem</span> <span class="o">=</span> <span class="nx">SubItem</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="mi">2</span><span class="p">});</span>
-            <span class="nx">item</span><span class="p">.</span><span class="nx">subItems</span> <span class="o">=</span> <span class="p">[</span><span class="nx">subItem</span><span class="p">];</span>
-            <span class="nx">subItem</span><span class="p">.</span><span class="nx">subItems</span> <span class="o">=</span> <span class="p">[</span><span class="nx">evenMoreSubItem</span><span class="p">];</span>
-            
-            <span class="kd">var</span> <span class="nx">calledOn</span> <span class="o">=</span> <span class="p">[];</span>
-            <span class="kd">var</span> <span class="nx">callback</span> <span class="o">=</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">createSpy</span><span class="p">(</span><span class="s1">&#39;callback&#39;</span><span class="p">);</span>
-            <span class="nx">callback</span><span class="p">.</span><span class="nx">andCallFake</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-                 <span class="nx">calledOn</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
-            <span class="p">});</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
-            <span class="nx">SubItem</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
-            <span class="nx">item</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">callback</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">calledOn</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">([</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">subItem</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">evenMoreSubItem</span><span class="p">.</span><span class="nx">id</span><span class="p">]);</span>
-        <span class="p">});</span>
-        
-    <span class="p">});</span>
+    <span class="p">});</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>See comment in included: method.  We had to remove this, but would
+like to bring it back one day if possible
+describe('saveCallbacks', function() {</p>
+
+<pre><code>beforeEach(function() {
+    Item.expect('save');
+    SubItem.embedsOne('subItem', 'SubItem');
+    SubItem.embedsMany('subItems', 'SubItem');
+});
+
+it('should fire on items embedded with embedsOne when saving parent', function() {
+    var item = Item.new({id: 0});
+    var subItem = SubItem.new({id: 1});
+    var evenMoreSubItem = SubItem.new({id: 2});
+    item.subItem = subItem;
+    subItem.subItem = evenMoreSubItem;
+
+    var calledOn = [];
+    var callback = jasmine.createSpy('callback');
+    callback.andCallFake(function() {
+         calledOn.push(this.id);
+    });
+    Item.setCallback('before', 'save', callback);
+    SubItem.setCallback('before', 'save', callback);
+    item.save();
+    expect(callback.calls.length).toBe(3);
+    expect(calledOn).toEqual([item.id, subItem.id, evenMoreSubItem.id]);
+});
+
+it('should fire on items embedded with embedsMany when saving parent', function() {
+    var item = Item.new({id: 0});
+    var subItem = SubItem.new({id: 1});
+    var evenMoreSubItem = SubItem.new({id: 2});
+    item.subItems = [subItem];
+    subItem.subItems = [evenMoreSubItem];
+
+    var calledOn = [];
+    var callback = jasmine.createSpy('callback');
+    callback.andCallFake(function() {
+         calledOn.push(this.id);
+    });
+    Item.setCallback('before', 'save', callback);
+    SubItem.setCallback('before', 'save', callback);
+    item.save();
+    expect(callback.calls.length).toBe(3);
+    expect(calledOn).toEqual([item.id, subItem.id, evenMoreSubItem.id]);
+});
+</code></pre></div></div><div class="code"><div class="wrapper">    <span class="c1">// );</span>
     </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><a id="embeddedIn"></a></p>
 
 <h3 id="embeddedin">embeddedIn</h3>
