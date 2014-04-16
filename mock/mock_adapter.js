@@ -38,6 +38,10 @@ angular.module('Iguana')
                 },
                 
                 toBeCalledWith: function(args) {
+                    if (arguments.length > 1) {
+                        args = Array.prototype.slice.call(arguments);
+                    }
+                    
                     if (Object.prototype.toString.call( args ) !== '[object Array]') {
                         args = [args];
                     }
