@@ -1,0 +1,199 @@
+<!DOCTYPE html><html lang="en"><head><title>spec/single_collection_inheritance_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/single_collection_inheritance_spec"><meta name="groc-project-path" content="spec/single_collection_inheritance_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/single_collection_inheritance_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Iguana.SingleCollectionInheritance&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">Iguana</span><span class="p">,</span> <span class="nx">Item</span><span class="p">;</span>
+
+    <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;Iguana&#39;</span><span class="p">);</span>
+
+        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">_Iguana_</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">Iguana</span> <span class="o">=</span> <span class="nx">_Iguana_</span><span class="p">;</span>
+            <span class="nx">Iguana</span><span class="p">.</span><span class="nx">setAdapter</span><span class="p">(</span><span class="s1">&#39;Iguana.Mock.Adapter&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+
+    <span class="p">});</span>
+
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;new&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">ItemType1</span><span class="p">,</span> <span class="nx">ItemType2</span><span class="p">;</span>
+
+        <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="single-collection-inheritance">Single Collection Inheritance</h1>
+
+<p>You may have different documents in a single collection that
+you want to be mapped to different classes.  This is known as
+"ploymorphism" or "single collection inheritance."  </p>
+
+<p>In order to implement single collection inheritance, you 
+will need to set aliases for your classes.
+Doing so will cause a property to be added to each document (by default,
+the property is __iguana_type), 
+indicating which class it should be mapped to.  This allows
+iguana to map each document to the appropriate class.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...</p></div></div><div class="code"><div class="wrapper">                <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;item&#39;</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">);</span>
+                <span class="p">});</span>
+
+                <span class="nx">ItemType1</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;item_type_1&#39;</span><span class="p">);</span>
+                <span class="p">});</span>
+
+                <span class="nx">ItemType2</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;item_type_2&#39;</span><span class="p">);</span>
+                <span class="p">});</span>
+            <span class="p">});</span>
+
+        <span class="p">});</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Now that you have called alias(), when a document 
+is loaded up over the api, it will be instantiated
+as instance of the appropriate class.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should create an instance of a subclass if the type property matches the alias&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...</p></div></div><div class="code"><div class="wrapper">            <span class="c1">//There are two items in the database</span>
+            <span class="kd">var</span> <span class="nx">items</span> <span class="o">=</span> <span class="p">[{</span>
+                <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="nx">__iguana_type</span><span class="o">:</span> <span class="s1">&#39;item_type_1&#39;</span>
+            <span class="p">},</span> <span class="p">{</span>
+                <span class="nx">id</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="nx">__iguana_type</span><span class="o">:</span> <span class="s1">&#39;item_type_2&#39;</span>
+            <span class="p">}];</span>
+
+            <span class="c1">//Mocking out the adapter to load up the first item.</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+
+                <span class="c1">//Since the __iguana_type is &#39;item_type_1&#39;, the result is </span>
+                <span class="c1">//an instance of ItemType1</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">ItemType1</span><span class="p">);</span>
+            <span class="p">});</span>
+
+            <span class="c1">//Mocking out the adapter to load up the second item.</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">items</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+
+                <span class="c1">//Since the __iguana_type is &#39;item_type_2&#39;, the result is </span>
+                <span class="c1">//an instance of ItemType2</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">ItemType2</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">});</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>When a new instance is created, the __iguana_type is set automatically.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should create an instance of the class and set the __iguana_type if the __iguana_type is not set&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...</p></div></div><div class="code"><div class="wrapper">            <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="nx">ItemType1</span><span class="p">.</span><span class="k">new</span><span class="p">({});</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">ItemType1</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">__iguana_type</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;item_type_1&#39;</span><span class="p">);</span>
+        <span class="p">});</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Iguana classes cannot be created with 'new Item()'; You must call 'Item.new' </p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should only allow instances to be created with Item.new, not new Item()&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">func</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">new</span> <span class="nx">Item</span><span class="p">();</span>
+            <span class="p">};</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">func</span><span class="p">).</span><span class="nx">toThrow</span><span class="p">(</span><span class="s2">&quot;Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()&quot;</span><span class="p">);</span>
+        <span class="p">});</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should throw an error if no class matches the __iguana_type property&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...</p></div></div><div class="code"><div class="wrapper">            <span class="kd">var</span> <span class="nx">func</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span>
+                    <span class="nx">__iguana_type</span><span class="o">:</span> <span class="s1">&#39;noItemForThis&#39;</span>
+                <span class="p">});</span>
+            <span class="p">};</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">func</span><span class="p">).</span><span class="nx">toThrow</span><span class="p">(</span><span class="s1">&#39;No class could be found for __iguana_type=&quot;noItemForThis&quot;.&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should not set the type property if there is no alias&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">UnAliasedItem</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">();</span>
+            <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="nx">UnAliasedItem</span><span class="p">.</span><span class="k">new</span><span class="p">({});</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">UnAliasedItem</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">__iguana_type</span><span class="p">).</span><span class="nx">toBeUndefined</span><span class="p">();</span>
+        <span class="p">});</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should create an instance of the class if the type property matches the sciAlias&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span>
+                <span class="nx">__iguana_type</span><span class="o">:</span> <span class="s1">&#39;item&#39;</span>
+            <span class="p">});</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
+        <span class="p">});</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should work with a lazy-loaded class&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">mockClass</span> <span class="o">=</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">createSpy</span><span class="p">(</span><span class="s1">&#39;mockClass&#39;</span><span class="p">);</span>
+            <span class="nx">mockClass</span><span class="p">.</span><span class="nx">inheritsFrom</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">};</span>
+            <span class="nx">mockClass</span><span class="p">.</span><span class="k">new</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nx">mockClass</span><span class="p">();</span>
+            <span class="p">};</span>
+
+            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="s1">&#39;getAliasedKlass&#39;</span><span class="p">).</span><span class="nx">andReturn</span><span class="p">(</span><span class="nx">mockClass</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span>
+                <span class="nx">__iguana_type</span><span class="o">:</span> <span class="s1">&#39;lazy_loaded_item&#39;</span>
+            <span class="p">});</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">Item</span><span class="p">.</span><span class="nx">getAliasedKlass</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s1">&#39;lazy_loaded_item&#39;</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">mockClass</span><span class="p">);</span>
+        <span class="p">});</span>
+
+    <span class="p">});</span>
+
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;sciProperty&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should default to __iguana_type&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">.</span><span class="nx">sciProperty</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;__iguana_type&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">().</span><span class="nx">sciProperty</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;__iguana_type&#39;</span><span class="p">);</span>
+        <span class="p">});</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="configuring-the-property-used-for-the-alias">Configuring the property used for the alias.</h3>
+
+<p>If you want to use something other than '__iguana_type' for
+the property that defines the alias, you can use 'setSciProperty'.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should be overridable&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;item&#39;</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">setSciProperty</span><span class="p">(</span><span class="s1">&#39;item_type&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+
+            <span class="kd">var</span> <span class="nx">ItemType1</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;item_type_1&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+
+            <span class="kd">var</span> <span class="nx">ItemType2</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;item_type_2&#39;</span><span class="p">);</span>
+            <span class="p">});</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Since we called setSciProperty('itemType'), we should
+use the itemType property to define the alias of the 
+class used to instantiate the document.</p></div></div><div class="code"><div class="wrapper">            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="nx">item_type</span><span class="o">:</span> <span class="s1">&#39;item_type_1&#39;</span>
+            <span class="p">};</span>
+
+            <span class="c1">//Mocking out the adapter to load up the item.</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">item</span><span class="p">]</span>
+            <span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">loadedItem</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+
+                <span class="c1">//Since the __iguana_type is &#39;item_type_1&#39;, the result is </span>
+                <span class="c1">//an instance of ItemType1</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">ItemType1</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+
+    <span class="p">});</span>
+
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="create-class-method">create class method</h3>
+
+<p>Calling the create method on a subclass will
+automatically set the appropriate class</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should set the sciProperty&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;item&#39;</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+
+            <span class="kd">var</span> <span class="nx">ItemType1</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s1">&#39;item_type_1&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+
+            <span class="kd">var</span> <span class="nx">expectedObject</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;__iguana_type&#39;</span><span class="o">:</span> <span class="s1">&#39;item_type_1&#39;</span>
+            <span class="p">}</span>
+            <span class="nx">ItemType1</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="nx">expectedObject</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">expectedObject</span><span class="p">]</span>
+            <span class="p">});</span>
+            <span class="nx">ItemType1</span><span class="p">.</span><span class="nx">create</span><span class="p">({});</span>
+            <span class="nx">ItemType1</span><span class="p">.</span><span class="nx">adapter</span><span class="p">().</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+
+    <span class="p">});</span>
+
+
+<span class="p">});</span></div></div></div></div></body></html>
