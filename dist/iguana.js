@@ -177,15 +177,17 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
                     return this._makeApiCall(collection, 'show', params);
                 },
 
-                create: function(collection, obj) {
+                create: function(collection, obj, metadata) {
                     return this._makeApiCall(collection, 'create', {
-                        record: obj
+                        record: obj,
+                        meta: metadata
                     });
                 },
 
-                update: function(collection, obj) {
+                update: function(collection, obj, metadata) {
                     return this._makeApiCall(collection, 'update', {
-                        record: obj
+                        record: obj,
+                        meta: metadata
                     });
                 },
 
@@ -365,20 +367,20 @@ angular.module('Iguana')
                     return this._callAdapterMethAndInstantiateResult('index', false, arguments);
                 },
                 
-                create: function(obj) {
+                create: function(obj, metadata) {
                     var instance = this.new(obj);
                     if (!instance.isNew()) {
                         throw new Error("Cannot call create on instance that is already saved.");
                     }
-                    return instance.save();
+                    return instance.save(metadata);
                 },
                 
-                update: function(obj) {
+                update: function(obj, metadata) {
                     var instance = this.new(obj);
                     if (instance.isNew()) {
                         throw new Error("Cannot call update on instance that is not already saved.");
                     }
-                    return instance.save();
+                    return instance.save(metadata);
                 },
                 
                 destroy: function(id) {
@@ -388,8 +390,9 @@ angular.module('Iguana')
                     }.bind(this));
                 },
                 
-                saveWithoutInstantiating: function(meth, obj) {
-                    return this._callAdapterMeth(meth, [obj]).then(function(response){
+                saveWithoutInstantiating: function(meth, obj, metadata) {
+                    var args = metadata ? [obj, metadata] : [obj];
+                    return this._callAdapterMeth(meth, args).then(function(response){
                         return {
                             result: response.result[0],
                             meta: response.meta
@@ -440,10 +443,10 @@ angular.module('Iguana')
             
             instanceMixin: {
                 
-                save: function() {
+                save: function(metadata) {
                     var returnValue;
                     this.runCallbacks('save', function() {
-                        returnValue = this._save();
+                        returnValue = this._save(metadata);
                     });
                     return returnValue;
                 },
@@ -453,10 +456,10 @@ angular.module('Iguana')
                     return !id;
                 },
                 
-                _save: function() {
+                _save: function(metadata) {
                     var action = this.isNew() ? "create" : "update"; 
                     
-                    return this.constructor.saveWithoutInstantiating(action, this.asJson()).then(function(response){
+                    return this.constructor.saveWithoutInstantiating(action, this.asJson(), metadata).then(function(response){
                         var attrs = angular.extend({}, response.result);
                         
                         this.copyAttrs(attrs);

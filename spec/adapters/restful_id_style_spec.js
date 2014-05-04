@@ -98,18 +98,19 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
         
         // ### create
         // as required by Iguana.Adapter.Base, create expects a document
-        // as it's only argument
+        // and an optional metadata hash
         it('should make an api call and process the result', function() {
             var attrs = {prop: 'value'};
+            var metadata = {meta: 'data'};
             var returnAttrs = angular.extend({}, attrs, {id: 'id'});
-            $httpBackend.expectPOST('/items.json', {record: attrs}).respond(200, {contents: {items: [returnAttrs]}, meta: 'meta'});
+            $httpBackend.expectPOST('/items.json', {record: attrs, meta: metadata}).respond(200, {contents: {items: [returnAttrs]}, meta: 'meta'});
             var callbacks = {success: function(response){
                 expect(response.result.constructor).toBe(Item);
                 expect(response.result.asJson()).toEqual(returnAttrs);
                 expect(response.meta).toBe('meta');
             }};
             spyOn(callbacks, 'success').andCallThrough();
-            Item.create(attrs).then(callbacks.success);
+            Item.create(attrs, metadata).then(callbacks.success);
             $httpBackend.flush();
             expect(callbacks.success).toHaveBeenCalled();
         });
@@ -120,17 +121,18 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
         
         // ### update
         // as required by Iguana.Adapter.Base, update expects a document
-        // as it's only argument
+        // and an optional metadata hash
         it('should make an api call and process the result', function() {
             var attrs = {id: 'id', prop: 'value'};
-            $httpBackend.expectPUT('/items.json', {record: attrs}).respond(200, {contents: {items: [attrs]}, meta: 'meta'});
+            var metadata = {meta: 'data'};
+            $httpBackend.expectPUT('/items.json', {record: attrs, meta: metadata}).respond(200, {contents: {items: [attrs]}, meta: 'meta'});
             var callbacks = {success: function(response){
                 expect(response.result.constructor).toBe(Item);
                 expect(response.result.asJson()).toEqual(attrs);
                 expect(response.meta).toBe('meta');
             }};
             spyOn(callbacks, 'success').andCallThrough();
-            Item.update(attrs).then(callbacks.success);
+            Item.update(attrs, metadata).then(callbacks.success);
             $httpBackend.flush();
             expect(callbacks.success).toHaveBeenCalled();
         });

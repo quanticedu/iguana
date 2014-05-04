@@ -51,20 +51,20 @@
                     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_callAdapterMethAndInstantiateResult</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
                 <span class="p">},</span>
                 
-                <span class="nx">create</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">create</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">)</span> <span class="p">{</span>
                     <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="k">new</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span>
                     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">instance</span><span class="p">.</span><span class="nx">isNew</span><span class="p">())</span> <span class="p">{</span>
                         <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Cannot call create on instance that is already saved.&quot;</span><span class="p">);</span>
                     <span class="p">}</span>
-                    <span class="k">return</span> <span class="nx">instance</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
+                    <span class="k">return</span> <span class="nx">instance</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="nx">metadata</span><span class="p">);</span>
                 <span class="p">},</span>
                 
-                <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">)</span> <span class="p">{</span>
                     <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="k">new</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span>
                     <span class="k">if</span> <span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">isNew</span><span class="p">())</span> <span class="p">{</span>
                         <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Cannot call update on instance that is not already saved.&quot;</span><span class="p">);</span>
                     <span class="p">}</span>
-                    <span class="k">return</span> <span class="nx">instance</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
+                    <span class="k">return</span> <span class="nx">instance</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="nx">metadata</span><span class="p">);</span>
                 <span class="p">},</span>
                 
                 <span class="nx">destroy</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
@@ -74,8 +74,9 @@
                     <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
                 <span class="p">},</span>
                 
-                <span class="nx">saveWithoutInstantiating</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">meth</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_callAdapterMeth</span><span class="p">(</span><span class="nx">meth</span><span class="p">,</span> <span class="p">[</span><span class="nx">obj</span><span class="p">]).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+                <span class="nx">saveWithoutInstantiating</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">meth</span><span class="p">,</span> <span class="nx">obj</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kd">var</span> <span class="nx">args</span> <span class="o">=</span> <span class="nx">metadata</span> <span class="o">?</span> <span class="p">[</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">]</span> <span class="o">:</span> <span class="p">[</span><span class="nx">obj</span><span class="p">];</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_callAdapterMeth</span><span class="p">(</span><span class="nx">meth</span><span class="p">,</span> <span class="nx">args</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
                         <span class="k">return</span> <span class="p">{</span>
                             <span class="nx">result</span><span class="o">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                             <span class="nx">meta</span><span class="o">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">meta</span>
@@ -126,10 +127,10 @@
             
             <span class="nx">instanceMixin</span><span class="o">:</span> <span class="p">{</span>
                 
-                <span class="nx">save</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="nx">save</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">metadata</span><span class="p">)</span> <span class="p">{</span>
                     <span class="kd">var</span> <span class="nx">returnValue</span><span class="p">;</span>
                     <span class="k">this</span><span class="p">.</span><span class="nx">runCallbacks</span><span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-                        <span class="nx">returnValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_save</span><span class="p">();</span>
+                        <span class="nx">returnValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_save</span><span class="p">(</span><span class="nx">metadata</span><span class="p">);</span>
                     <span class="p">});</span>
                     <span class="k">return</span> <span class="nx">returnValue</span><span class="p">;</span>
                 <span class="p">},</span>
@@ -139,10 +140,10 @@
                     <span class="k">return</span> <span class="o">!</span><span class="nx">id</span><span class="p">;</span>
                 <span class="p">},</span>
                 
-                <span class="nx">_save</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="nx">_save</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">metadata</span><span class="p">)</span> <span class="p">{</span>
                     <span class="kd">var</span> <span class="nx">action</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">isNew</span><span class="p">()</span> <span class="o">?</span> <span class="s2">&quot;create&quot;</span> <span class="o">:</span> <span class="s2">&quot;update&quot;</span><span class="p">;</span> 
                     
-                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">saveWithoutInstantiating</span><span class="p">(</span><span class="nx">action</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">saveWithoutInstantiating</span><span class="p">(</span><span class="nx">action</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">asJson</span><span class="p">(),</span> <span class="nx">metadata</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
                         <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">({},</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
                         
                         <span class="k">this</span><span class="p">.</span><span class="nx">copyAttrs</span><span class="p">(</span><span class="nx">attrs</span><span class="p">);</span>

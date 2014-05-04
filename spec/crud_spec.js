@@ -82,6 +82,20 @@ describe('Iguana.Crud', function() {
             assertSavesAndFiresSuccessCallback(item, 'update');
         });
         
+        it('should pass metadata along', function() {
+            var item = Item.new();
+            var mockPromise = {
+                then: function() {
+                    return mockPromise;
+                }
+            }
+            spyOn(Item.adapter(), 'create').andReturn(mockPromise);
+            var metadata = {meta: 'data'};
+            item.save(metadata);
+            expect(Item.adapter().create).toHaveBeenCalled();
+            expect(Item.adapter().create.calls[0].args[2]).toBe(metadata);
+        });
+        
         it('should fire error when creating a new item', function() {
             var item = Item.new({});
             assertFiresErrorCallbackOnSave(item, 'create');

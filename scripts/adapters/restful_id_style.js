@@ -20,15 +20,17 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
                     return this._makeApiCall(collection, 'show', params);
                 },
 
-                create: function(collection, obj) {
+                create: function(collection, obj, metadata) {
                     return this._makeApiCall(collection, 'create', {
-                        record: obj
+                        record: obj,
+                        meta: metadata
                     });
                 },
 
-                update: function(collection, obj) {
+                update: function(collection, obj, metadata) {
                     return this._makeApiCall(collection, 'update', {
-                        record: obj
+                        record: obj,
+                        meta: metadata
                     });
                 },
 

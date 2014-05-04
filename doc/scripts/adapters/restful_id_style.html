@@ -18,15 +18,17 @@
                     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_makeApiCall</span><span class="p">(</span><span class="nx">collection</span><span class="p">,</span> <span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="nx">params</span><span class="p">);</span>
                 <span class="p">},</span>
 
-                <span class="nx">create</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">collection</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">create</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">collection</span><span class="p">,</span> <span class="nx">obj</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_makeApiCall</span><span class="p">(</span><span class="nx">collection</span><span class="p">,</span> <span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="p">{</span>
-                        <span class="nx">record</span><span class="o">:</span> <span class="nx">obj</span>
+                        <span class="nx">record</span><span class="o">:</span> <span class="nx">obj</span><span class="p">,</span>
+                        <span class="nx">meta</span><span class="o">:</span> <span class="nx">metadata</span>
                     <span class="p">});</span>
                 <span class="p">},</span>
 
-                <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">collection</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">collection</span><span class="p">,</span> <span class="nx">obj</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_makeApiCall</span><span class="p">(</span><span class="nx">collection</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="p">{</span>
-                        <span class="nx">record</span><span class="o">:</span> <span class="nx">obj</span>
+                        <span class="nx">record</span><span class="o">:</span> <span class="nx">obj</span><span class="p">,</span>
+                        <span class="nx">meta</span><span class="o">:</span> <span class="nx">metadata</span>
                     <span class="p">});</span>
                 <span class="p">},</span>
 
