@@ -15,11 +15,11 @@ angular.module('Iguana')
 
                 Iguana.setCallback('before', 'copyAttrsOnInitialize', function() {
                     var attrs = this.$$sourceAttrs;
-                    if (!attrs || !attrs.$instantiatedWithNew) {
+                    if (!attrs || !attrs.$$instantiatedWithNew) {
                         throw new Error("Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()");
                     }
 
-                    delete attrs.$instantiatedWithNew;
+                    delete attrs.$$instantiatedWithNew;
                 });
             },
 
@@ -50,7 +50,7 @@ angular.module('Iguana')
 
                     //Ensure that all instances are created with Iguana.new rather than 'new Iguana'
                     //See after copyAttrs callback above
-                    attrs.$instantiatedWithNew = true;
+                    attrs.$$instantiatedWithNew = true;
 
                     var instance;
 
