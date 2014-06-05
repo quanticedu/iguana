@@ -28,7 +28,7 @@ describe('Iguana.Serializers', function() {
                 someArray: [1,2,3,4],
                 someDate: new Date(2013,1,1),
                 someObject: {a: 1},
-                $ignoreThisProp: 'ignored',
+                $$ignoreThisProp: 'ignored',
                 ignoreThisFunction: function() {}
             };
             var item = Item.new(obj);

@@ -30,7 +30,7 @@ a function that will let us fetch the klass just in time.</p></div></div><div cl
                 
                 <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">sourceValue</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">key</span><span class="p">){</span>
                     <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">klassFetcher</span><span class="p">().</span><span class="k">new</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
-                    <span class="nx">instance</span><span class="p">.</span><span class="nx">$embeddedIn</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">;</span>
+                    <span class="nx">instance</span><span class="p">.</span><span class="nx">$$embeddedIn</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">;</span>
                     <span class="nx">target</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">instance</span><span class="p">;</span>
                 <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
                 
@@ -43,7 +43,7 @@ a function that will let us fetch the klass just in time.</p></div></div><div cl
             
             <span class="nx">_instantiate</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">parent</span><span class="p">,</span> <span class="nx">sourceValue</span><span class="p">)</span> <span class="p">{</span>
                 <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">klassFetcher</span><span class="p">().</span><span class="k">new</span><span class="p">(</span><span class="nx">sourceValue</span><span class="p">);</span>
-                <span class="nx">instance</span><span class="p">.</span><span class="nx">$embeddedIn</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">;</span>
+                <span class="nx">instance</span><span class="p">.</span><span class="nx">$$embeddedIn</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">;</span>
                 <span class="k">return</span> <span class="nx">instance</span><span class="p">;</span>
             <span class="p">}</span>
             
@@ -101,7 +101,7 @@ wrapped();
                     <span class="k">this</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span><span class="s1">&#39;_embeddedIn&#39;</span><span class="o">:</span> <span class="nx">propName</span><span class="p">});</span>
                     <span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{};</span>
                     <span class="nx">obj</span><span class="p">[</span><span class="nx">propName</span><span class="p">]</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-                        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">$embeddedIn</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">$$embeddedIn</span><span class="p">;</span>
                     <span class="p">};</span>
                     <span class="k">this</span><span class="p">.</span><span class="nx">include</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span>
                 <span class="p">}</span>

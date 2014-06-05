@@ -34,7 +34,7 @@
                 
                 angular.forEach(sourceValue, function(val, key){
                     var instance = this.klassFetcher().new(val);
-                    instance.$embeddedIn = parent;
+                    instance.$$embeddedIn = parent;
                     target[key] = instance;
                 }.bind(this));
                 
@@ -47,7 +47,7 @@
             
             _instantiate: function(parent, sourceValue) {
                 var instance = this.klassFetcher().new(sourceValue);
-                instance.$embeddedIn = parent;
+                instance.$$embeddedIn = parent;
                 return instance;
             }
             
@@ -110,7 +110,7 @@
                     this.extend({'_embeddedIn': propName});
                     var obj = {};
                     obj[propName] = function() {
-                        return this.$embeddedIn;
+                        return this.$$embeddedIn;
                     };
                     this.include(obj);
                 }
