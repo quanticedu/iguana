@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="en"><head><title>scripts/embeds</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="scripts/embeds"><meta name="groc-project-path" content="scripts/embeds.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">scripts/embeds.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;Iguana&#39;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Iguana.Embeds&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;AClassAbove&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Class</span><span class="p">){</span>
+        
+        <span class="kd">var</span> <span class="nx">EmbedRelationship</span> <span class="o">=</span> <span class="nx">Class</span><span class="p">.</span><span class="nx">subclass</span><span class="p">({</span>
+            <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="nx">klassFetcher</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We don't want to worry about whether the class has been aliased or
+yet when the relationship is set up.  So long as it has been aliased by the
+time we try to process a relationship, that's good enough.  So we take
+a function that will let us fetch the klass just in time.</p></div></div><div class="code"><div class="wrapper">                <span class="k">this</span><span class="p">.</span><span class="nx">propName</span> <span class="o">=</span> <span class="nx">propName</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">klassFetcher</span> <span class="o">=</span> <span class="nx">klassFetcher</span><span class="p">;</span>
+            <span class="p">},</span>
+            
+            <span class="nx">process</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">parent</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">sourceValue</span> <span class="o">=</span> <span class="nx">attrs</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">propName</span><span class="p">];</span>
+                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">sourceValue</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>                
+                <span class="nx">attrs</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">propName</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_instantiate</span><span class="p">(</span><span class="nx">parent</span><span class="p">,</span> <span class="nx">sourceValue</span><span class="p">);</span> 
+            <span class="p">}</span>
+        <span class="p">});</span>
+        
+        <span class="kd">var</span> <span class="nx">EmbedManyRelationship</span> <span class="o">=</span> <span class="nx">EmbedRelationship</span><span class="p">.</span><span class="nx">subclass</span><span class="p">({</span>
+            
+            <span class="nx">_instantiate</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">parent</span><span class="p">,</span> <span class="nx">sourceValue</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">target</span><span class="p">;</span>
+                </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>figure out if we are dealing with an array or an object</p></div></div><div class="code"><div class="wrapper">                <span class="k">if</span> <span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span> <span class="nx">sourceValue</span> <span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;[object Array]&#39;</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">target</span> <span class="o">=</span> <span class="p">[];</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">sourceValue</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">target</span> <span class="o">=</span> <span class="p">{};</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Expecting array or object for embedsMany relationship &quot;&#39;</span><span class="o">+</span><span class="k">this</span><span class="p">.</span><span class="nx">propName</span><span class="o">+</span><span class="s1">&#39;&quot;. Got &#39;</span><span class="o">+</span><span class="nx">sourceValue</span><span class="p">);</span>
+                <span class="p">}</span>
+                
+                <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">sourceValue</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">key</span><span class="p">){</span>
+                    <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">klassFetcher</span><span class="p">().</span><span class="k">new</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
+                    <span class="nx">instance</span><span class="p">.</span><span class="nx">$$embeddedIn</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">;</span>
+                    <span class="nx">target</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">instance</span><span class="p">;</span>
+                <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+                
+                <span class="k">return</span> <span class="nx">target</span><span class="p">;</span>
+            <span class="p">}</span>
+            
+        <span class="p">});</span>
+        
+        <span class="kd">var</span> <span class="nx">EmbedOneRelationship</span> <span class="o">=</span> <span class="nx">EmbedRelationship</span><span class="p">.</span><span class="nx">subclass</span><span class="p">({</span>
+            
+            <span class="nx">_instantiate</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">parent</span><span class="p">,</span> <span class="nx">sourceValue</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">klassFetcher</span><span class="p">().</span><span class="k">new</span><span class="p">(</span><span class="nx">sourceValue</span><span class="p">);</span>
+                <span class="nx">instance</span><span class="p">.</span><span class="nx">$$embeddedIn</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">;</span>
+                <span class="k">return</span> <span class="nx">instance</span><span class="p">;</span>
+            <span class="p">}</span>
+            
+        <span class="p">});</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            
+            <span class="nx">included</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">Iguana</span><span class="p">.</span><span class="nx">extendableObject</span><span class="p">(</span><span class="s1">&#39;embedRelationships&#39;</span><span class="p">);</span>
+                <span class="nx">Iguana</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;copyAttrs&#39;</span><span class="p">,</span> <span class="s1">&#39;processEmbeds&#39;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>// We would like to bring this back, but it can
+// case MaxCallStack errors in Chrome.  Maybe
+// we can eventually find a solution
+Iguana.setCallback('around', 'save', function(save) {
+    var wrapped = save;</p>
+
+<pre><code>// var relationships = this.embedRelationships();
+// for (var propName in relationships) {
+//     if (!relationships.hasOwnProperty(propName)) { 
+//         continue
+//     }
+//     var relationship = relationships[propName];
+//     var value = this[propName];
+//     if (value) {
+//         var isArray = (Object.prototype.toString.call(value) === '[object Array]');
+//         var values = isArray ? value : [value];
+//         values.forEach(function(item) {
+//             var reWrapped = function(wrapped) {
+//                 item.runCallbacks('save', wrapped);
+//             }.bind(item, wrapped);
+//             wrapped = reWrapped;
+//         });
+//     }
+// }
+wrapped();
+</code></pre></div></div><div class="code"><div class="wrapper">                <span class="c1">// );</span>
+            <span class="p">},</span>
+            
+            <span class="nx">classMixin</span><span class="o">:</span> <span class="p">{</span>
+                
+                <span class="nx">embedsMany</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="nx">classAlias</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">embedRelationships</span><span class="p">().</span><span class="nx">set</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="k">new</span> <span class="nx">EmbedManyRelationship</span><span class="p">(</span>
+                        <span class="nx">propName</span><span class="p">,</span> 
+                        <span class="k">this</span><span class="p">.</span><span class="nx">getAliasedKlass</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">classAlias</span><span class="p">)</span>
+                    <span class="p">));</span>
+                <span class="p">},</span>
+                
+                <span class="nx">embedsOne</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="nx">classAlias</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">embedRelationships</span><span class="p">().</span><span class="nx">set</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="k">new</span> <span class="nx">EmbedOneRelationship</span><span class="p">(</span>
+                        <span class="nx">propName</span><span class="p">,</span>
+                        <span class="k">this</span><span class="p">.</span><span class="nx">getAliasedKlass</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">classAlias</span><span class="p">)</span>
+                    <span class="p">));</span>
+                <span class="p">},</span>
+                
+                <span class="nx">embeddedIn</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">propName</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span><span class="s1">&#39;_embeddedIn&#39;</span><span class="o">:</span> <span class="nx">propName</span><span class="p">});</span>
+                    <span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{};</span>
+                    <span class="nx">obj</span><span class="p">[</span><span class="nx">propName</span><span class="p">]</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">$$embeddedIn</span><span class="p">;</span>
+                    <span class="p">};</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">include</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            
+            <span class="nx">instanceMixin</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">embedRelationships</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">embedRelationships</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">);</span>
+                <span class="p">},</span>
+                
+                <span class="nx">processEmbeds</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>           
+                    <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">embedRelationships</span><span class="p">(),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">relationship</span><span class="p">){</span>
+                        <span class="nx">relationship</span><span class="p">.</span><span class="nx">process</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">$$sourceAttrs</span><span class="p">);</span>
+                    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+                <span class="p">}</span>                
+            <span class="p">}</span>
+        <span class="p">};</span>
+    <span class="p">}]);</span></div></div></div></div></body></html>
