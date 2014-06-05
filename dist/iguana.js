@@ -518,7 +518,7 @@ angular.module('Iguana')
                 
                 angular.forEach(sourceValue, function(val, key){
                     var instance = this.klassFetcher().new(val);
-                    instance.$embeddedIn = parent;
+                    instance.$$embeddedIn = parent;
                     target[key] = instance;
                 }.bind(this));
                 
@@ -531,7 +531,7 @@ angular.module('Iguana')
             
             _instantiate: function(parent, sourceValue) {
                 var instance = this.klassFetcher().new(sourceValue);
-                instance.$embeddedIn = parent;
+                instance.$$embeddedIn = parent;
                 return instance;
             }
             
@@ -594,7 +594,7 @@ angular.module('Iguana')
                     this.extend({'_embeddedIn': propName});
                     var obj = {};
                     obj[propName] = function() {
-                        return this.$embeddedIn;
+                        return this.$$embeddedIn;
                     };
                     this.include(obj);
                 }
@@ -647,11 +647,11 @@ angular.module('Iguana')
 
                 Iguana.setCallback('before', 'copyAttrsOnInitialize', function() {
                     var attrs = this.$$sourceAttrs;
-                    if (!attrs || !attrs.$instantiatedWithNew) {
+                    if (!attrs || !attrs.$$instantiatedWithNew) {
                         throw new Error("Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()");
                     }
 
-                    delete attrs.$instantiatedWithNew;
+                    delete attrs.$$instantiatedWithNew;
                 });
             },
 
@@ -682,7 +682,7 @@ angular.module('Iguana')
 
                     //Ensure that all instances are created with Iguana.new rather than 'new Iguana'
                     //See after copyAttrs callback above
-                    attrs.$instantiatedWithNew = true;
+                    attrs.$$instantiatedWithNew = true;
 
                     var instance;
 
