@@ -250,7 +250,7 @@ describe('Iguana', function() {
                 if ($scope.item) {
                     $scope.item.save().then(function() {
                         $window.alert("Saved!");
-                    }, function() {
+                    }, function(error) {
                         $window.alert('Something went wrong: '+error.message);
                     });
                 }
@@ -336,7 +336,7 @@ describe('Iguana', function() {
                 if ($scope.item) {
                     $scope.item.destroy().then(function() {
                         $window.alert("Destroyed!");
-                    }, function() {
+                    }, function(error) {
                         $window.alert('Something went wrong: '+error.message);
                     });
                 }
