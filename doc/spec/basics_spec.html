@@ -228,7 +228,7 @@ responding to success and failure conditions.</p></div></div><div class="code"><
                 <span class="k">if</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
                     <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">save</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
                         <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Saved!&quot;</span><span class="p">);</span>
-                    <span class="p">},</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
                         <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
                     <span class="p">});</span>
                 <span class="p">}</span>
@@ -304,7 +304,7 @@ responding to success and failure conditions.</p></div></div><div class="code"><
                 <span class="k">if</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
                     <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">destroy</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
                         <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Destroyed!&quot;</span><span class="p">);</span>
-                    <span class="p">},</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
                         <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
                     <span class="p">});</span>
                 <span class="p">}</span>
