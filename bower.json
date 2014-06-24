@@ -1,6 +1,6 @@
 {
     "name": "iguana",
-    "version": "0.0.23",
+    "version": "0.0.24",
     "main": "./dist/iguana.js",
     "dependencies": {
         "angular": "~1.3.0",
