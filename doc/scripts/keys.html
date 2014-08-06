@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="en"><head><title>scripts/keys</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="scripts/keys"><meta name="groc-project-path" content="scripts/keys.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">scripts/keys.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;Iguana&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Iguana.Keys&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$injector&#39;</span><span class="p">,</span>
+        <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+            <span class="k">return</span> <span class="p">{</span>
+
+                <span class="nx">classMixin</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="nx">defineSetter</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">setter</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="kd">var</span> <span class="nx">internalKey</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">internalKeyFor</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+
+                        <span class="k">this</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;after&#39;</span><span class="p">,</span> <span class="s1">&#39;copyAttrsOnInitialize&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if this property already exists, copy it to the internal key</p></div></div><div class="code"><div class="wrapper">                            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+                                <span class="k">this</span><span class="p">[</span><span class="nx">internalKey</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">[</span><span class="nx">key</span><span class="p">];</span>
+                            <span class="p">}</span>
+
+                            <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">key</span><span class="p">,</span> <span class="p">{</span>
+                                <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">readKey</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+                                <span class="p">},</span>
+                                <span class="nx">set</span><span class="o">:</span> <span class="nx">setter</span><span class="p">,</span>
+                                <span class="nx">enumerable</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                                <span class="nx">configurable</span><span class="o">:</span> <span class="kc">true</span> <span class="c1">// let developers mess with this if they want to</span>
+                            <span class="p">});</span>
+                        <span class="p">});</span>
+                    <span class="p">},</span>
+
+                    <span class="nx">internalKeyFor</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">return</span> <span class="s1">&#39;$$___&#39;</span> <span class="o">+</span> <span class="nx">key</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+
+                <span class="nx">instanceMixin</span><span class="o">:</span> <span class="p">{</span>
+
+                    <span class="nx">readKey</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="kd">var</span> <span class="nx">internalKey</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">internalKeyFor</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+                        <span class="k">return</span> <span class="k">this</span><span class="p">[</span><span class="nx">internalKey</span><span class="p">];</span>
+                    <span class="p">},</span>
+
+                    <span class="nx">writeKey</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="kd">var</span> <span class="nx">internalKey</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">internalKeyFor</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">[</span><span class="nx">internalKey</span><span class="p">]</span> <span class="o">=</span> <span class="nx">val</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="nx">val</span><span class="p">;</span>
+                    <span class="p">}</span>
+
+                <span class="p">}</span>
+            <span class="p">};</span>
+
+        <span class="p">}</span>
+    <span class="p">]);</span></div></div></div></div></body></html>

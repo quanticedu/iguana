@@ -14,8 +14,7 @@
             <span class="p">});</span>
         <span class="p">});</span>
 
-    <span class="p">});</span>
-    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="callbacks">Callbacks</h1>
+    <span class="p">});</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="callbacks">Callbacks</h1>
 
 <h3 id="save">save</h3>
 
@@ -25,12 +24,13 @@
             <span class="nx">Item</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
                 <span class="nx">called</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
             <span class="p">});</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span><span class="nx">result</span><span class="o">:</span> <span class="p">{}});</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({}).</span><span class="nx">save</span><span class="p">();</span>          
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({}).</span><span class="nx">save</span><span class="p">();</span>
             <span class="nx">expect</span><span class="p">(</span><span class="nx">called</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
         <span class="p">});</span>
-    <span class="p">});</span>
-    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="copyattrs">copyAttrs</h3>
+    <span class="p">});</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="copyattrs">copyAttrs</h3>
 
 <p>Triggered when the properties of a vanilla object are copied
 onto the instance.  This happens during initialize and after
@@ -40,14 +40,15 @@ onto the instance.  This happens during initialize and after
             <span class="nx">Item</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;copyAttrs&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
                 <span class="nx">calledCount</span> <span class="o">=</span> <span class="nx">calledCount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
             <span class="p">});</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span><span class="nx">result</span><span class="o">:</span> <span class="p">{}});</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({}).</span><span class="nx">save</span><span class="p">();</span>          
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({}).</span><span class="nx">save</span><span class="p">();</span>
             <span class="nx">expect</span><span class="p">(</span><span class="nx">calledCount</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
             <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">);</span>
             <span class="nx">expect</span><span class="p">(</span><span class="nx">calledCount</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
         <span class="p">});</span>
-    <span class="p">});</span>
-    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="copyattrsoninitialize">copyAttrsOnInitialize</h3>
+    <span class="p">});</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="copyattrsoninitialize">copyAttrsOnInitialize</h3>
 
 <p>Triggered when the properties of a vanilla object are copied
 onto the instance, but only during initialize, not after
@@ -57,13 +58,15 @@ onto the instance, but only during initialize, not after
             <span class="nx">Item</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;copyAttrsOnInitialize&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
                 <span class="nx">calledCount</span> <span class="o">=</span> <span class="nx">calledCount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
             <span class="p">});</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span><span class="nx">result</span><span class="o">:</span> <span class="p">{}});</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({}).</span><span class="nx">save</span><span class="p">();</span>          
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({}).</span><span class="nx">save</span><span class="p">();</span>
             <span class="nx">expect</span><span class="p">(</span><span class="nx">calledCount</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
             <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">);</span>
             <span class="nx">expect</span><span class="p">(</span><span class="nx">calledCount</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
         <span class="p">});</span>
     <span class="p">});</span>
 
-    
+
 <span class="p">});</span></div></div></div></div></body></html>

@@ -17,7 +17,7 @@ describe('Iguana.Keys', function() {
     });
 
     // # Keys
-    // ### key
+    // ### defineSetter
     // Used to define a setter on an attribute for a record
     describe('defineSetter', function() {
 
