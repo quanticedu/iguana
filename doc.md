@@ -4,6 +4,8 @@ The most useful documentation is in our spec files:
 
  * [Basics](spec/basics_spec.html)
   * Creating an iguana class; fetching, saving, a deleting documents
+ * [Callbacks](spec/basics_spec.html)
+  * Triggering actions on save, etc.
  * [Testing](spec/mocks_spec.html)
   * Mocking out api calls
  * [Embedded Documents](spec/embeds_spec.html)

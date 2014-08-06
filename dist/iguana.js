@@ -1,65 +1,66 @@
 angular.module('Iguana', ['SuperModel', 'ngResource'])
-.provider('Iguana', function(){
-        
+    .provider('Iguana', function() {
+
         this._defaultBaseUrl = '';
-        
+
         this.setAdapter = function(adapterName) {
             this._defaultAdapterName = adapterName;
         };
-        
+
         this.setBaseUrl = function(baseUrl) {
             this._defaultBaseUrl = baseUrl;
         }
-        
+
         this.$get = [
-            'SuperModel', 
+            'SuperModel',
             'Iguana.Alias',
             'Iguana.Callbacks',
             'Iguana.Crud',
             'Iguana.Embeds',
+            'Iguana.Keys',
             'Iguana.Serializers',
-            'Iguana.SingleCollectionInheritance', 
-            
+            'Iguana.SingleCollectionInheritance',
+
             function(SuperModel, Alias, Callbacks, Crud, Embeds, Serializers, SingleCollectionInheritance) {
-                
+
                 var plugins = Array.prototype.slice.call(arguments, 1);
-                                
-                var Iguana = SuperModel.subclass(function(){ 
-                
-                    angular.forEach(plugins, function(mixins){
+
+                var Iguana = SuperModel.subclass(function() {
+
+                    angular.forEach(plugins, function(mixins) {
                         this.extend(mixins.classMixin || {});
                         this.include(mixins.instanceMixin || {});
                         if (mixins.included) {
                             mixins.included(this);
                         }
                     }.bind(this));
-                    
+
                     this.extend({
                         expect: function() {
                             throw new Error("There is no 'expect' method.  Make sure to include iguana-mock.js and inject MockIguana.")
                         }
                     });
-                                                        
+
                     return {
                         initialize: function(attrs) {
                             if (attrs === undefined) {
                                 attrs = {};
                             }
 
-                            if (typeof attrs !== 'object' || Object.prototype.toString.call( attrs ) === '[object Array]') {
-                                throw new Error("Expecting to instantiate Iguana class with object, got '"+attrs+"'");
+                            if (typeof attrs !== 'object' || Object.prototype.toString.call(attrs) === '[object Array]') {
+                                throw new Error("Expecting to instantiate Iguana class with object, got '" + attrs + "'");
                             }
 
-                            this.copyAttrsOnInitialize(attrs);                                
+                            this.copyAttrsOnInitialize(attrs);
                         },
-                        
+
                         copyAttrsOnInitialize: function(attrs) {
                             this.$$sourceAttrs = attrs;
                             this.runCallbacks('copyAttrsOnInitialize', function() {
                                 this.copyAttrs();
                             });
                         },
-                        
+
                         copyAttrs: function(attrs) {
                             if (attrs) {
                                 this.$$sourceAttrs = attrs;
@@ -69,15 +70,16 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                             });
                         }
                     }
-                
+
                 });
-                
+
                 if (this._defaultAdapterName) Iguana.setAdapter(this._defaultAdapterName);
                 Iguana.setBaseUrl(this._defaultBaseUrl);
-                            
+
                 return Iguana;
-            }];
-        
+            }
+        ];
+
     });
 angular.module('Iguana')
 .factory('Iguana.Adapters.AdapterBase', ['$q', 'SuperModel', function($q, SuperModel){
@@ -314,18 +316,20 @@ angular.module('Iguana')
         }
     ]);
 angular.module('Iguana')
-.factory('Iguana.Callbacks', [function(){
-        
-        
-        return {
-            included: function(Iguana) {
-                Iguana.defineCallbacks('copyAttrs');
-                Iguana.defineCallbacks('copyAttrsOnInitialize');
-                Iguana.defineCallbacks('save');
-            }
-        };
-        
-    }]);
+    .factory('Iguana.Callbacks', [
+        function() {
+
+
+            return {
+                included: function(Iguana) {
+                    Iguana.defineCallbacks('copyAttrs');
+                    Iguana.defineCallbacks('copyAttrsOnInitialize');
+                    Iguana.defineCallbacks('save');
+                }
+            };
+
+        }
+    ]);
 angular.module('Iguana')
 .factory('Iguana.Crud', ['$injector', function($injector){
                 
@@ -625,6 +629,59 @@ angular.module('Iguana')
             }
         };
     }]);
+'use strict';
+
+angular.module('Iguana')
+    .factory('Iguana.Keys', ['$injector',
+        function() {
+
+            return {
+
+                classMixin: {
+                    defineSetter: function(key, setter) {
+                        var internalKey = this.internalKeyFor(key);
+
+                        this.setCallback('after', 'copyAttrsOnInitialize', function() {
+
+                            // if this property already exists, copy it to the internal key
+                            if (this.hasOwnProperty(key)) {
+                                this[internalKey] = this[key];
+                            }
+
+                            Object.defineProperty(this, key, {
+                                get: function() {
+                                    return this.readKey(key);
+                                },
+                                set: setter,
+                                enumerable: true,
+                                configurable: true // let developers mess with this if they want to
+                            });
+                        });
+                    },
+
+                    internalKeyFor: function(key) {
+                        return '$$___' + key;
+                    }
+                },
+
+                instanceMixin: {
+
+                    readKey: function(key) {
+                        var internalKey = this.constructor.internalKeyFor(key);
+                        return this[internalKey];
+                    },
+
+                    writeKey: function(key, val) {
+                        var internalKey = this.constructor.internalKeyFor(key);
+                        this[internalKey] = val;
+                        return val;
+                    }
+
+                }
+            };
+
+        }
+    ]);
 angular.module('Iguana')
 .factory('Iguana.Serializers', [function(){
         

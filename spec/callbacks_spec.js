@@ -15,7 +15,7 @@ describe('Iguana.Callbacks', function() {
         });
 
     });
-    
+
     // # Callbacks
     // ### save
     // triggered on the sending of the 'save' action to the api
@@ -25,12 +25,14 @@ describe('Iguana.Callbacks', function() {
             Item.setCallback('before', 'save', function() {
                 called = true;
             });
-            Item.expect('create', {}, {result: {}});
-            Item.new({}).save();          
+            Item.expect('create', {}, {
+                result: {}
+            });
+            Item.new({}).save();
             expect(called).toBe(true);
         });
     });
-    
+
     // ### copyAttrs
     // Triggered when the properties of a vanilla object are copied
     // onto the instance.  This happens during initialize and after
@@ -41,14 +43,16 @@ describe('Iguana.Callbacks', function() {
             Item.setCallback('before', 'copyAttrs', function() {
                 calledCount = calledCount + 1;
             });
-            Item.expect('create', {}, {result: {}});
-            Item.new({}).save();          
+            Item.expect('create', {}, {
+                result: {}
+            });
+            Item.new({}).save();
             expect(calledCount).toBe(1);
             Item.flush('create');
             expect(calledCount).toBe(2);
         });
     });
-    
+
     // ### copyAttrsOnInitialize
     // Triggered when the properties of a vanilla object are copied
     // onto the instance, but only during initialize, not after
@@ -59,15 +63,15 @@ describe('Iguana.Callbacks', function() {
             Item.setCallback('before', 'copyAttrsOnInitialize', function() {
                 calledCount = calledCount + 1;
             });
-            Item.expect('create', {}, {result: {}});
-            Item.new({}).save();          
+            Item.expect('create', {}, {
+                result: {}
+            });
+            Item.new({}).save();
             expect(calledCount).toBe(1);
             Item.flush('create');
             expect(calledCount).toBe(1);
         });
     });
 
-    
+
 });
-
-
