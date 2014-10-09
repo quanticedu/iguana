@@ -1,0 +1,436 @@
+<!DOCTYPE html><html lang="en"><head><title>spec/mocks_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/mocks_spec"><meta name="groc-project-path" content="spec/mocks_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/mocks_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+
+describe(<span class="hljs-string">'IguanaMock'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    
+    <span class="hljs-keyword">var</span> myApp, Iguana, Item, $controller, scope, $window;
+    
+    beforeEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="testing">Testing</h1>
+<p>The dist folder of iguana includes a file for use in testing called iguana-mock.js.
+You will need to include that file when running tests in order to use the features 
+described here.</p></div></div><div class="code"><div class="wrapper">        myApp = angular.module(<span class="hljs-string">'myApp'</span>, [<span class="hljs-string">'Iguana'</span>]);
+
+        myApp.factory(<span class="hljs-string">'Item'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Iguana)</span>{</span>
+            
+            <span class="hljs-keyword">return</span> Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">'items'</span>);
+            });
+            
+        });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The following examples test a controller that handles all of
+the api calls for our Item model</p></div></div><div class="code"><div class="wrapper">        myApp.controller(<span class="hljs-string">'ItemController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Item, $scope, $window)</span>{</span>
+            
+            $scope.itemList = [];
+            $scope.item = <span class="hljs-literal">null</span>;
+            
+            <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onError</span><span class="hljs-params">(error)</span> {</span>
+                $window.alert(error.message);
+            }
+            
+            <span class="hljs-keyword">this</span>.show = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(id)</span> {</span>
+                <span class="hljs-keyword">return</span> Item.show(id).then(
+                    <span class="hljs-comment">//success callback</span>
+                    <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span>{</span>
+                        $scope.item = response.result;
+                        <span class="hljs-keyword">if</span>(response.meta) {
+                            $window.alert(response.meta.message);
+                        }
+                    }, 
+                    <span class="hljs-comment">//error callback</span>
+                    onError
+                );
+            };
+            
+            <span class="hljs-keyword">this</span>.index = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(query)</span> {</span>
+                <span class="hljs-keyword">return</span> Item.index(query).then(
+                    <span class="hljs-comment">//success callback</span>
+                    <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span>{</span>
+                        $scope.itemList = response.result;
+                        <span class="hljs-keyword">if</span>(response.meta) {
+                            $window.alert(response.meta.message);
+                        }
+                    }, 
+                    <span class="hljs-comment">//error callback</span>
+                    onError
+                );
+            };
+            
+            <span class="hljs-keyword">this</span>.create = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(attrs)</span> {</span>
+                attrs = attrs || {};
+                $scope.item = Item.new(attrs);
+                <span class="hljs-keyword">this</span>.save();
+            }
+            
+            <span class="hljs-keyword">this</span>.save = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">if</span> ($scope.item) {
+                    <span class="hljs-keyword">return</span> $scope.item.save().then(
+                        <span class="hljs-comment">//success callback</span>
+                        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span>{</span>
+                            $window.alert(<span class="hljs-string">"Item saved!"</span>);
+                            <span class="hljs-keyword">if</span>(response.meta) {
+                                $window.alert(response.meta.message);
+                            }
+                        }, 
+                        <span class="hljs-comment">//error callback</span>
+                        onError
+                    );
+                }
+            };
+            
+            <span class="hljs-keyword">this</span>.destroy = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">if</span> ($scope.item) {
+                    <span class="hljs-keyword">return</span> $scope.item.destroy().then(
+                        <span class="hljs-comment">//success callback</span>
+                        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span>{</span>
+                            $scope.item = <span class="hljs-literal">null</span>;
+                            $window.alert(<span class="hljs-string">"Item deleted!"</span>);
+                            <span class="hljs-keyword">if</span>(response.meta) {
+                                $window.alert(response.meta.message);
+                            }
+                        }, 
+                        <span class="hljs-comment">//error callback</span>
+                        onError
+                    );
+                }
+            };
+        }); 
+        
+        module(<span class="hljs-string">'myApp'</span>);
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="setup">Setup</h3>
+<p>Make sure to inject MockIguana, which will add some helper
+methods (i.e. &#39;expect&#39;) onto all Iguana classes.  You don&#39;t need
+to do anything with MockIguana; simply injecting it is sufficient     </p></div></div><div class="code"><div class="wrapper">        inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_Iguana_, _Item_, _$controller_, $rootScope, MockIguana, _$window_)</span>{</span>
+            Iguana = _Iguana_;
+            $controller = _$controller_;
+            scope = $rootScope.$<span class="hljs-keyword">new</span>();
+            Item = _Item_;
+            $window = _$window_;
+            spyOn($window, <span class="hljs-string">'alert'</span>);
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Use the mock adapter, which will 
+allow you to mock out all of the api calls.</p></div></div><div class="code"><div class="wrapper">            Iguana.setAdapter(<span class="hljs-string">'Iguana.Mock.Adapter'</span>);
+            
+        });
+        
+
+        
+    });
+    
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="mocking-basics">Mocking Basics</h2></div></div></div><div class="segment"><div class="code"><div class="wrapper">    it(<span class="hljs-string">'should work with expect/call/fush'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>In most cases, making mock api calls will involve 3 steps.     </p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>First, call expect() to indicate that you expect a method to be called ...</p></div></div><div class="code"><div class="wrapper">        Item.expect(<span class="hljs-string">'show'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>... then, run your code that is going to call the method ...</p></div></div><div class="code"><div class="wrapper">        controller.show(<span class="hljs-string">'id'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>... and last, call flush() to mock out the returning of the request.</p></div></div><div class="code"><div class="wrapper">        Item.flush(<span class="hljs-string">'show'</span>);
+        expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+        expect(scope.item.constructor).toBe(Item);
+    });
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="show">Show</h2></div></div></div><div class="segment"><div class="code"><div class="wrapper">    describe(<span class="hljs-string">'mocking show'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="basic-expectcallflush">Basic expect/call/flush</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with no special features set'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>  
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'show'</span>);
+            controller.show(<span class="hljs-string">'id'</span>);
+            Item.flush(<span class="hljs-string">'show'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.constructor).toBe(Item);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="tobecalledwith">toBeCalledWith</h3>
+<p>You can indicate the arguments you expect to be passed to the
+method with <em>toBeCalledWith</em></p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with toBeCalledWith'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'show'</span>).toBeCalledWith(<span class="hljs-string">'someId'</span>);
+            controller.show(<span class="hljs-string">'someId'</span>);
+            Item.flush(<span class="hljs-string">'show'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.constructor).toBe(Item);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="returns">returns</h3>
+<p>You can indicate the response that comes back from the server</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with returns and a full response'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'show'</span>).returns({
+                result: {foo: <span class="hljs-string">'bar'</span>}, 
+                meta: {message: <span class="hljs-string">'some metadata came back'</span>}
+            });
+            controller.show(<span class="hljs-string">'id'</span>);
+            Item.flush(<span class="hljs-string">'show'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.constructor).toBe(Item);
+            expect(scope.item.foo).toBe(<span class="hljs-string">'bar'</span>);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'some metadata came back'</span>);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If you don&#39;t expect any metadata, then you can just pass the result
+to <em>returns</em></p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with returns and just a result hash'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'show'</span>).returns({foo: <span class="hljs-string">'bar'</span>});
+            controller.show(<span class="hljs-string">'id'</span>);
+            Item.flush(<span class="hljs-string">'show'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.constructor).toBe(Item);
+            expect(scope.item.foo).toBe(<span class="hljs-string">'bar'</span>);
+            expect($window.alert).not.toHaveBeenCalled();
+        });        
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>You can pass an instance instead of a hash to returns</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with returns and just a result instance'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            <span class="hljs-keyword">var</span> item = Item.new({foo: <span class="hljs-string">'bar'</span>});
+            Item.expect(<span class="hljs-string">'show'</span>).returns(item);
+            controller.show(<span class="hljs-string">'id'</span>);
+            Item.flush(<span class="hljs-string">'show'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.foo).toBe(<span class="hljs-string">'bar'</span>);
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Note: the instance that comes back has the same attributes
+as the instance that was passed in, but it is not
+the same object.</p></div></div><div class="code"><div class="wrapper">            expect(scope.item).not.toBe(item);
+            expect(scope.item).toEqual(item);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="returnsmeta">returnsMeta</h2>
+<p>If you just care about the metadata, then you can set it with
+<em>returnsMeta</em></p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with returnsMeta'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'show'</span>).returnsMeta({message: <span class="hljs-string">'some metadata came back'</span>});
+            controller.show(<span class="hljs-string">'id'</span>);
+            Item.flush(<span class="hljs-string">'show'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.constructor).toBe(Item);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'some metadata came back'</span>);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="fails">fails</h2>
+<p>If you want the api call to fail, you can call <em>fail</em></p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with fail'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'show'</span>).fails({message: <span class="hljs-string">'An Error'</span>});
+            controller.show(<span class="hljs-string">'id'</span>);
+            Item.flush(<span class="hljs-string">'show'</span>);
+            expect(scope.item).toBe(<span class="hljs-literal">null</span>);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'An Error'</span>);
+        });
+        
+    });
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="index">Index</h2></div></div></div><div class="segment"><div class="code"><div class="wrapper">    describe(<span class="hljs-string">'mocking index'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="basic-expectcallflush">Basic expect/call/flush</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with no special features set'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'index'</span>);
+            controller.index();
+            Item.flush(<span class="hljs-string">'index'</span>);
+            expect(scope.itemList).not.toEqual([]);
+            expect(scope.itemList[<span class="hljs-number">0</span>].constructor).toBe(Item);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="tobecalledwith">toBeCalledWith</h3>
+<p>You can indicate the arguments you expect to be passed to the
+method with <em>toBeCalledWith</em></p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with toBeCalledWith'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'index'</span>).toBeCalledWith(<span class="hljs-string">'someQuery'</span>);
+            controller.index(<span class="hljs-string">'someQuery'</span>);
+            Item.flush(<span class="hljs-string">'index'</span>);
+            expect(scope.itemList).not.toEqual([]);
+            expect(scope.itemList[<span class="hljs-number">0</span>].constructor).toBe(Item);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="returns">returns</h3>
+<p>You can indicate the response that comes back from the server</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with returns and a full response'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'index'</span>).returns({
+                result: [{foo: <span class="hljs-string">'bar'</span>}], 
+                meta: {message: <span class="hljs-string">'some metadata came back'</span>}
+            });
+            controller.index();
+            Item.flush(<span class="hljs-string">'index'</span>);
+            expect(scope.itemList).not.toEqual([]);
+            expect(scope.itemList[<span class="hljs-number">0</span>].constructor).toBe(Item);
+            expect(scope.itemList[<span class="hljs-number">0</span>].foo).toBe(<span class="hljs-string">'bar'</span>);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'some metadata came back'</span>);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If you don&#39;t expect any metadata, then you can just pass the result
+to <em>returns</em></p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with returns and just a result hash'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'index'</span>).returns([{foo: <span class="hljs-string">'bar'</span>}]);
+            controller.index(<span class="hljs-string">'id'</span>);
+            Item.flush(<span class="hljs-string">'index'</span>);
+            expect(scope.itemList).not.toEqual([]);
+            expect(scope.itemList[<span class="hljs-number">0</span>].constructor).toBe(Item);
+            expect(scope.itemList[<span class="hljs-number">0</span>].foo).toBe(<span class="hljs-string">'bar'</span>);
+            expect($window.alert).not.toHaveBeenCalled();
+        });        
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>You can pass a list of instances instead of a hash to returns</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with returns and just a list of result instances'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            <span class="hljs-keyword">var</span> items = [Item.new({foo: <span class="hljs-string">'bar'</span>})];
+            <span class="hljs-keyword">var</span> ex = Item.expect(<span class="hljs-string">'index'</span>).returns(items);
+            controller.index();
+            Item.flush(<span class="hljs-string">'index'</span>);
+            expect(scope.itemList).not.toEqual([]);
+            expect(scope.itemList[<span class="hljs-number">0</span>].constructor).toBe(Item);
+            expect(scope.itemList[<span class="hljs-number">0</span>].foo).toBe(<span class="hljs-string">'bar'</span>);
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Note: the instance that comes back has the same attributes
+as the instance that was passed in, but it is not
+the same object.</p></div></div><div class="code"><div class="wrapper">            expect(scope.itemList[<span class="hljs-number">0</span>]).not.toBe(items[<span class="hljs-number">0</span>]);
+            expect(scope.itemList[<span class="hljs-number">0</span>]).toEqual(items[<span class="hljs-number">0</span>]);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="returnsmeta">returnsMeta</h2>
+<p>If you just care about the metadata, then you can set it with
+<em>returnsMeta</em></p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with returnsMeta'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'index'</span>).returnsMeta({message: <span class="hljs-string">'some metadata came back'</span>});
+            controller.index();
+            Item.flush(<span class="hljs-string">'index'</span>);
+            expect(scope.itemList).not.toEqual([]);
+            expect(scope.itemList[<span class="hljs-number">0</span>].constructor).toBe(Item);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'some metadata came back'</span>);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="fails">fails</h2>
+<p>If you want the api call to fail, you can call <em>fail</em></p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with fail'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'index'</span>).fails({message: <span class="hljs-string">'An Error'</span>});
+            controller.index();
+            Item.flush(<span class="hljs-string">'index'</span>);
+            expect(scope.itemList).toEqual([]);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'An Error'</span>);
+        });
+        
+    });    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="create-and-update">Create and Update</h2></div></div></div><div class="segment"><div class="code"><div class="wrapper">    describe(<span class="hljs-string">'mocking create and update'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="basic-expectcallflush-with-create">Basic expect/call/flush with create</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        it(<span class="hljs-string">'create should work with no special features set'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'create'</span>);
+            controller.create();
+            Item.flush(<span class="hljs-string">'create'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.constructor).toBe(Item);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'Item saved!'</span>);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="basic-expectcallflush-with-update">Basic expect/call/flush with update</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        it(<span class="hljs-string">'update should work with no special features set'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            <span class="hljs-comment">//load up an item</span>
+            Item.expect(<span class="hljs-string">'show'</span>).returns({id: <span class="hljs-string">'id'</span>});
+            controller.show(<span class="hljs-string">'someid'</span>);
+            Item.flush(<span class="hljs-string">'show'</span>);
+            
+            <span class="hljs-comment">//update it</span>
+            Item.expect(<span class="hljs-string">'update'</span>);
+            controller.save();
+            Item.flush(<span class="hljs-string">'update'</span>);
+            
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.constructor).toBe(Item);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'Item saved!'</span>);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="basic-expectcallflush-with-save">Basic expect/call/flush with save</h3>
+<p>If you don&#39;t care what kind of save is called (either
+create or update are both ok?)</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'save should work with no special features set'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'save'</span>).returns({id: <span class="hljs-string">'id'</span>});
+            controller.create();
+            Item.flush(<span class="hljs-string">'save'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.constructor).toBe(Item);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'Item saved!'</span>);
+            
+            Item.expect(<span class="hljs-string">'save'</span>);
+            controller.save();
+            Item.flush(<span class="hljs-string">'save'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.constructor).toBe(Item);
+            expect($window.alert.calls.length).toBe(<span class="hljs-number">2</span>);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="returns">returns</h3>
+<p>In general, there is no need to indicate the return value,
+because the server usually will return the same item that was saved.</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should return the item that was passed in'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'save'</span>);
+            controller.create({foo: <span class="hljs-string">'bar'</span>});
+            Item.flush(<span class="hljs-string">'save'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.constructor).toBe(Item);
+            expect(scope.item.foo).toBe(<span class="hljs-string">'bar'</span>);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'Item saved!'</span>);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>But, if you expect the server to make changes to the item, then
+you can use returns to indicate that </p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should return the item that was passed in'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'save'</span>).returns({foo: <span class="hljs-string">'bar'</span>, serverAddedThis: <span class="hljs-literal">true</span>});
+            controller.create({foo: <span class="hljs-string">'bar'</span>});
+            Item.flush(<span class="hljs-string">'save'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.constructor).toBe(Item);
+            expect(scope.item.foo).toBe(<span class="hljs-string">'bar'</span>);
+            expect(scope.item.serverAddedThis).toBe(<span class="hljs-literal">true</span>);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'Item saved!'</span>);
+        });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="returnsmeta">returnsMeta</h2>
+<p>If you&#39;re fine with the default return value, but
+you want to set the metadata, you can use
+<em>returnsMeta</em></p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with returnsMeta'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'save'</span>).returnsMeta({message: <span class="hljs-string">'some metadata came back'</span>});
+            controller.create();
+            Item.flush(<span class="hljs-string">'save'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.constructor).toBe(Item);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'some metadata came back'</span>);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'Item saved!'</span>);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="fails">fails</h2>
+<p>If you want the api call to fail, you can call <em>fail</em></p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with fail'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'save'</span>).fails({message: <span class="hljs-string">'An Error'</span>});
+            controller.create();
+            Item.flush(<span class="hljs-string">'save'</span>);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'An Error'</span>);
+        });
+        
+    });  
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="destroy">Destroy</h2></div></div></div><div class="segment"><div class="code"><div class="wrapper">    describe(<span class="hljs-string">'mocking destroy'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="basic-expectcallflush">Basic expect/call/flush</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with no special features set'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>  
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'show'</span>);
+            controller.show(<span class="hljs-string">'id'</span>);
+            Item.flush(<span class="hljs-string">'show'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect(scope.item.constructor).toBe(Item);
+            
+            Item.expect(<span class="hljs-string">'destroy'</span>);
+            controller.destroy();
+            Item.flush(<span class="hljs-string">'destroy'</span>);
+            expect(scope.item).toBe(<span class="hljs-literal">null</span>);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'Item deleted!'</span>);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="tobecalledwith">toBeCalledWith</h3>
+<p>You can indicate the arguments you expect to be passed to the
+method with <em>toBeCalledWith</em></p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with toBeCalledWith'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'show'</span>).returns({id: <span class="hljs-string">'someid'</span>});
+            controller.show(<span class="hljs-string">'id'</span>);
+            Item.flush(<span class="hljs-string">'show'</span>);
+            
+            Item.expect(<span class="hljs-string">'destroy'</span>).toBeCalledWith(<span class="hljs-string">'someid'</span>);
+            controller.destroy();
+            Item.flush(<span class="hljs-string">'destroy'</span>);
+            expect(scope.item).toBe(<span class="hljs-literal">null</span>);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'Item deleted!'</span>);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="returns">returns</h3>
+<p>Destroy always returns an empty result, so you cannot 
+pass a result to returns</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with returns and a full response'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            expect(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>{</span>
+                Item.expect(<span class="hljs-string">'destroy'</span>).returns({foo: <span class="hljs-string">'bar'</span>});
+            }).toThrow(<span class="hljs-string">'destroy always returns an empty result, so you cannot mock out a different result.'</span>);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="returnsmeta">returnsMeta</h2>
+<p>You can set the metadata that cose back with <em>returnsMeta</em></p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with returnsMeta'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'show'</span>).returns({id: <span class="hljs-string">'someid'</span>});
+            controller.show(<span class="hljs-string">'id'</span>);
+            Item.flush(<span class="hljs-string">'show'</span>);
+            
+            Item.expect(<span class="hljs-string">'destroy'</span>).returnsMeta({message: <span class="hljs-string">'some metadata came back'</span>});
+            controller.destroy();
+            Item.flush(<span class="hljs-string">'destroy'</span>);
+            expect(scope.item).toBe(<span class="hljs-literal">null</span>);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'Item deleted!'</span>);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'some metadata came back'</span>);
+        });
+        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="fails">fails</h2>
+<p>If you want the api call to fail, you can call <em>fail</em></p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should work with fail'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> controller = $controller(<span class="hljs-string">"ItemController"</span>, {$scope: scope});
+            Item.expect(<span class="hljs-string">'show'</span>).returns({id: <span class="hljs-string">'someid'</span>});
+            controller.show(<span class="hljs-string">'id'</span>);
+            Item.flush(<span class="hljs-string">'show'</span>);
+            
+            Item.expect(<span class="hljs-string">'destroy'</span>).fails({message: <span class="hljs-string">'An Error'</span>});
+            controller.destroy();
+            Item.flush(<span class="hljs-string">'destroy'</span>);
+            expect(scope.item).not.toBe(<span class="hljs-literal">null</span>);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'An Error'</span>);
+        });
+        
+    });  
+    
+});</div></div></div></div></body></html>

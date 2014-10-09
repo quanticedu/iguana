@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="en"><head><title>scripts/adapters/adapter_base</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="scripts/adapters/adapter_base"><meta name="groc-project-path" content="scripts/adapters/adapter_base.js"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">scripts/adapters/adapter_base.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper">angular.module(<span class="hljs-string">'Iguana'</span>)
+.factory(<span class="hljs-string">'Iguana.Adapters.AdapterBase'</span>, [<span class="hljs-string">'$q'</span>, <span class="hljs-string">'SuperModel'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($q, SuperModel)</span>{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="creating-adapters">Creating adapters</h1>
+<p>To create a new adapter, you will need to create a new service that
+subclasses Iguana.Adapters.AdapterBase.<br>For an example, see <a href="restful_id_style.html">Iguana.Adapters.RestfulIdStyle</a></p>
+<p>Your subclass should define some or all of the methods described below.    </p>
+<p>All methods should return a promise which will be resolved with an 
+object that has the following two properties:</p>
+<p><strong>result</strong> - an array of documents.<br><strong>metadata</strong> - anything you want it to be.</p></div></div><div class="code"><div class="wrapper">        
+        <span class="hljs-keyword">return</span> SuperModel.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+           
+            <span class="hljs-keyword">return</span> {
+                initialize: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(iguanaKlass)</span> {</span>
+                    <span class="hljs-keyword">this</span>.iguanaKlass = iguanaKlass;
+                },
+                </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="show">show</h3>
+<p>Any arguments passed to Iguana.show will be passed through to 
+the adapter, allowing the adapter to support any kind of 
+querying functionality.  </p>
+<p>The &#39;result&#39; array should have only a single document.  Any 
+subsequent documents will be ignored.</p></div></div><div class="code"><div class="wrapper">                show: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collection, arg1, arg2)</span> {</span>
+                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Adapter does not support show method"</span>);
+                },
+                </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="index">index</h3>
+<p>Any arguments passed to Iguana.index will be passed through to 
+the adapter, allowing the adapter to support any kind of 
+querying functionality.</p>
+<p>The &#39;result&#39; array can have any number of documents</p></div></div><div class="code"><div class="wrapper">                index: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collection, arg1, arg2)</span> {</span>
+                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Adapter does not support index method"</span>);
+                },
+                </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="create">create</h3>
+<p>A document will be passed to create</p>
+<p>The &#39;result&#39; array should have only a single document.  Any 
+subsequent documents will be ignored.</p></div></div><div class="code"><div class="wrapper">                create: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collection, obj)</span> {</span>
+                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Adapter does not support create method"</span>);
+                },
+                </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="update">update</h3>
+<p>A document will be passed to update</p>
+<p>The &#39;result&#39; array should have only a single document.  Any 
+subsequent documents will be ignored.</p></div></div><div class="code"><div class="wrapper">                update: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collection, obj)</span> {</span>
+                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Adapter does not support update method"</span>);
+                },
+                </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="destroy">destroy</h3>
+<p>An id will be passed to destroy.  (Maybe we need to support other
+querying functionality here as well?)  </p>
+<p>The &#39;result&#39; array should be empty.  Any contents will be ignored.</p></div></div><div class="code"><div class="wrapper">                destroy: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collection, id)</span> {</span>
+                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Adapter does not support destroy method"</span>);
+                }
+            };
+        })
+        
+    }]);</div></div></div></div></body></html>
