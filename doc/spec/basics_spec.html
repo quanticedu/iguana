@@ -1,333 +1,324 @@
-<!DOCTYPE html><html lang="en"><head><title>spec/basics_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/basics_spec"><meta name="groc-project-path" content="spec/basics_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/basics_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+<!DOCTYPE html><html lang="en"><head><title>spec/basics_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/basics_spec"><meta name="groc-project-path" content="spec/basics_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/basics_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
 
-<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Iguana&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+describe(<span class="hljs-string">'Iguana'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
     
-    <span class="kd">var</span> <span class="nx">myApp</span><span class="p">;</span>
+    <span class="hljs-keyword">var</span> myApp;
     
-    <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    beforeEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
         </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="basics">Basics</h1></div></div><div class="code"><div class="wrapper">        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="include-iguana-in-your-app-and-configure-it">Include Iguana in your app and configure it.</h3>
-
-<p>Set the adapter and baseUrl in your app's config method.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">myApp</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Iguana&#39;</span><span class="p">])</span>
-            <span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">IguanaProvider</span><span class="p">)</span> <span class="p">{</span>
+<p>Set the adapter and baseUrl in your app&#39;s config method.</p></div></div><div class="code"><div class="wrapper">        myApp = angular.module(<span class="hljs-string">'myApp'</span>, [<span class="hljs-string">'Iguana'</span>])
+            .config(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(IguanaProvider)</span> {</span>
                 
-                <span class="c1">//Adapters allow Iguana to work with any crud api by translating</span>
-                <span class="c1">//between the api&#39;s expected format and Iguana&#39;s expected format.  Iguana</span>
-                <span class="c1">//currently ships with one built-in adapter, Iguana.Adapters.RestfulIdStyle,</span>
-                <span class="c1">//and one mock adapter for use in tests.  We&#39;re using the mock adapter here.</span>
-                <span class="nx">IguanaProvider</span><span class="p">.</span><span class="nx">setAdapter</span><span class="p">(</span><span class="s1">&#39;Iguana.Mock.Adapter&#39;</span><span class="p">);</span>
+                <span class="hljs-comment">//Adapters allow Iguana to work with any crud api by translating</span>
+                <span class="hljs-comment">//between the api's expected format and Iguana's expected format.  Iguana</span>
+                <span class="hljs-comment">//currently ships with one built-in adapter, Iguana.Adapters.RestfulIdStyle,</span>
+                <span class="hljs-comment">//and one mock adapter for use in tests.  We're using the mock adapter here.</span>
+                IguanaProvider.setAdapter(<span class="hljs-string">'Iguana.Mock.Adapter'</span>);
                 
-                <span class="c1">//Set the baseUrl for your api.  By default this id &#39;&#39;, </span>
-                <span class="c1">//so if you don&#39;t override it then it will </span>
-                <span class="c1">//hit your site&#39;s domain.</span>
-                <span class="nx">IguanaProvider</span><span class="p">.</span><span class="nx">setBaseUrl</span><span class="p">(</span><span class="s1">&#39;http:://baseurl&#39;</span><span class="p">);</span>
+                <span class="hljs-comment">//Set the baseUrl for your api.  By default this id '', </span>
+                <span class="hljs-comment">//so if you don't override it then it will </span>
+                <span class="hljs-comment">//hit your site's domain.</span>
+                IguanaProvider.setBaseUrl(<span class="hljs-string">'http:://baseurl'</span>);
                 
-        <span class="p">});</span>
+        });
         
-    <span class="p">});</span>
+    });
     
     
-    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should show an item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    it(<span class="hljs-string">'should show an item'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
         </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="create-an-iguana-class">Create an Iguana class</h3>
-
 <p>Create one Iguana class for each type of data you want to load up from your api.
-Iguana classes are based on <a href="https://github.com/pedago/a-class-above">a-class-above</a>'s OOP structure.
+Iguana classes are based on <a href="https://github.com/pedago/a-class-above">a-class-above</a>&#39;s OOP structure.
 Here, this.setCollection is calling a class method on our new Item class.</p>
-
 <p>The collection name is used for building urls when hitting the
 api. In this case, the urls for this class will be
-http:://baseurl/items.json or http:://baseurl/items/SOME_ID.json</p></div></div><div class="code"><div class="wrapper">        <span class="nx">myApp</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">){</span>
+http:://baseurl/items.json or http:://baseurl/items/SOME_ID.json</p></div></div><div class="code"><div class="wrapper">        myApp.factory(<span class="hljs-string">'Item'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Iguana)</span>{</span>
             
-            <span class="k">return</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="hljs-keyword">return</span> Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
                 
-                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">);</span>
-            <span class="p">});</span>
+                <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">"items"</span>);
+            });
             
-        <span class="p">});</span>  
+        });  
     </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="fetch-something-from-your-api">Fetch something from your api</h3>
-
 <p>Create a controller that will load up a model from the api and use it
-for something</p></div></div><div class="code"><div class="wrapper">        <span class="c1">//Create controller</span>
-        <span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ShowItemController&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">$scope</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
-            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Here we are calling 'show' to load up a single item from the database,
+for something</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-comment">//Create controller</span>
+        myApp.controller(<span class="hljs-string">'ShowItemController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Item, $scope, $window)</span>{</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Here we are calling &#39;show&#39; to load up a single item from the database,
 and then stick it onto the scope once it is loaded.  </p>
-
-<h3 id="aidqueryingaquerying"><a id='querying'></a>Querying</h3>
-
-<p>This example shows us passing an id to 'show', but what if you needed
-to run a more complex query?  The supported querying functionality for 'show' and
-'index' is defined by the adapter that you are using.  Check the documentation
-for your adapter for information on how to query.</p></div></div><div class="code"><div class="wrapper">            <span class="c1">//Call Item.show</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">itemId</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
-                <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
-            <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
-            <span class="p">});</span>
-        <span class="p">});</span>
+<h3 id="-a-id-querying-a-querying"><a id='querying'></a>Querying</h3>
+<p>This example shows us passing an id to &#39;show&#39;, but what if you needed
+to run a more complex query?  The supported querying functionality for &#39;show&#39; and
+&#39;index&#39; is defined by the adapter that you are using.  Check the documentation
+for your adapter for information on how to query.</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-comment">//Call Item.show</span>
+            Item.show($scope.itemId).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span>{</span>
+                $scope.item = response.result;
+            }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(error)</span> {</span>
+                $window.alert(<span class="hljs-string">'Something went wrong: '</span>+error.message);
+            });
+        });
         
-        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>        
-        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">MockIguana</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">,</span> <span class="nx">$controller</span><span class="p">,</span> <span class="nx">Item</span><span class="p">){</span>
-            <span class="kd">var</span> <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">itemId</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">;</span>
+        module(<span class="hljs-string">'myApp'</span>);        
+        inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(MockIguana, $rootScope, $controller, Item)</span>{</span>
+            <span class="hljs-keyword">var</span> scope = $rootScope.$<span class="hljs-keyword">new</span>();
+            scope.itemId = <span class="hljs-string">"id"</span>;
             
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">).</span><span class="nx">toBeCalledWith</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">).</span><span class="nx">returns</span><span class="p">({</span>
-                <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> 
-                <span class="nx">someString</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
-                <span class="nx">someNumber</span><span class="o">:</span> <span class="mf">1.4</span><span class="p">,</span>
-                <span class="nx">someArray</span><span class="o">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
-                <span class="nx">someObject</span><span class="o">:</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">}</span>
-            <span class="p">});</span>
-            <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;ShowItemController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">);</span>
+            Item.expect(<span class="hljs-string">'show'</span>).toBeCalledWith(<span class="hljs-string">'id'</span>).returns({
+                id: <span class="hljs-string">'id'</span>, 
+                someString: <span class="hljs-string">'value'</span>,
+                someNumber: <span class="hljs-number">1.4</span>,
+                someArray: [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>],
+                someObject: {a: <span class="hljs-number">1</span>}
+            });
+            $controller(<span class="hljs-string">"ShowItemController"</span>, {$scope: scope});
+            Item.flush(<span class="hljs-string">'show'</span>);
             
-            <span class="kd">var</span> <span class="nx">loadedItem</span> <span class="o">=</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">;</span>
+            <span class="hljs-keyword">var</span> loadedItem = scope.item;
             </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The value of response.result is an instance of Item,
 and all of the properties that came over the api
-have been copied onto it.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">id</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">);</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">someString</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">);</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">someNumber</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mf">1.4</span><span class="p">);</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">someArray</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]);</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItem</span><span class="p">.</span><span class="nx">someObject</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">});</span>
+have been copied onto it.</p></div></div><div class="code"><div class="wrapper">            expect(loadedItem.constructor).toBe(Item);
+            expect(loadedItem.id).toBe(<span class="hljs-string">'id'</span>);
+            expect(loadedItem.someString).toEqual(<span class="hljs-string">'value'</span>);
+            expect(loadedItem.someNumber).toEqual(<span class="hljs-number">1.4</span>);
+            expect(loadedItem.someArray).toEqual([<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>]);
+            expect(loadedItem.someObject).toEqual({a: <span class="hljs-number">1</span>});
             
-        <span class="p">});</span>
+        });
         
-    <span class="p">});</span>
+    });
     </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="setting-the-id-property">setting the id property</h3>
-
-<p>By default, Iguana assumes that your documents have a property called 'id'
+<p>By default, Iguana assumes that your documents have a property called &#39;id&#39;
 which includes a unique id for your document.  You can change the name of 
-the property that is used as the unique identifier with the <em>setIdProperty</em> class method.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">it</span> <span class="p">(</span><span class="s1">&#39;should allow the idProperty to be overridden&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+the property that is used as the unique identifier with the <em>setIdProperty</em> class method.</p></div></div><div class="code"><div class="wrapper">    it (<span class="hljs-string">'should allow the idProperty to be overridden'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
         
-        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>        
-        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">){</span>
-            <span class="kd">var</span> <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="nx">setIdProperty</span><span class="p">(</span><span class="s1">&#39;customIdProp&#39;</span><span class="p">);</span>
-            <span class="p">});</span>
+        module(<span class="hljs-string">'myApp'</span>);        
+        inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Iguana)</span>{</span>
+            <span class="hljs-keyword">var</span> Item = Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">this</span>.setIdProperty(<span class="hljs-string">'customIdProp'</span>);
+            });
             
-            <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span>
-                <span class="nx">customIdProp</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span>
-            <span class="p">});</span>
-        <span class="p">});</span>
+            Item.new({
+                customIdProp: <span class="hljs-string">'id'</span>
+            });
+        });
         
         
         
-    <span class="p">});</span>
+    });
     
-    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should add instance methods onto our model&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    it(<span class="hljs-string">'should add instance methods onto our model'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
         </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="add-instance-methods-to-your-class">Add instance methods to your class</h3>
-
 <p><a href="https://github.com/pedago/a-class-above">a-class-above</a> allows
-us to add instance methods to our class.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">myApp</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">){</span>
+us to add instance methods to our class.</p></div></div><div class="code"><div class="wrapper">        myApp.factory(<span class="hljs-string">'Item'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Iguana)</span>{</span>
             
-            <span class="k">return</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="hljs-keyword">return</span> Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
                                 
-                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">);</span>
+                <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">"items"</span>);
                 
-                <span class="c1">//We return an instance mixin that will be mixed in</span>
-                <span class="c1">//to our class.</span>
-                <span class="k">return</span> <span class="p">{</span>
-                    <span class="nx">awesomeness</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-                        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">quality</span><span class="p">;</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-            <span class="p">});</span>
+                <span class="hljs-comment">//We return an instance mixin that will be mixed in</span>
+                <span class="hljs-comment">//to our class.</span>
+                <span class="hljs-keyword">return</span> {
+                    awesomeness: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.size * <span class="hljs-keyword">this</span>.quality;
+                    }
+                }
+            });
             
-        <span class="p">});</span> 
+        }); 
         
-        <span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ShowItemController&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">$scope</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
+        myApp.controller(<span class="hljs-string">'ShowItemController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Item, $scope, $window)</span>{</span>
             
-            <span class="c1">//Call Item.show</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">itemId</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
-                <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
-                <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;You loaded an item with an awesomeness level of &#39;</span><span class="o">+</span><span class="nx">item</span><span class="p">.</span><span class="nx">awesomeness</span><span class="p">());</span>
-            <span class="p">});</span>
-        <span class="p">});</span>
+            <span class="hljs-comment">//Call Item.show</span>
+            Item.show($scope.itemId).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span>{</span>
+                <span class="hljs-keyword">var</span> item = response.result;
+                $window.alert(<span class="hljs-string">'You loaded an item with an awesomeness level of '</span>+item.awesomeness());
+            });
+        });
         
-        <span class="c1">//This is the object that will come back from the api.  So we</span>
-        <span class="c1">//should expect to see an awesomeness level of 3 * 4 = 12</span>
-        <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="nx">size</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span> <span class="nx">quality</span><span class="o">:</span> <span class="mi">4</span><span class="p">};</span>
+        <span class="hljs-comment">//This is the object that will come back from the api.  So we</span>
+        <span class="hljs-comment">//should expect to see an awesomeness level of 3 * 4 = 12</span>
+        <span class="hljs-keyword">var</span> attrs = {id: <span class="hljs-string">'id'</span>, size: <span class="hljs-number">3</span>, quality: <span class="hljs-number">4</span>};
         
-        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>        
-        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$rootScope</span><span class="p">,</span> <span class="nx">$controller</span><span class="p">,</span> <span class="nx">Item</span><span class="p">,</span> <span class="nx">$window</span><span class="p">,</span> <span class="nx">MockIguana</span><span class="p">){</span>
-            <span class="kd">var</span> <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">itemId</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">;</span>
-            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">$window</span><span class="p">,</span> <span class="s1">&#39;alert&#39;</span><span class="p">);</span>
+        module(<span class="hljs-string">'myApp'</span>);        
+        inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($rootScope, $controller, Item, $window, MockIguana)</span>{</span>
+            <span class="hljs-keyword">var</span> scope = $rootScope.$<span class="hljs-keyword">new</span>();
+            scope.itemId = <span class="hljs-string">"id"</span>;
+            spyOn($window, <span class="hljs-string">'alert'</span>);
             
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">).</span><span class="nx">returns</span><span class="p">(</span><span class="nx">attrs</span><span class="p">);</span>
-            <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;ShowItemController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">);</span>
+            Item.expect(<span class="hljs-string">'show'</span>).returns(attrs);
+            $controller(<span class="hljs-string">"ShowItemController"</span>, {$scope: scope});
+            Item.flush(<span class="hljs-string">'show'</span>);
             
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s1">&#39;You loaded an item with an awesomeness level of 12&#39;</span><span class="p">);</span>
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'You loaded an item with an awesomeness level of 12'</span>);
             
-        <span class="p">});</span>
+        });
         
-    <span class="p">});</span>
+    });
     
-    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should show many items&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    it(<span class="hljs-string">'should show many items'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
 
-        <span class="nx">myApp</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">){</span>
+        myApp.factory(<span class="hljs-string">'Item'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Iguana)</span>{</span>
             
-            <span class="k">return</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="hljs-keyword">return</span> Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
                 
-                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">);</span>
-            <span class="p">});</span>
+                <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">"items"</span>);
+            });
             
-        <span class="p">});</span>  
+        });  
     </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="fetch-many-things-from-your-api">Fetch many things from your api</h3>
-
-<p>Create a controller that will load up models from the api</p></div></div><div class="code"><div class="wrapper">        <span class="c1">//Create controller</span>
-        <span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ListItemsController&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">$scope</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
-            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Call 'index' to load up a list of items from the database.  As with show,
-supported querying functionality is defined by the adapter (<a href="#querying">see note above</a>)</p></div></div><div class="code"><div class="wrapper">            <span class="c1">//Call Item.index</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">index</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
-                <span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
-            <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
-            <span class="p">});</span>
-        <span class="p">});</span>
+<p>Create a controller that will load up models from the api</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-comment">//Create controller</span>
+        myApp.controller(<span class="hljs-string">'ListItemsController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Item, $scope, $window)</span>{</span>
+            </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Call &#39;index&#39; to load up a list of items from the database.  As with show,
+supported querying functionality is defined by the adapter (<a href="#querying">see note above</a>)</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-comment">//Call Item.index</span>
+            Item.index().then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span>{</span>
+                $scope.items = response.result;
+            }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(error)</span> {</span>
+                $window.alert(<span class="hljs-string">'Something went wrong: '</span>+error.message);
+            });
+        });
         
-        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>        
-        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">MockIguana</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">,</span> <span class="nx">$controller</span><span class="p">,</span> <span class="nx">Item</span><span class="p">){</span>
-            <span class="kd">var</span> <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
+        module(<span class="hljs-string">'myApp'</span>);        
+        inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(MockIguana, $rootScope, $controller, Item)</span>{</span>
+            <span class="hljs-keyword">var</span> scope = $rootScope.$<span class="hljs-keyword">new</span>();
             
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">).</span><span class="nx">returns</span><span class="p">([{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id1&#39;</span><span class="p">},</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id2&#39;</span><span class="p">}]);</span>
-            <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;ListItemsController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">);</span>
+            Item.expect(<span class="hljs-string">'index'</span>).returns([{id: <span class="hljs-string">'id1'</span>}, {id: <span class="hljs-string">'id2'</span>}]);
+            $controller(<span class="hljs-string">"ListItemsController"</span>, {$scope: scope});
+            Item.flush(<span class="hljs-string">'index'</span>);
             
-            <span class="kd">var</span> <span class="nx">loadedItems</span> <span class="o">=</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">items</span><span class="p">;</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItems</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">loadedItems</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
+            <span class="hljs-keyword">var</span> loadedItems = scope.items;
+            expect(loadedItems.length).toBe(<span class="hljs-number">2</span>);
+            expect(loadedItems[<span class="hljs-number">0</span>].constructor).toBe(Item);
             
-        <span class="p">});</span>
+        });
         
-    <span class="p">});</span>
+    });
     
-    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should let us save things, too&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    it(<span class="hljs-string">'should let us save things, too'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
         
-        <span class="nx">myApp</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">){</span>
+        myApp.factory(<span class="hljs-string">'Item'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Iguana)</span>{</span>
             
-            <span class="k">return</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="hljs-keyword">return</span> Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
                 
-                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">);</span>
-            <span class="p">});</span>
+                <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">"items"</span>);
+            });
             
-        <span class="p">});</span>  
-    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="save-something">Save something</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        <span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;EditItemController&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">$scope</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
+        });  
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="save-something">Save something</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        myApp.controller(<span class="hljs-string">'EditItemController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Item, $scope, $window)</span>{</span>
             </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If an itemId is passed into our controller, then it will
 load up the item so we can update it (Imagine there is a form
-on the screen with form elements found to properties on our item.)</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">itemId</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">itemId</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
-                    <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
-                <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
-                <span class="p">});</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If no itemId is passed in then we will create a new one</p></div></div><div class="code"><div class="wrapper">                <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">();</span>
-            <span class="p">}</span>
+on the screen with form elements found to properties on our item.)</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">if</span> ($scope.itemId) {
+                Item.show($scope.itemId).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span>{</span>
+                    $scope.item = response.result;
+                }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(error)</span> {</span>
+                    $window.alert(<span class="hljs-string">'Something went wrong: '</span>+error.message);
+                });
+            } <span class="hljs-keyword">else</span> {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If no itemId is passed in then we will create a new one</p></div></div><div class="code"><div class="wrapper">                $scope.item = Item.new();
+            }
             </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Respond to some user action by calling item.save() and then 
-responding to success and failure conditions.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">$scope</span><span class="p">.</span><span class="nx">save</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">save</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-                        <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Saved!&quot;</span><span class="p">);</span>
-                    <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
-                    <span class="p">});</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">});</span> 
+responding to success and failure conditions.</p></div></div><div class="code"><div class="wrapper">            $scope.save = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">if</span> ($scope.item) {
+                    $scope.item.save().then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                        $window.alert(<span class="hljs-string">"Saved!"</span>);
+                    }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(error)</span> {</span>
+                        $window.alert(<span class="hljs-string">'Something went wrong: '</span>+error.message);
+                    });
+                }
+            }
+        }); 
         
-        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>        
-        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">MockIguana</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">,</span> <span class="nx">$controller</span><span class="p">,</span> <span class="nx">Item</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
-            <span class="c1">//Creating a new item</span>
-            <span class="kd">var</span> <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
-            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">$window</span><span class="p">,</span> <span class="s1">&#39;alert&#39;</span><span class="p">);</span>
-            <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;EditItemController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
+        module(<span class="hljs-string">'myApp'</span>);        
+        inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(MockIguana, $rootScope, $controller, Item, $window)</span>{</span>
+            <span class="hljs-comment">//Creating a new item</span>
+            <span class="hljs-keyword">var</span> scope = $rootScope.$<span class="hljs-keyword">new</span>();
+            spyOn($window, <span class="hljs-string">'alert'</span>);
+            $controller(<span class="hljs-string">"EditItemController"</span>, {$scope: scope});
             </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The object that gets sent to the api will be the
 jsonified version of our instance (following the rules of
 angular.toJson).  This means that any property whose name does
-not start with '$' and whose value is not a function will be sent
-to the api's 'save' method.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">some</span> <span class="o">=</span> <span class="s2">&quot;value&quot;</span><span class="p">;</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">someNumber</span> <span class="o">=</span> <span class="mf">1.4</span><span class="p">;</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">someArray</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">];</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">someObject</span> <span class="o">=</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">};</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">ignoreThisFunction</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{};</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">$$ignoreThisProperty</span> <span class="o">=</span> <span class="s2">&quot;ignored&quot;</span><span class="p">;</span>
+not start with &#39;$&#39; and whose value is not a function will be sent
+to the api&#39;s &#39;save&#39; method.</p></div></div><div class="code"><div class="wrapper">            scope.item.some = <span class="hljs-string">"value"</span>;
+            scope.item.someNumber = <span class="hljs-number">1.4</span>;
+            scope.item.someArray = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>];
+            scope.item.someObject = {a: <span class="hljs-number">1</span>};
+            scope.item.ignoreThisFunction = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>};
+            scope.item.$$ignoreThisProperty = <span class="hljs-string">"ignored"</span>;
                         
-            <span class="c1">//Since the item does not have an id, we will call the &quot;create&quot;</span>
-            <span class="c1">//method on our api.</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">).</span><span class="nx">toBeCalledWith</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">);</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">)</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s1">&#39;Saved!&#39;</span><span class="p">);</span>
+            <span class="hljs-comment">//Since the item does not have an id, we will call the "create"</span>
+            <span class="hljs-comment">//method on our api.</span>
+            Item.expect(<span class="hljs-string">'create'</span>).toBeCalledWith(scope.item);
+            scope.save();
+            Item.flush(<span class="hljs-string">'create'</span>)
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'Saved!'</span>);
             
-            <span class="c1">//Updating an existing item</span>
-            <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">itemId</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">;</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">).</span><span class="nx">returns</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="nx">prop</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">});</span>
-            <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;EditItemController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">);</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">prop</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">);</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">prop</span> <span class="o">=</span> <span class="s2">&quot;reset&quot;</span><span class="p">;</span>   
-            <span class="c1">//Since the item already has an id, we will call the &quot;update&quot;</span>
-            <span class="c1">//method on our api.</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">).</span><span class="nx">toBeCalledWith</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">asJson</span><span class="p">());</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">);</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+            <span class="hljs-comment">//Updating an existing item</span>
+            scope = $rootScope.$<span class="hljs-keyword">new</span>();
+            scope.itemId = <span class="hljs-string">"id"</span>;
+            Item.expect(<span class="hljs-string">'show'</span>).returns({id: <span class="hljs-string">'id'</span>, prop: <span class="hljs-string">'value'</span>});
+            $controller(<span class="hljs-string">"EditItemController"</span>, {$scope: scope});
+            Item.flush(<span class="hljs-string">'show'</span>);
+            expect(scope.item.prop).toBe(<span class="hljs-string">'value'</span>);
+            scope.item.prop = <span class="hljs-string">"reset"</span>;   
+            <span class="hljs-comment">//Since the item already has an id, we will call the "update"</span>
+            <span class="hljs-comment">//method on our api.</span>
+            Item.expect(<span class="hljs-string">'update'</span>).toBeCalledWith(scope.item.asJson());
+            scope.save();
+            expect($window.alert.calls.length).toBe(<span class="hljs-number">1</span>);
+            Item.flush(<span class="hljs-string">'update'</span>);
+            expect($window.alert.calls.length).toBe(<span class="hljs-number">2</span>);
             
-        <span class="p">});</span>      
-    <span class="p">});</span>
+        });      
+    });
     
-    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should event let us delete things&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    it(<span class="hljs-string">'should event let us delete things'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
         
-        <span class="nx">myApp</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">){</span>
+        myApp.factory(<span class="hljs-string">'Item'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Iguana)</span>{</span>
             
-            <span class="k">return</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="hljs-keyword">return</span> Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
                 
-                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">);</span>
-            <span class="p">});</span>
+                <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">"items"</span>);
+            });
             
-        <span class="p">});</span>  
-    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="delete-something">Delete something</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        <span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;EditItemController&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">$scope</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
+        });  
+    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="delete-something">Delete something</h3></div></div></div><div class="segment"><div class="code"><div class="wrapper">        myApp.controller(<span class="hljs-string">'EditItemController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Item, $scope, $window)</span>{</span>
             </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If an itemId is passed into our controller, then it will
 load up the item so we can update it (Imagine there is a form
-on the screen with form elements found to properties on our item.)</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">itemId</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">itemId</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
-                    <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
-                <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
-                <span class="p">});</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If no itemId is passed in then we will create a new one</p></div></div><div class="code"><div class="wrapper">                <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Item</span><span class="p">();</span>
-            <span class="p">}</span>
+on the screen with form elements found to properties on our item.)</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">if</span> ($scope.itemId) {
+                Item.show($scope.itemId).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span>{</span>
+                    $scope.item = response.result;
+                }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(error)</span> {</span>
+                    $window.alert(<span class="hljs-string">'Something went wrong: '</span>+error.message);
+                });
+            } <span class="hljs-keyword">else</span> {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If no itemId is passed in then we will create a new one</p></div></div><div class="code"><div class="wrapper">                $scope.item = <span class="hljs-keyword">new</span> Item();
+            }
             </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Respond to some user action by calling item.destroy() and then 
-responding to success and failure conditions.</p></div></div><div class="code"><div class="wrapper">            <span class="nx">$scope</span><span class="p">.</span><span class="nx">destroy</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="nx">$scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">destroy</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-                        <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Destroyed!&quot;</span><span class="p">);</span>
-                    <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Something went wrong: &#39;</span><span class="o">+</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
-                    <span class="p">});</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">});</span> 
+responding to success and failure conditions.</p></div></div><div class="code"><div class="wrapper">            $scope.destroy = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">if</span> ($scope.item) {
+                    $scope.item.destroy().then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                        $window.alert(<span class="hljs-string">"Destroyed!"</span>);
+                    }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(error)</span> {</span>
+                        $window.alert(<span class="hljs-string">'Something went wrong: '</span>+error.message);
+                    });
+                }
+            }
+        }); 
         
-        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>        
-        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">MockIguana</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">,</span> <span class="nx">$controller</span><span class="p">,</span> <span class="nx">Item</span><span class="p">,</span> <span class="nx">$window</span><span class="p">){</span>
+        module(<span class="hljs-string">'myApp'</span>);        
+        inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(MockIguana, $rootScope, $controller, Item, $window)</span>{</span>
             
-            <span class="c1">//Deleting an existing item</span>
-            <span class="kd">var</span> <span class="nx">scope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
-            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">$window</span><span class="p">,</span> <span class="s1">&#39;alert&#39;</span><span class="p">);</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">itemId</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">;</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">).</span><span class="nx">returns</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="nx">prop</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">});</span>
-            <span class="nx">$controller</span><span class="p">(</span><span class="s2">&quot;EditItemController&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">$scope</span><span class="o">:</span> <span class="nx">scope</span><span class="p">});</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">);</span>
+            <span class="hljs-comment">//Deleting an existing item</span>
+            <span class="hljs-keyword">var</span> scope = $rootScope.$<span class="hljs-keyword">new</span>();
+            spyOn($window, <span class="hljs-string">'alert'</span>);
+            scope.itemId = <span class="hljs-string">"id"</span>;
+            Item.expect(<span class="hljs-string">'show'</span>).returns({id: <span class="hljs-string">'id'</span>, prop: <span class="hljs-string">'value'</span>});
+            $controller(<span class="hljs-string">"EditItemController"</span>, {$scope: scope});
+            Item.flush(<span class="hljs-string">'show'</span>);
             
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">).</span><span class="nx">toBeCalledWith</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
-            <span class="nx">scope</span><span class="p">.</span><span class="nx">destroy</span><span class="p">();</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">);</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">$window</span><span class="p">.</span><span class="nx">alert</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s1">&#39;Destroyed!&#39;</span><span class="p">)</span>
+            Item.expect(<span class="hljs-string">'destroy'</span>).toBeCalledWith(scope.item.id);
+            scope.destroy();
+            Item.flush(<span class="hljs-string">'destroy'</span>);
+            expect($window.alert).toHaveBeenCalledWith(<span class="hljs-string">'Destroyed!'</span>)
             
-        <span class="p">});</span>      
-    <span class="p">});</span>
+        });      
+    });
     
-<span class="p">});</span></div></div></div></div></body></html>
+});</div></div></div></div></body></html>

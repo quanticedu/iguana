@@ -9,11 +9,11 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
       "type": "file",
       "data": {
         "language": {
-          "nameMatchers": [".md"],
+          "nameMatchers": [".md", ".markdown", ".mkd", ".mkdn", ".mdown"],
           "commentsOnly": true,
           "name": "Markdown"
         },
-        "sourcePath": "/Users/nbrustein/code/iguana/doc.md",
+        "sourcePath": "/Users/brent/Development/Pedago/iguana/doc.md",
         "projectPath": "doc.md",
         "targetPath": "index",
         "pageTitle": "index",
@@ -49,7 +49,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                   "foldPrefix": "^",
                   "name": "JavaScript"
                 },
-                "sourcePath": "/Users/nbrustein/code/iguana/scripts/adapters/adapter_base.js",
+                "sourcePath": "/Users/brent/Development/Pedago/iguana/scripts/adapters/adapter_base.js",
                 "projectPath": "scripts/adapters/adapter_base.js",
                 "targetPath": "scripts/adapters/adapter_base",
                 "pageTitle": "scripts/adapters/adapter_base",
@@ -122,7 +122,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                   "foldPrefix": "^",
                   "name": "JavaScript"
                 },
-                "sourcePath": "/Users/nbrustein/code/iguana/scripts/adapters/restful_id_style.js",
+                "sourcePath": "/Users/brent/Development/Pedago/iguana/scripts/adapters/restful_id_style.js",
                 "projectPath": "scripts/adapters/restful_id_style.js",
                 "targetPath": "scripts/adapters/restful_id_style",
                 "pageTitle": "scripts/adapters/restful_id_style",
@@ -144,7 +144,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/scripts/alias.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/scripts/alias.js",
             "projectPath": "scripts/alias.js",
             "targetPath": "scripts/alias",
             "pageTitle": "scripts/alias",
@@ -164,7 +164,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/scripts/callbacks.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/scripts/callbacks.js",
             "projectPath": "scripts/callbacks.js",
             "targetPath": "scripts/callbacks",
             "pageTitle": "scripts/callbacks",
@@ -184,7 +184,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/scripts/crud.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/scripts/crud.js",
             "projectPath": "scripts/crud.js",
             "targetPath": "scripts/crud",
             "pageTitle": "scripts/crud",
@@ -204,7 +204,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/scripts/embeds.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/scripts/embeds.js",
             "projectPath": "scripts/embeds.js",
             "targetPath": "scripts/embeds",
             "pageTitle": "scripts/embeds",
@@ -224,7 +224,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/scripts/iguana.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/scripts/iguana.js",
             "projectPath": "scripts/iguana.js",
             "targetPath": "scripts/iguana",
             "pageTitle": "scripts/iguana",
@@ -244,7 +244,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/scripts/keys.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/scripts/keys.js",
             "projectPath": "scripts/keys.js",
             "targetPath": "scripts/keys",
             "pageTitle": "scripts/keys",
@@ -264,7 +264,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/scripts/serializers.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/scripts/serializers.js",
             "projectPath": "scripts/serializers.js",
             "targetPath": "scripts/serializers",
             "pageTitle": "scripts/serializers",
@@ -284,7 +284,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/scripts/single_collection_inheritance.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/scripts/single_collection_inheritance.js",
             "projectPath": "scripts/single_collection_inheritance.js",
             "targetPath": "scripts/single_collection_inheritance",
             "pageTitle": "scripts/single_collection_inheritance",
@@ -322,7 +322,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                   "foldPrefix": "^",
                   "name": "JavaScript"
                 },
-                "sourcePath": "/Users/nbrustein/code/iguana/spec/adapters/restful_id_style_spec.js",
+                "sourcePath": "/Users/brent/Development/Pedago/iguana/spec/adapters/restful_id_style_spec.js",
                 "projectPath": "spec/adapters/restful_id_style_spec.js",
                 "targetPath": "spec/adapters/restful_id_style_spec",
                 "pageTitle": "spec/adapters/restful_id_style_spec",
@@ -405,7 +405,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/spec/alias_spec.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/spec/alias_spec.js",
             "projectPath": "spec/alias_spec.js",
             "targetPath": "spec/alias_spec",
             "pageTitle": "spec/alias_spec",
@@ -425,7 +425,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/spec/basics_spec.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/spec/basics_spec.js",
             "projectPath": "spec/basics_spec.js",
             "targetPath": "spec/basics_spec",
             "pageTitle": "spec/basics_spec",
@@ -522,7 +522,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/spec/callbacks_spec.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/spec/callbacks_spec.js",
             "projectPath": "spec/callbacks_spec.js",
             "targetPath": "spec/callbacks_spec",
             "pageTitle": "spec/callbacks_spec",
@@ -579,7 +579,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/spec/crud_spec.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/spec/crud_spec.js",
             "projectPath": "spec/crud_spec.js",
             "targetPath": "spec/crud_spec",
             "pageTitle": "spec/crud_spec",
@@ -599,7 +599,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/spec/embeds_spec.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/spec/embeds_spec.js",
             "projectPath": "spec/embeds_spec.js",
             "targetPath": "spec/embeds_spec",
             "pageTitle": "spec/embeds_spec",
@@ -664,7 +664,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/spec/iguana_spec.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/spec/iguana_spec.js",
             "projectPath": "spec/iguana_spec.js",
             "targetPath": "spec/iguana_spec",
             "pageTitle": "spec/iguana_spec",
@@ -684,7 +684,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/spec/keys_spec.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/spec/keys_spec.js",
             "projectPath": "spec/keys_spec.js",
             "targetPath": "spec/keys_spec",
             "pageTitle": "spec/keys_spec",
@@ -725,7 +725,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/spec/mocks_spec.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/spec/mocks_spec.js",
             "projectPath": "spec/mocks_spec.js",
             "targetPath": "spec/mocks_spec",
             "pageTitle": "spec/mocks_spec",
@@ -986,7 +986,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/spec/serializers_spec.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/spec/serializers_spec.js",
             "projectPath": "spec/serializers_spec.js",
             "targetPath": "spec/serializers_spec",
             "pageTitle": "spec/serializers_spec",
@@ -1024,7 +1024,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nbrustein/code/iguana/spec/single_collection_inheritance_spec.js",
+            "sourcePath": "/Users/brent/Development/Pedago/iguana/spec/single_collection_inheritance_spec.js",
             "projectPath": "spec/single_collection_inheritance_spec.js",
             "targetPath": "spec/single_collection_inheritance_spec",
             "pageTitle": "spec/single_collection_inheritance_spec",

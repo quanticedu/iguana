@@ -1,53 +1,53 @@
-<!DOCTYPE html><html lang="en"><head><title>scripts/alias</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="scripts/alias"><meta name="groc-project-path" content="scripts/alias.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">scripts/alias.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;Iguana&#39;</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Iguana.Alias&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$injector&#39;</span><span class="p">,</span>
-        <span class="kd">function</span><span class="p">(</span><span class="nx">$injector</span><span class="p">)</span> <span class="p">{</span>
+<!DOCTYPE html><html lang="en"><head><title>scripts/alias</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="scripts/alias"><meta name="groc-project-path" content="scripts/alias.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">scripts/alias.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper">angular.module(<span class="hljs-string">'Iguana'</span>)
+    .factory(<span class="hljs-string">'Iguana.Alias'</span>, [<span class="hljs-string">'$injector'</span>,
+        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($injector)</span> {</span>
 
-            <span class="k">return</span> <span class="p">{</span>
-                <span class="nx">classMixin</span><span class="o">:</span> <span class="p">{</span>
+            <span class="hljs-keyword">return</span> {
+                classMixin: {
 
-                    <span class="nx">injectablesMap</span><span class="o">:</span> <span class="p">{},</span>
+                    injectablesMap: {},
 
-                    <span class="nx">alias</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="k">this</span><span class="p">.</span><span class="nx">_alias</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
-                            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">value</span><span class="p">])</span> <span class="p">{</span>
-                                <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;A klass has already been aliased to &quot;&#39;</span> <span class="o">+</span> <span class="nx">value</span> <span class="o">+</span> <span class="s1">&#39;&quot;.  Cannot alias another to the same name.&#39;</span><span class="p">);</span>
-                            <span class="p">}</span>
-                            <span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">value</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-                        <span class="p">}</span>
-                        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_alias</span><span class="p">;</span>
-                    <span class="p">},</span>
+                    alias: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+                        <span class="hljs-keyword">if</span> (value) {
+                            <span class="hljs-keyword">this</span>._alias = value;
+                            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._aliasedKlasses[value]) {
+                                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'A klass has already been aliased to "'</span> + value + <span class="hljs-string">'".  Cannot alias another to the same name.'</span>);
+                            }
+                            <span class="hljs-keyword">this</span>._aliasedKlasses[value] = <span class="hljs-keyword">this</span>;
+                        }
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._alias;
+                    },
 
-                    <span class="nx">getAliasedKlass</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">alias</span><span class="p">,</span> <span class="nx">throwIfUnfound</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="nx">angular</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">throwIfUnfound</span><span class="p">))</span> <span class="p">{</span>
-                            <span class="nx">throwIfUnfound</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-                        <span class="p">}</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">alias</span><span class="p">])</span> <span class="p">{</span>
-                            <span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">injectablesMap</span><span class="p">[</span><span class="nx">alias</span><span class="p">];</span>
-                            <span class="k">if</span> <span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
-                                <span class="kd">var</span> <span class="nx">klass</span><span class="p">;</span>
-                                <span class="k">try</span> <span class="p">{</span>
-                                    <span class="nx">klass</span> <span class="o">=</span> <span class="nx">$injector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">path</span><span class="p">);</span>
-                                <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{}</span>
-                                <span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">alias</span><span class="p">]</span> <span class="o">=</span> <span class="nx">klass</span><span class="p">;</span>
-                                <span class="k">if</span> <span class="p">(</span><span class="nx">alias</span> <span class="o">!==</span> <span class="nx">klass</span><span class="p">.</span><span class="nx">alias</span><span class="p">())</span> <span class="p">{</span>
-                                    <span class="kd">var</span> <span class="nx">message</span> <span class="o">=</span> <span class="s1">&#39;Class included in injectablesMap does not have the expected alias: &quot;&#39;</span> <span class="o">+</span> <span class="nx">klass</span><span class="p">.</span><span class="nx">alias</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&quot; != &quot;&#39;</span> <span class="o">+</span> <span class="nx">alias</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">;</span>
-                                    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
-                                <span class="p">}</span>
-                            <span class="p">}</span>
-                        <span class="p">}</span>
+                    getAliasedKlass: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(alias, throwIfUnfound)</span> {</span>
+                        <span class="hljs-keyword">if</span> (angular.isUndefined(throwIfUnfound)) {
+                            throwIfUnfound = <span class="hljs-literal">true</span>;
+                        }
+                        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>._aliasedKlasses[alias]) {
+                            <span class="hljs-keyword">var</span> path = <span class="hljs-keyword">this</span>.injectablesMap[alias];
+                            <span class="hljs-keyword">if</span> (path) {
+                                <span class="hljs-keyword">var</span> klass;
+                                <span class="hljs-keyword">try</span> {
+                                    klass = $injector.get(path);
+                                } <span class="hljs-keyword">catch</span> (e) {}
+                                <span class="hljs-keyword">this</span>._aliasedKlasses[alias] = klass;
+                                <span class="hljs-keyword">if</span> (alias !== klass.alias()) {
+                                    <span class="hljs-keyword">var</span> message = <span class="hljs-string">'Class included in injectablesMap does not have the expected alias: "'</span> + klass.alias() + <span class="hljs-string">'" != "'</span> + alias + <span class="hljs-string">'"'</span>;
+                                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(message);
+                                }
+                            }
+                        }
 
-                        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">alias</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">throwIfUnfound</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;No class aliased to &quot;&#39;</span> <span class="o">+</span> <span class="nx">alias</span> <span class="o">+</span> <span class="s1">&#39;&quot;.&#39;</span><span class="p">);</span>
-                        <span class="p">}</span>
-                        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_aliasedKlasses</span><span class="p">[</span><span class="nx">alias</span><span class="p">];</span>
-                    <span class="p">},</span>
+                        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>._aliasedKlasses[alias] &amp;&amp; throwIfUnfound) {
+                            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'No class aliased to "'</span> + alias + <span class="hljs-string">'".'</span>);
+                        }
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._aliasedKlasses[alias];
+                    },
 
-                    <span class="nx">mapInjectables</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">injectablesMap</span><span class="p">,</span> <span class="nx">obj</span><span class="p">);</span>
-                    <span class="p">},</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>this same object will be shared between all subclasses of Iguana, 
-so any class can access any aliased class</p></div></div><div class="code"><div class="wrapper">                    <span class="nx">_aliasedKlasses</span><span class="o">:</span> <span class="p">{}</span>
-                <span class="p">}</span>
-            <span class="p">};</span>
-        <span class="p">}</span>
-    <span class="p">]);</span></div></div></div></div></body></html>
+                    mapInjectables: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(obj)</span> {</span>
+                        angular.extend(<span class="hljs-keyword">this</span>.injectablesMap, obj);
+                    },</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>this same object will be shared between all subclasses of Iguana, 
+so any class can access any aliased class</p></div></div><div class="code"><div class="wrapper">                    _aliasedKlasses: {}
+                }
+            };
+        }
+    ]);</div></div></div></div></body></html>
