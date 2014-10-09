@@ -4,7 +4,7 @@
     "main": "./dist/iguana.js",
     "dependencies": {
         "angular": "~1.3.0",
-        "super-model": ">0.0.9",
+        "super-model": "~0.0.11",
         "angular-resource": "~1.3.0"
     },
     "devDependencies": {

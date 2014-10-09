@@ -72,5 +72,7 @@ angular.module('Iguana')
         
     });
     
+    // see also: https://github.com/angular/angular.js/commit/0d3b69a5f27b41745b504c7ffd8d72653bac1f85
+    return {}; 
     
 }]);
