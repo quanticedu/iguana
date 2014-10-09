@@ -47,7 +47,7 @@ in those projects for more information.
 
 ### Documentation
 
-[0.0.28](http://pedago.github.io/iguana/docs/0.0.28)
+[0.0.28](http://pedago.github.io/iguana/docs/0.0.28)  
 [0.0.23](http://pedago.github.io/iguana/docs/0.0.23)  
 [0.0.22](http://pedago.github.io/iguana/docs/0.0.22)  
 [0.0.21](http://pedago.github.io/iguana/docs/0.0.21)  
