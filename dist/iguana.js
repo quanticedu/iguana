@@ -214,7 +214,15 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
                         if (!collection) {
                             throw new Error('No collection defined on iguana class.');
                         }
-                        resource[meth](
+                        var func = resource[meth];
+                        if (!func) {
+                            var props = {
+                                collectionName: collectionName,
+                                meth: meth
+                            };
+                            throw new Error('No func available for "' + meth + '": ' + angular.toJson(props));
+                        }
+                        func(
                             params,
                             function(response) {
                                 var contents = response.contents;

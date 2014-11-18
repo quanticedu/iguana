@@ -1,68 +1,72 @@
-<!DOCTYPE html><html lang="en"><head><title>spec/callbacks_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/callbacks_spec"><meta name="groc-project-path" content="spec/callbacks_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/callbacks_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+<!DOCTYPE html><html lang="en"><head><title>spec/callbacks_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/callbacks_spec"><meta name="groc-project-path" content="spec/callbacks_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/callbacks_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
 
-describe(<span class="hljs-string">'Iguana.Callbacks'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Iguana.Callbacks&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 
-    <span class="hljs-keyword">var</span> Iguana, Item;
+    <span class="kd">var</span> <span class="nx">Iguana</span><span class="p">,</span> <span class="nx">Item</span><span class="p">;</span>
 
-    beforeEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-        module(<span class="hljs-string">'Iguana'</span>);
+    <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;Iguana&#39;</span><span class="p">);</span>
 
-        inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(MockIguana, _Iguana_)</span> {</span>
-            Iguana = _Iguana_;
-            Item = Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-                <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">'items'</span>);
-            });
-        });
+        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">MockIguana</span><span class="p">,</span> <span class="nx">_Iguana_</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">Iguana</span> <span class="o">=</span> <span class="nx">_Iguana_</span><span class="p">;</span>
+            <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
 
-    });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="callbacks">Callbacks</h1>
+    <span class="p">});</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="callbacks">Callbacks</h1>
+
 <h3 id="save">save</h3>
-<p>triggered on the sending of the &#39;save&#39; action to the api</p></div></div><div class="code"><div class="wrapper">    describe(<span class="hljs-string">'save'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-        it(<span class="hljs-string">'should support callbacks'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-            <span class="hljs-keyword">var</span> called = <span class="hljs-literal">false</span>;
-            Item.setCallback(<span class="hljs-string">'before'</span>, <span class="hljs-string">'save'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-                called = <span class="hljs-literal">true</span>;
-            });
-            Item.expect(<span class="hljs-string">'create'</span>, {}, {
-                result: {}
-            });
-            Item.new({}).save();
-            expect(called).toBe(<span class="hljs-literal">true</span>);
-        });
-    });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="copyattrs">copyAttrs</h3>
+
+<p>triggered on the sending of the 'save' action to the api</p></div></div><div class="code"><div class="wrapper">    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should support callbacks&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">called</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="nx">called</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({}).</span><span class="nx">save</span><span class="p">();</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">called</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">});</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="copyattrs">copyAttrs</h3>
+
 <p>Triggered when the properties of a vanilla object are copied
 onto the instance.  This happens during initialize and after
-<em>create</em> or <em>update</em> api calls return.</p></div></div><div class="code"><div class="wrapper">    describe(<span class="hljs-string">'copyAttrs'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-        it(<span class="hljs-string">'should support callbacks'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-            <span class="hljs-keyword">var</span> calledCount = <span class="hljs-number">0</span>;
-            Item.setCallback(<span class="hljs-string">'before'</span>, <span class="hljs-string">'copyAttrs'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-                calledCount = calledCount + <span class="hljs-number">1</span>;
-            });
-            Item.expect(<span class="hljs-string">'create'</span>, {}, {
-                result: {}
-            });
-            Item.new({}).save();
-            expect(calledCount).toBe(<span class="hljs-number">1</span>);
-            Item.flush(<span class="hljs-string">'create'</span>);
-            expect(calledCount).toBe(<span class="hljs-number">2</span>);
-        });
-    });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="copyattrsoninitialize">copyAttrsOnInitialize</h3>
+<em>create</em> or <em>update</em> api calls return.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;copyAttrs&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should support callbacks&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">calledCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;copyAttrs&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="nx">calledCount</span> <span class="o">=</span> <span class="nx">calledCount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({}).</span><span class="nx">save</span><span class="p">();</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">calledCount</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">calledCount</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">});</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="copyattrsoninitialize">copyAttrsOnInitialize</h3>
+
 <p>Triggered when the properties of a vanilla object are copied
 onto the instance, but only during initialize, not after
-<em>create</em> or <em>update</em> calls return;</p></div></div><div class="code"><div class="wrapper">    describe(<span class="hljs-string">'copyAttrsOnInitialize'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-        it(<span class="hljs-string">'should support callbacks'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-            <span class="hljs-keyword">var</span> calledCount = <span class="hljs-number">0</span>;
-            Item.setCallback(<span class="hljs-string">'before'</span>, <span class="hljs-string">'copyAttrsOnInitialize'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-                calledCount = calledCount + <span class="hljs-number">1</span>;
-            });
-            Item.expect(<span class="hljs-string">'create'</span>, {}, {
-                result: {}
-            });
-            Item.new({}).save();
-            expect(calledCount).toBe(<span class="hljs-number">1</span>);
-            Item.flush(<span class="hljs-string">'create'</span>);
-            expect(calledCount).toBe(<span class="hljs-number">1</span>);
-        });
-    });
+<em>create</em> or <em>update</em> calls return;</p></div></div><div class="code"><div class="wrapper">    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;copyAttrsOnInitialize&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should support callbacks&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">calledCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;copyAttrsOnInitialize&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="nx">calledCount</span> <span class="o">=</span> <span class="nx">calledCount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span>
+                <span class="nx">result</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">});</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({}).</span><span class="nx">save</span><span class="p">();</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">calledCount</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+            <span class="nx">Item</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">);</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">calledCount</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
 
 
-});</div></div></div></div></body></html>
+<span class="p">});</span></div></div></div></div></body></html>

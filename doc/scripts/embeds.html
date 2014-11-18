@@ -1,63 +1,64 @@
-<!DOCTYPE html><html lang="en"><head><title>scripts/embeds</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="scripts/embeds"><meta name="groc-project-path" content="scripts/embeds.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">scripts/embeds.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"> angular.module(<span class="hljs-string">'Iguana'</span>)
-.factory(<span class="hljs-string">'Iguana.Embeds'</span>, [<span class="hljs-string">'AClassAbove'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Class)</span>{</span>
+<!DOCTYPE html><html lang="en"><head><title>scripts/embeds</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="scripts/embeds"><meta name="groc-project-path" content="scripts/embeds.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">scripts/embeds.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;Iguana&#39;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Iguana.Embeds&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;AClassAbove&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Class</span><span class="p">){</span>
         
-        <span class="hljs-keyword">var</span> EmbedRelationship = Class.subclass({
-            initialize: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(propName, klassFetcher)</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We don&#39;t want to worry about whether the class has been aliased or
+        <span class="kd">var</span> <span class="nx">EmbedRelationship</span> <span class="o">=</span> <span class="nx">Class</span><span class="p">.</span><span class="nx">subclass</span><span class="p">({</span>
+            <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="nx">klassFetcher</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We don't want to worry about whether the class has been aliased or
 yet when the relationship is set up.  So long as it has been aliased by the
-time we try to process a relationship, that&#39;s good enough.  So we take
-a function that will let us fetch the klass just in time.</p></div></div><div class="code"><div class="wrapper">                <span class="hljs-keyword">this</span>.propName = propName;
-                <span class="hljs-keyword">this</span>.klassFetcher = klassFetcher;
-            },
+time we try to process a relationship, that's good enough.  So we take
+a function that will let us fetch the klass just in time.</p></div></div><div class="code"><div class="wrapper">                <span class="k">this</span><span class="p">.</span><span class="nx">propName</span> <span class="o">=</span> <span class="nx">propName</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">klassFetcher</span> <span class="o">=</span> <span class="nx">klassFetcher</span><span class="p">;</span>
+            <span class="p">},</span>
             
-            process: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(parent, attrs)</span> {</span>
-                <span class="hljs-keyword">var</span> sourceValue = attrs[<span class="hljs-keyword">this</span>.propName];
-                <span class="hljs-keyword">if</span> (!sourceValue) <span class="hljs-keyword">return</span>;                
-                attrs[<span class="hljs-keyword">this</span>.propName] = <span class="hljs-keyword">this</span>._instantiate(parent, sourceValue); 
-            }
-        });
+            <span class="nx">process</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">parent</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">sourceValue</span> <span class="o">=</span> <span class="nx">attrs</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">propName</span><span class="p">];</span>
+                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">sourceValue</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>                
+                <span class="nx">attrs</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">propName</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_instantiate</span><span class="p">(</span><span class="nx">parent</span><span class="p">,</span> <span class="nx">sourceValue</span><span class="p">);</span> 
+            <span class="p">}</span>
+        <span class="p">});</span>
         
-        <span class="hljs-keyword">var</span> EmbedManyRelationship = EmbedRelationship.subclass({
+        <span class="kd">var</span> <span class="nx">EmbedManyRelationship</span> <span class="o">=</span> <span class="nx">EmbedRelationship</span><span class="p">.</span><span class="nx">subclass</span><span class="p">({</span>
             
-            _instantiate: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(parent, sourceValue)</span> {</span>
-                <span class="hljs-keyword">var</span> target;
-                </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>figure out if we are dealing with an array or an object</p></div></div><div class="code"><div class="wrapper">                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.prototype.toString.call( sourceValue ) === <span class="hljs-string">'[object Array]'</span> ) {
-                    target = [];
-                } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> sourceValue === <span class="hljs-string">'object'</span>) {
-                    target = {};
-                } <span class="hljs-keyword">else</span> {
-                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Expecting array or object for embedsMany relationship "'</span>+<span class="hljs-keyword">this</span>.propName+<span class="hljs-string">'". Got '</span>+sourceValue);
-                }
+            <span class="nx">_instantiate</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">parent</span><span class="p">,</span> <span class="nx">sourceValue</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">target</span><span class="p">;</span>
+                </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>figure out if we are dealing with an array or an object</p></div></div><div class="code"><div class="wrapper">                <span class="k">if</span> <span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span> <span class="nx">sourceValue</span> <span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;[object Array]&#39;</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">target</span> <span class="o">=</span> <span class="p">[];</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">sourceValue</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">target</span> <span class="o">=</span> <span class="p">{};</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Expecting array or object for embedsMany relationship &quot;&#39;</span><span class="o">+</span><span class="k">this</span><span class="p">.</span><span class="nx">propName</span><span class="o">+</span><span class="s1">&#39;&quot;. Got &#39;</span><span class="o">+</span><span class="nx">sourceValue</span><span class="p">);</span>
+                <span class="p">}</span>
                 
-                angular.forEach(sourceValue, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(val, key)</span>{</span>
-                    <span class="hljs-keyword">var</span> instance = <span class="hljs-keyword">this</span>.klassFetcher().new(val);
-                    instance.$$embeddedIn = parent;
-                    target[key] = instance;
-                }.bind(<span class="hljs-keyword">this</span>));
+                <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">sourceValue</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">key</span><span class="p">){</span>
+                    <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">klassFetcher</span><span class="p">().</span><span class="k">new</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
+                    <span class="nx">instance</span><span class="p">.</span><span class="nx">$$embeddedIn</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">;</span>
+                    <span class="nx">target</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">instance</span><span class="p">;</span>
+                <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
                 
-                <span class="hljs-keyword">return</span> target;
-            }
+                <span class="k">return</span> <span class="nx">target</span><span class="p">;</span>
+            <span class="p">}</span>
             
-        });
+        <span class="p">});</span>
         
-        <span class="hljs-keyword">var</span> EmbedOneRelationship = EmbedRelationship.subclass({
+        <span class="kd">var</span> <span class="nx">EmbedOneRelationship</span> <span class="o">=</span> <span class="nx">EmbedRelationship</span><span class="p">.</span><span class="nx">subclass</span><span class="p">({</span>
             
-            _instantiate: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(parent, sourceValue)</span> {</span>
-                <span class="hljs-keyword">var</span> instance = <span class="hljs-keyword">this</span>.klassFetcher().new(sourceValue);
-                instance.$$embeddedIn = parent;
-                <span class="hljs-keyword">return</span> instance;
-            }
+            <span class="nx">_instantiate</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">parent</span><span class="p">,</span> <span class="nx">sourceValue</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">klassFetcher</span><span class="p">().</span><span class="k">new</span><span class="p">(</span><span class="nx">sourceValue</span><span class="p">);</span>
+                <span class="nx">instance</span><span class="p">.</span><span class="nx">$$embeddedIn</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">;</span>
+                <span class="k">return</span> <span class="nx">instance</span><span class="p">;</span>
+            <span class="p">}</span>
             
-        });
+        <span class="p">});</span>
         
-        <span class="hljs-keyword">return</span> {
+        <span class="k">return</span> <span class="p">{</span>
             
-            included: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Iguana)</span> {</span>
-                Iguana.extendableObject(<span class="hljs-string">'embedRelationships'</span>);
-                Iguana.setCallback(<span class="hljs-string">'before'</span>, <span class="hljs-string">'copyAttrs'</span>, <span class="hljs-string">'processEmbeds'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>// We would like to bring this back, but it can
+            <span class="nx">included</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Iguana</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">Iguana</span><span class="p">.</span><span class="nx">extendableObject</span><span class="p">(</span><span class="s1">&#39;embedRelationships&#39;</span><span class="p">);</span>
+                <span class="nx">Iguana</span><span class="p">.</span><span class="nx">setCallback</span><span class="p">(</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;copyAttrs&#39;</span><span class="p">,</span> <span class="s1">&#39;processEmbeds&#39;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>// We would like to bring this back, but it can
 // case MaxCallStack errors in Chrome.  Maybe
 // we can eventually find a solution
-Iguana.setCallback(&#39;around&#39;, &#39;save&#39;, function(save) {
+Iguana.setCallback('around', 'save', function(save) {
     var wrapped = save;</p>
+
 <pre><code>// var relationships = this.embedRelationships();
 // for (var propName in relationships) {
 //     if (!relationships.hasOwnProperty(propName)) { 
@@ -66,55 +67,56 @@ Iguana.setCallback(&#39;around&#39;, &#39;save&#39;, function(save) {
 //     var relationship = relationships[propName];
 //     var value = this[propName];
 //     if (value) {
-//         var isArray = (Object.prototype.toString.call(value) === &#39;[object Array]&#39;);
+//         var isArray = (Object.prototype.toString.call(value) === '[object Array]');
 //         var values = isArray ? value : [value];
 //         values.forEach(function(item) {
 //             var reWrapped = function(wrapped) {
-//                 item.runCallbacks(&#39;save&#39;, wrapped);
+//                 item.runCallbacks('save', wrapped);
 //             }.bind(item, wrapped);
 //             wrapped = reWrapped;
 //         });
 //     }
 // }
-wrapped();</code></pre></div></div><div class="code"><div class="wrapper">                <span class="hljs-comment">// );</span>
-            },
+wrapped();
+</code></pre></div></div><div class="code"><div class="wrapper">                <span class="c1">// );</span>
+            <span class="p">},</span>
             
-            classMixin: {
+            <span class="nx">classMixin</span><span class="o">:</span> <span class="p">{</span>
                 
-                embedsMany: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(propName, classAlias)</span> {</span>
-                    <span class="hljs-keyword">this</span>.embedRelationships().set(propName, <span class="hljs-keyword">new</span> EmbedManyRelationship(
-                        propName, 
-                        <span class="hljs-keyword">this</span>.getAliasedKlass.bind(<span class="hljs-keyword">this</span>, classAlias)
-                    ));
-                },
+                <span class="nx">embedsMany</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="nx">classAlias</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">embedRelationships</span><span class="p">().</span><span class="nx">set</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="k">new</span> <span class="nx">EmbedManyRelationship</span><span class="p">(</span>
+                        <span class="nx">propName</span><span class="p">,</span> 
+                        <span class="k">this</span><span class="p">.</span><span class="nx">getAliasedKlass</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">classAlias</span><span class="p">)</span>
+                    <span class="p">));</span>
+                <span class="p">},</span>
                 
-                embedsOne: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(propName, classAlias)</span> {</span>
-                    <span class="hljs-keyword">this</span>.embedRelationships().set(propName, <span class="hljs-keyword">new</span> EmbedOneRelationship(
-                        propName,
-                        <span class="hljs-keyword">this</span>.getAliasedKlass.bind(<span class="hljs-keyword">this</span>, classAlias)
-                    ));
-                },
+                <span class="nx">embedsOne</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="nx">classAlias</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">embedRelationships</span><span class="p">().</span><span class="nx">set</span><span class="p">(</span><span class="nx">propName</span><span class="p">,</span> <span class="k">new</span> <span class="nx">EmbedOneRelationship</span><span class="p">(</span>
+                        <span class="nx">propName</span><span class="p">,</span>
+                        <span class="k">this</span><span class="p">.</span><span class="nx">getAliasedKlass</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">classAlias</span><span class="p">)</span>
+                    <span class="p">));</span>
+                <span class="p">},</span>
                 
-                embeddedIn: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(propName)</span> {</span>
-                    <span class="hljs-keyword">this</span>.extend({<span class="hljs-string">'_embeddedIn'</span>: propName});
-                    <span class="hljs-keyword">var</span> obj = {};
-                    obj[propName] = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$$embeddedIn;
-                    };
-                    <span class="hljs-keyword">this</span>.include(obj);
-                }
-            },
+                <span class="nx">embeddedIn</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">propName</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span><span class="s1">&#39;_embeddedIn&#39;</span><span class="o">:</span> <span class="nx">propName</span><span class="p">});</span>
+                    <span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{};</span>
+                    <span class="nx">obj</span><span class="p">[</span><span class="nx">propName</span><span class="p">]</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">$$embeddedIn</span><span class="p">;</span>
+                    <span class="p">};</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">include</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
             
-            instanceMixin: {
-                embedRelationships: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-                    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.constructor.embedRelationships.apply(<span class="hljs-keyword">this</span>.constructor);
-                },
+            <span class="nx">instanceMixin</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">embedRelationships</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">embedRelationships</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">);</span>
+                <span class="p">},</span>
                 
-                processEmbeds: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>{</span>           
-                    angular.forEach(<span class="hljs-keyword">this</span>.embedRelationships(), <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(relationship)</span>{</span>
-                        relationship.process(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.$$sourceAttrs);
-                    }.bind(<span class="hljs-keyword">this</span>));
-                }                
-            }
-        };
-    }]);</div></div></div></div></body></html>
+                <span class="nx">processEmbeds</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>           
+                    <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">embedRelationships</span><span class="p">(),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">relationship</span><span class="p">){</span>
+                        <span class="nx">relationship</span><span class="p">.</span><span class="nx">process</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">$$sourceAttrs</span><span class="p">);</span>
+                    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+                <span class="p">}</span>                
+            <span class="p">}</span>
+        <span class="p">};</span>
+    <span class="p">}]);</span></div></div></div></div></body></html>
