@@ -30,7 +30,7 @@ angular.module('Iguana')
                                     klass = $injector.get(path);
                                 } catch (e) {}
                                 this._aliasedKlasses[alias] = klass;
-                                if (alias !== klass.alias()) {
+                                if (klass && alias !== klass.alias()) {
                                     var message = 'Class included in injectablesMap does not have the expected alias: "' + klass.alias() + '" != "' + alias + '"';
                                     throw new Error(message);
                                 }
