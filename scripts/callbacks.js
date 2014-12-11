@@ -1,5 +1,6 @@
 angular.module('Iguana')
     .factory('Iguana.Callbacks', [
+
         function() {
 
 
@@ -8,6 +9,7 @@ angular.module('Iguana')
                     Iguana.defineCallbacks('copyAttrs');
                     Iguana.defineCallbacks('copyAttrsOnInitialize');
                     Iguana.defineCallbacks('save');
+                    Iguana.defineCallbacks('processEmbeds');
                 }
             };
 

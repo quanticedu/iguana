@@ -73,5 +73,23 @@ describe('Iguana.Callbacks', function() {
         });
     });
 
+    // ### processEmbeds
+    // Triggered when an embedded relationship is 
+    // processing new objects coming in with copyAttrs and
+    // instantiating them as embedded documents
+    describe('processEmbeds', function() {
+        it('should support callbacks', function() {
+            var calledCount = 0;
+            Item.alias('Item');
+            Item.embedsOne('something', 'Item');
+            Item.setCallback('before', 'processEmbeds', function() {
+                calledCount = calledCount + 1;
+            });
+            expect(calledCount).toBe(0);
+            Item.new({});
+            expect(calledCount).toBe(1);
+        });
+    });
+
 
 });

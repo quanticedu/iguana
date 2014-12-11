@@ -325,6 +325,7 @@ angular.module('Iguana')
     ]);
 angular.module('Iguana')
     .factory('Iguana.Callbacks', [
+
         function() {
 
 
@@ -333,310 +334,329 @@ angular.module('Iguana')
                     Iguana.defineCallbacks('copyAttrs');
                     Iguana.defineCallbacks('copyAttrsOnInitialize');
                     Iguana.defineCallbacks('save');
+                    Iguana.defineCallbacks('processEmbeds');
                 }
             };
 
         }
     ]);
 angular.module('Iguana')
-.factory('Iguana.Crud', ['$injector', function($injector){
-                
-        return {
-            
-            included: function(Iguana) {
-                Iguana.setIdProperty('id');
-            },
-            
-            classMixin: {
-                
-                setCollection: function(collection) {
-                    this.extend({collection: collection});
-                },
-                
-                setAdapter: function(adapterName) {
-                    try {
-                        var adapterKlass = $injector.get(adapterName);
-                    } catch(e) {
-                        throw new Error('Cannot find adapter "'+adapterName+'"');
-                    }
-                    
-                    this.extend({adapterKlass: adapterKlass});
-                },
-                
-                setBaseUrl: function(url) {
-                    //remove trailing slash
-                    url = url.replace(/\/$/, "");
-                    this.extend({baseUrl: url});
-                },
-                
-                setIdProperty: function(idProperty) {
-                    this.extend({idProperty: idProperty});
-                },
-                
-                adapter: function() {
-                    if (!this._adapter) {
-                        if (!this.adapterKlass) {
-                            throw new Error("No adapter set.  You need to call setAdapter()");
-                        }
-                        this._adapter = new this.adapterKlass(this);
-                    }
-                    return this._adapter;
-                },
-                
-                show: function(arg1, arg2) {
-                    return this._callAdapterMethAndInstantiateResult('show', true, arguments);
-                },
-                
-                index: function(arg1, arg2) {
-                    return this._callAdapterMethAndInstantiateResult('index', false, arguments);
-                },
-                
-                create: function(obj, metadata) {
-                    var instance = this.new(obj);
-                    if (!instance.isNew()) {
-                        throw new Error("Cannot call create on instance that is already saved.");
-                    }
-                    return instance.save(metadata);
-                },
-                
-                update: function(obj, metadata) {
-                    var instance = this.new(obj);
-                    if (instance.isNew()) {
-                        throw new Error("Cannot call update on instance that is not already saved.");
-                    }
-                    return instance.save(metadata);
-                },
-                
-                destroy: function(id) {
-                    var klass = this;                    
-                    return this._callAdapterMeth('destroy', [id]).then(function(response){
-                        return this._prepareEmptyResponse(response);
-                    }.bind(this));
-                },
-                
-                saveWithoutInstantiating: function(meth, obj, metadata) {
-                    var args = metadata ? [obj, metadata] : [obj];
-                    return this._callAdapterMeth(meth, args).then(function(response){
-                        return {
-                            result: response.result[0],
-                            meta: response.meta
-                        };
-                    });
-                },
-                
-                _prepareEmptyResponse: function(response) {
-                    return {
-                        result: null,
-                        meta: response.meta
-                    };
-                },
-                
-                _callAdapterMethAndInstantiateResult: function(meth, singlify, args) {
-                    return this._callAdapterMeth(meth, args).then(function(response){
-                        return this._instantiateFromResponse(singlify, response);
-                    }.bind(this));
-                },
-                
-                _instantiateFromResponse: function(singlify, response) {
-                    var instances = this._instantiateFromResult(response.result);
-                    var result = singlify ? instances[0] : instances;          
-                    return {
-                        result: result,
-                        meta: response.meta
-                    };
-                },
-                
-                _instantiateFromResult: function(result) {
-                    if (!result) { return []; }
-                    var instances = [];
-                    angular.forEach(result, function(attrs){
-                        instances.push(this.new(attrs));
-                    }.bind(this));
-                    return instances;
-                },
-                
-                _callAdapterMeth: function(meth, args) {
-                    if (!this.collection) {
-                        throw new Error('Cannot make an api call because collection has not been set.  You need to call setCollection().')
-                    }
-                    args = Array.prototype.slice.call(args, 0);
-                    args.unshift(this.collection);
-                    return this.adapter()[meth].apply(this.adapter(), args);
-                }
-            },
-            
-            instanceMixin: {
-                
-                save: function(metadata) {
-                    var returnValue;
-                    this.runCallbacks('save', function() {
-                        returnValue = this._save(metadata);
-                    });
-                    return returnValue;
-                },
-                
-                isNew: function() {
-                    var id = this[this.idProperty()];
-                    return !id;
-                },
-                
-                _save: function(metadata) {
-                    var action = this.isNew() ? "create" : "update"; 
-                    
-                    return this.constructor.saveWithoutInstantiating(action, this.asJson(), metadata).then(function(response){
-                        var attrs = angular.extend({}, response.result);
-                        
-                        this.copyAttrs(attrs);
-                        return {
-                            result: this,
-                            meta: response.meta
-                        };
-                    }.bind(this));
-                },
-                
-                destroy: function() {
-                    return this.constructor.destroy(this[this.idProperty()]);
-                },
-                
-                idProperty: function() {
-                    return this.constructor.idProperty;
-                }
-                
-            }
-        };
-        
-    }]);
- angular.module('Iguana')
-.factory('Iguana.Embeds', ['AClassAbove', function(Class){
-        
-        var EmbedRelationship = Class.subclass({
-            initialize: function(propName, klassFetcher) {
-                // We don't want to worry about whether the class has been aliased or
-                // yet when the relationship is set up.  So long as it has been aliased by the
-                // time we try to process a relationship, that's good enough.  So we take
-                // a function that will let us fetch the klass just in time.
-                this.propName = propName;
-                this.klassFetcher = klassFetcher;
-            },
-            
-            process: function(parent, attrs) {
-                var sourceValue = attrs[this.propName];
-                if (!sourceValue) return;                
-                attrs[this.propName] = this._instantiate(parent, sourceValue); 
-            }
-        });
-        
-        var EmbedManyRelationship = EmbedRelationship.subclass({
-            
-            _instantiate: function(parent, sourceValue) {
-                var target;
-                
-                // figure out if we are dealing with an array or an object
-                if (Object.prototype.toString.call( sourceValue ) === '[object Array]' ) {
-                    target = [];
-                } else if (typeof sourceValue === 'object') {
-                    target = {};
-                } else {
-                    throw new Error('Expecting array or object for embedsMany relationship "'+this.propName+'". Got '+sourceValue);
-                }
-                
-                angular.forEach(sourceValue, function(val, key){
-                    var instance = this.klassFetcher().new(val);
-                    instance.$$embeddedIn = parent;
-                    target[key] = instance;
-                }.bind(this));
-                
-                return target;
-            }
-            
-        });
-        
-        var EmbedOneRelationship = EmbedRelationship.subclass({
-            
-            _instantiate: function(parent, sourceValue) {
-                var instance = this.klassFetcher().new(sourceValue);
-                instance.$$embeddedIn = parent;
-                return instance;
-            }
-            
-        });
-        
-        return {
-            
-            included: function(Iguana) {
-                Iguana.extendableObject('embedRelationships');
-                Iguana.setCallback('before', 'copyAttrs', 'processEmbeds');
+    .factory('Iguana.Crud', ['$injector',
+        function($injector) {
 
-                // // We would like to bring this back, but it can
-                // // case MaxCallStack errors in Chrome.  Maybe
-                // // we can eventually find a solution
-                // Iguana.setCallback('around', 'save', function(save) {
-                //     var wrapped = save;
-                // 
-                //     
-                //     
-                //     // var relationships = this.embedRelationships();
-                //     // for (var propName in relationships) {
-                //     //     if (!relationships.hasOwnProperty(propName)) { 
-                //     //         continue
-                //     //     }
-                //     //     var relationship = relationships[propName];
-                //     //     var value = this[propName];
-                //     //     if (value) {
-                //     //         var isArray = (Object.prototype.toString.call(value) === '[object Array]');
-                //     //         var values = isArray ? value : [value];
-                //     //         values.forEach(function(item) {
-                //     //             var reWrapped = function(wrapped) {
-                //     //                 item.runCallbacks('save', wrapped);
-                //     //             }.bind(item, wrapped);
-                //     //             wrapped = reWrapped;
-                //     //         });
-                //     //     }
-                //     // }
-                // 
-                //     wrapped();
-                // });
-            },
-            
-            classMixin: {
-                
-                embedsMany: function(propName, classAlias) {
-                    this.embedRelationships().set(propName, new EmbedManyRelationship(
-                        propName, 
-                        this.getAliasedKlass.bind(this, classAlias)
-                    ));
+            return {
+
+                included: function(Iguana) {
+                    Iguana.setIdProperty('id');
                 },
-                
-                embedsOne: function(propName, classAlias) {
-                    this.embedRelationships().set(propName, new EmbedOneRelationship(
-                        propName,
-                        this.getAliasedKlass.bind(this, classAlias)
-                    ));
+
+                classMixin: {
+
+                    setCollection: function(collection) {
+                        this.extend({
+                            collection: collection
+                        });
+                    },
+
+                    setAdapter: function(adapterName) {
+                        try {
+                            var adapterKlass = $injector.get(adapterName);
+                        } catch (e) {
+                            throw new Error('Cannot find adapter "' + adapterName + '"');
+                        }
+
+                        this.extend({
+                            adapterKlass: adapterKlass
+                        });
+                    },
+
+                    setBaseUrl: function(url) {
+                        //remove trailing slash
+                        url = url.replace(/\/$/, "");
+                        this.extend({
+                            baseUrl: url
+                        });
+                    },
+
+                    setIdProperty: function(idProperty) {
+                        this.extend({
+                            idProperty: idProperty
+                        });
+                    },
+
+                    adapter: function() {
+                        if (!this._adapter) {
+                            if (!this.adapterKlass) {
+                                throw new Error("No adapter set.  You need to call setAdapter()");
+                            }
+                            this._adapter = new this.adapterKlass(this);
+                        }
+                        return this._adapter;
+                    },
+
+                    show: function(arg1, arg2) {
+                        return this._callAdapterMethAndInstantiateResult('show', true, arguments);
+                    },
+
+                    index: function(arg1, arg2) {
+                        return this._callAdapterMethAndInstantiateResult('index', false, arguments);
+                    },
+
+                    create: function(obj, metadata) {
+                        var instance = this.new(obj);
+                        if (!instance.isNew()) {
+                            throw new Error("Cannot call create on instance that is already saved.");
+                        }
+                        return instance.save(metadata);
+                    },
+
+                    update: function(obj, metadata) {
+                        var instance = this.new(obj);
+                        if (instance.isNew()) {
+                            throw new Error("Cannot call update on instance that is not already saved.");
+                        }
+                        return instance.save(metadata);
+                    },
+
+                    destroy: function(id) {
+                        var klass = this;
+                        return this._callAdapterMeth('destroy', [id]).then(function(response) {
+                            return this._prepareEmptyResponse(response);
+                        }.bind(this));
+                    },
+
+                    saveWithoutInstantiating: function(meth, obj, metadata) {
+                        var args = metadata ? [obj, metadata] : [obj];
+                        return this._callAdapterMeth(meth, args).then(function(response) {
+                            return {
+                                result: response.result[0],
+                                meta: response.meta
+                            };
+                        });
+                    },
+
+                    _prepareEmptyResponse: function(response) {
+                        return {
+                            result: null,
+                            meta: response.meta
+                        };
+                    },
+
+                    _callAdapterMethAndInstantiateResult: function(meth, singlify, args) {
+                        return this._callAdapterMeth(meth, args).then(function(response) {
+                            return this._instantiateFromResponse(singlify, response);
+                        }.bind(this));
+                    },
+
+                    _instantiateFromResponse: function(singlify, response) {
+                        var instances = this._instantiateFromResult(response.result);
+                        var result = singlify ? instances[0] : instances;
+                        return {
+                            result: result,
+                            meta: response.meta
+                        };
+                    },
+
+                    _instantiateFromResult: function(result) {
+                        if (!result) {
+                            return [];
+                        }
+                        var instances = [];
+                        angular.forEach(result, function(attrs) {
+                            instances.push(this.new(attrs));
+                        }.bind(this));
+                        return instances;
+                    },
+
+                    _callAdapterMeth: function(meth, args) {
+                        if (!this.collection) {
+                            throw new Error('Cannot make an api call because collection has not been set.  You need to call setCollection().')
+                        }
+                        args = Array.prototype.slice.call(args, 0);
+                        args.unshift(this.collection);
+                        return this.adapter()[meth].apply(this.adapter(), args);
+                    }
                 },
-                
-                embeddedIn: function(propName) {
-                    this.extend({'_embeddedIn': propName});
-                    var obj = {};
-                    obj[propName] = function() {
-                        return this.$$embeddedIn;
-                    };
-                    this.include(obj);
+
+                instanceMixin: {
+
+                    save: function(metadata) {
+                        var returnValue;
+                        this.runCallbacks('save', function() {
+                            returnValue = this._save(metadata);
+                        });
+                        return returnValue;
+                    },
+
+                    isNew: function() {
+                        var id = this[this.idProperty()];
+                        return !id;
+                    },
+
+                    _save: function(metadata) {
+                        var action = this.isNew() ? "create" : "update";
+
+                        return this.constructor.saveWithoutInstantiating(action, this.asJson(), metadata).then(function(response) {
+                            var attrs = angular.extend({}, response.result);
+
+                            this.copyAttrs(attrs);
+                            return {
+                                result: this,
+                                meta: response.meta
+                            };
+                        }.bind(this));
+                    },
+
+                    destroy: function() {
+                        return this.constructor.destroy(this[this.idProperty()]);
+                    },
+
+                    idProperty: function() {
+                        return this.constructor.idProperty;
+                    }
+
                 }
-            },
-            
-            instanceMixin: {
-                embedRelationships: function() {
-                    return this.constructor.embedRelationships.apply(this.constructor);
-                },
-                
-                processEmbeds: function(){           
-                    angular.forEach(this.embedRelationships(), function(relationship){
-                        relationship.process(this, this.$$sourceAttrs);
-                    }.bind(this));
-                }                
-            }
-        };
-    }]);
+            };
+
+        }
+    ]);
+ angular.module('Iguana')
+     .factory('Iguana.Embeds', ['AClassAbove',
+         function(Class) {
+
+             var EmbedRelationship = Class.subclass({
+                 initialize: function(propName, klassFetcher) {
+                     // We don't want to worry about whether the class has been aliased or
+                     // yet when the relationship is set up.  So long as it has been aliased by the
+                     // time we try to process a relationship, that's good enough.  So we take
+                     // a function that will let us fetch the klass just in time.
+                     this.propName = propName;
+                     this.klassFetcher = klassFetcher;
+                 },
+
+                 process: function(parent, attrs) {
+                     var sourceValue = attrs[this.propName];
+                     if (!sourceValue) return;
+                     attrs[this.propName] = this._instantiate(parent, sourceValue);
+                 }
+             });
+
+             var EmbedManyRelationship = EmbedRelationship.subclass({
+
+                 _instantiate: function(parent, sourceValue) {
+                     var target;
+
+                     // figure out if we are dealing with an array or an object
+                     if (Object.prototype.toString.call(sourceValue) === '[object Array]') {
+                         target = [];
+                     } else if (typeof sourceValue === 'object') {
+                         target = {};
+                     } else {
+                         throw new Error('Expecting array or object for embedsMany relationship "' + this.propName + '". Got ' + sourceValue);
+                     }
+
+                     angular.forEach(sourceValue, function(val, key) {
+                         var instance = this.klassFetcher().new(val);
+                         instance.$$embeddedIn = parent;
+                         target[key] = instance;
+                     }.bind(this));
+
+                     return target;
+                 }
+
+             });
+
+             var EmbedOneRelationship = EmbedRelationship.subclass({
+
+                 _instantiate: function(parent, sourceValue) {
+                     var instance = this.klassFetcher().new(sourceValue);
+                     instance.$$embeddedIn = parent;
+                     return instance;
+                 }
+
+             });
+
+             return {
+
+                 included: function(Iguana) {
+                     Iguana.extendableObject('embedRelationships');
+                     Iguana.setCallback('before', 'copyAttrs', 'processEmbeds');
+
+                     // // We would like to bring this back, but it can
+                     // // case MaxCallStack errors in Chrome.  Maybe
+                     // // we can eventually find a solution
+                     // Iguana.setCallback('around', 'save', function(save) {
+                     //     var wrapped = save;
+                     // 
+                     //     
+                     //     
+                     //     // var relationships = this.embedRelationships();
+                     //     // for (var propName in relationships) {
+                     //     //     if (!relationships.hasOwnProperty(propName)) { 
+                     //     //         continue
+                     //     //     }
+                     //     //     var relationship = relationships[propName];
+                     //     //     var value = this[propName];
+                     //     //     if (value) {
+                     //     //         var isArray = (Object.prototype.toString.call(value) === '[object Array]');
+                     //     //         var values = isArray ? value : [value];
+                     //     //         values.forEach(function(item) {
+                     //     //             var reWrapped = function(wrapped) {
+                     //     //                 item.runCallbacks('save', wrapped);
+                     //     //             }.bind(item, wrapped);
+                     //     //             wrapped = reWrapped;
+                     //     //         });
+                     //     //     }
+                     //     // }
+                     // 
+                     //     wrapped();
+                     // });
+                 },
+
+                 classMixin: {
+
+                     embedsMany: function(propName, classAlias) {
+                         this.embedRelationships().set(propName, new EmbedManyRelationship(
+                             propName,
+                             this.getAliasedKlass.bind(this, classAlias)
+                         ));
+                     },
+
+                     embedsOne: function(propName, classAlias) {
+                         this.embedRelationships().set(propName, new EmbedOneRelationship(
+                             propName,
+                             this.getAliasedKlass.bind(this, classAlias)
+                         ));
+                     },
+
+                     embeddedIn: function(propName) {
+                         this.extend({
+                             '_embeddedIn': propName
+                         });
+                         var obj = {};
+                         obj[propName] = function() {
+                             return this.$$embeddedIn;
+                         };
+                         this.include(obj);
+                     }
+                 },
+
+                 instanceMixin: {
+                     embedRelationships: function() {
+                         return this.constructor.embedRelationships.apply(this.constructor);
+                     },
+
+                     processEmbeds: function() {
+                         this.runCallbacks('processEmbeds', function() {
+                             angular.forEach(this.embedRelationships(), function(relationship) {
+                                 relationship.process(this, this.$$sourceAttrs);
+                             }.bind(this));
+                         });
+                     }
+                 }
+             };
+         }
+     ]);
 'use strict';
 
 angular.module('Iguana')
