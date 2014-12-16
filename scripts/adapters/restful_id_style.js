@@ -12,45 +12,45 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
 
                     name: 'Iguana.Adapters.RestfulIdStyle',
 
-                    index: function(collection, params) {
-                        return this._makeApiCall(collection, 'index', params);
+                    index: function(collection, params, options) {
+                        return this._makeApiCall(collection, 'index', params, options);
                     },
 
-                    show: function(collection, id, params) {
+                    show: function(collection, id, params, options) {
                         if (!id) {
                             throw new Error('No id provided');
                         }
                         params = params || {};
                         params[this.idProperty] = id;
-                        return this._makeApiCall(collection, 'show', params);
+                        return this._makeApiCall(collection, 'show', params, options);
                     },
 
-                    create: function(collection, obj, metadata) {
+                    create: function(collection, obj, metadata, options) {
                         return this._makeApiCall(collection, 'create', {
                             record: obj,
                             meta: metadata
-                        });
+                        }, options);
                     },
 
-                    update: function(collection, obj, metadata) {
+                    update: function(collection, obj, metadata, options) {
                         return this._makeApiCall(collection, 'update', {
                             record: obj,
                             meta: metadata
-                        });
+                        }, options);
                     },
 
-                    destroy: function(collection, id) {
+                    destroy: function(collection, id, options) {
                         if (!id) {
                             throw new Error('No id provided');
                         }
                         var params = {};
                         params[this.idProperty] = id;
-                        return this._makeApiCall(collection, 'destroy', params);
+                        return this._makeApiCall(collection, 'destroy', params, options);
                     },
 
-                    _makeApiCall: function(collectionName, meth, params) {
+                    _makeApiCall: function(collectionName, meth, params, options) {
                         var deferred = $q.defer();
-                        var resource = this._getResource(collectionName);
+                        var resource = this._getResource(collectionName, options);
                         var collection = this.iguanaKlass.collection;
                         if (!collection) {
                             throw new Error('No collection defined on iguana class.');
@@ -81,23 +81,45 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
                         return deferred.promise;
                     },
 
-                    _getResource: function(collection) {
+                    _getResource: function(collection, options) {
                         var url = [this.iguanaKlass.baseUrl, collection, ':' + this.idProperty].join('/') + '.json';
+                        options = options || {};
+                        var timeout;
+                        var unsupportedOptions = [];
+
+                        // currently, the only supported option is timeout
+                        Object.keys(options).forEach(function(key) {
+                            if (key === 'timeout') {
+                                timeout = options.timeout;
+                            } else {
+                                unsupportedOptions.push(key);
+                            }
+                        });
+
+                        if (unsupportedOptions.length > 0) {
+                            throw new Error('Unsupported options: "' + unsupportedOptions.join(',') + '"');
+                        }
+
                         return $resource(url, {}, {
                             'index': {
-                                method: 'GET'
+                                method: 'GET',
+                                timeout: timeout
                             },
                             'show': {
-                                method: 'GET'
+                                method: 'GET',
+                                timeout: timeout
                             },
                             'create': {
-                                method: 'POST'
+                                method: 'POST',
+                                timeout: timeout
                             },
                             'update': {
-                                method: 'PUT'
+                                method: 'PUT',
+                                timeout: timeout
                             },
                             'destroy': {
-                                method: 'DELETE'
+                                method: 'DELETE',
+                                timeout: timeout
                             }
                         });
                     }

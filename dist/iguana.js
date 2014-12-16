@@ -171,45 +171,45 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
 
                     name: 'Iguana.Adapters.RestfulIdStyle',
 
-                    index: function(collection, params) {
-                        return this._makeApiCall(collection, 'index', params);
+                    index: function(collection, params, options) {
+                        return this._makeApiCall(collection, 'index', params, options);
                     },
 
-                    show: function(collection, id, params) {
+                    show: function(collection, id, params, options) {
                         if (!id) {
                             throw new Error('No id provided');
                         }
                         params = params || {};
                         params[this.idProperty] = id;
-                        return this._makeApiCall(collection, 'show', params);
+                        return this._makeApiCall(collection, 'show', params, options);
                     },
 
-                    create: function(collection, obj, metadata) {
+                    create: function(collection, obj, metadata, options) {
                         return this._makeApiCall(collection, 'create', {
                             record: obj,
                             meta: metadata
-                        });
+                        }, options);
                     },
 
-                    update: function(collection, obj, metadata) {
+                    update: function(collection, obj, metadata, options) {
                         return this._makeApiCall(collection, 'update', {
                             record: obj,
                             meta: metadata
-                        });
+                        }, options);
                     },
 
-                    destroy: function(collection, id) {
+                    destroy: function(collection, id, options) {
                         if (!id) {
                             throw new Error('No id provided');
                         }
                         var params = {};
                         params[this.idProperty] = id;
-                        return this._makeApiCall(collection, 'destroy', params);
+                        return this._makeApiCall(collection, 'destroy', params, options);
                     },
 
-                    _makeApiCall: function(collectionName, meth, params) {
+                    _makeApiCall: function(collectionName, meth, params, options) {
                         var deferred = $q.defer();
-                        var resource = this._getResource(collectionName);
+                        var resource = this._getResource(collectionName, options);
                         var collection = this.iguanaKlass.collection;
                         if (!collection) {
                             throw new Error('No collection defined on iguana class.');
@@ -240,23 +240,45 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
                         return deferred.promise;
                     },
 
-                    _getResource: function(collection) {
+                    _getResource: function(collection, options) {
                         var url = [this.iguanaKlass.baseUrl, collection, ':' + this.idProperty].join('/') + '.json';
+                        options = options || {};
+                        var timeout;
+                        var unsupportedOptions = [];
+
+                        // currently, the only supported option is timeout
+                        Object.keys(options).forEach(function(key) {
+                            if (key === 'timeout') {
+                                timeout = options.timeout;
+                            } else {
+                                unsupportedOptions.push(key);
+                            }
+                        });
+
+                        if (unsupportedOptions.length > 0) {
+                            throw new Error('Unsupported options: "' + unsupportedOptions.join(',') + '"');
+                        }
+
                         return $resource(url, {}, {
                             'index': {
-                                method: 'GET'
+                                method: 'GET',
+                                timeout: timeout
                             },
                             'show': {
-                                method: 'GET'
+                                method: 'GET',
+                                timeout: timeout
                             },
                             'create': {
-                                method: 'POST'
+                                method: 'POST',
+                                timeout: timeout
                             },
                             'update': {
-                                method: 'PUT'
+                                method: 'PUT',
+                                timeout: timeout
                             },
                             'destroy': {
-                                method: 'DELETE'
+                                method: 'DELETE',
+                                timeout: timeout
                             }
                         });
                     }
@@ -394,39 +416,49 @@ angular.module('Iguana')
                         return this._adapter;
                     },
 
-                    show: function(arg1, arg2) {
+                    show: function() {
                         return this._callAdapterMethAndInstantiateResult('show', true, arguments);
                     },
 
-                    index: function(arg1, arg2) {
+                    index: function() {
                         return this._callAdapterMethAndInstantiateResult('index', false, arguments);
                     },
 
-                    create: function(obj, metadata) {
+                    create: function(obj, metadata, options) {
                         var instance = this.new(obj);
                         if (!instance.isNew()) {
                             throw new Error("Cannot call create on instance that is already saved.");
                         }
-                        return instance.save(metadata);
+                        return instance.save(metadata, options);
                     },
 
-                    update: function(obj, metadata) {
+                    update: function(obj, metadata, options) {
                         var instance = this.new(obj);
                         if (instance.isNew()) {
                             throw new Error("Cannot call update on instance that is not already saved.");
                         }
-                        return instance.save(metadata);
+                        return instance.save(metadata, options);
                     },
 
-                    destroy: function(id) {
+                    destroy: function(id, options) {
                         var klass = this;
-                        return this._callAdapterMeth('destroy', [id]).then(function(response) {
+                        var args = [id];
+                        if (options) {
+                            args.push(options);
+                        }
+                        return this._callAdapterMeth('destroy', args).then(function(response) {
                             return this._prepareEmptyResponse(response);
                         }.bind(this));
                     },
 
-                    saveWithoutInstantiating: function(meth, obj, metadata) {
-                        var args = metadata ? [obj, metadata] : [obj];
+                    saveWithoutInstantiating: function(meth, obj, metadata, options) {
+                        var args = [obj];
+                        if (metadata) {
+                            args.push(metadata);
+                        }
+                        if (options) {
+                            args.push(options);
+                        }
                         return this._callAdapterMeth(meth, args).then(function(response) {
                             return {
                                 result: response.result[0],
@@ -480,10 +512,10 @@ angular.module('Iguana')
 
                 instanceMixin: {
 
-                    save: function(metadata) {
+                    save: function(metadata, options) {
                         var returnValue;
                         this.runCallbacks('save', function() {
-                            returnValue = this._save(metadata);
+                            returnValue = this._save(metadata, options);
                         });
                         return returnValue;
                     },
@@ -493,10 +525,10 @@ angular.module('Iguana')
                         return !id;
                     },
 
-                    _save: function(metadata) {
+                    _save: function(metadata, options) {
                         var action = this.isNew() ? "create" : "update";
 
-                        return this.constructor.saveWithoutInstantiating(action, this.asJson(), metadata).then(function(response) {
+                        return this.constructor.saveWithoutInstantiating(action, this.asJson(), metadata, options).then(function(response) {
                             var attrs = angular.extend({}, response.result);
 
                             this.copyAttrs(attrs);
@@ -507,8 +539,8 @@ angular.module('Iguana')
                         }.bind(this));
                     },
 
-                    destroy: function() {
-                        return this.constructor.destroy(this[this.idProperty()]);
+                    destroy: function(options) {
+                        return this.constructor.destroy(this[this.idProperty()], options);
                     },
 
                     idProperty: function() {

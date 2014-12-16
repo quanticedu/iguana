@@ -52,39 +52,49 @@ angular.module('Iguana')
                         return this._adapter;
                     },
 
-                    show: function(arg1, arg2) {
+                    show: function() {
                         return this._callAdapterMethAndInstantiateResult('show', true, arguments);
                     },
 
-                    index: function(arg1, arg2) {
+                    index: function() {
                         return this._callAdapterMethAndInstantiateResult('index', false, arguments);
                     },
 
-                    create: function(obj, metadata) {
+                    create: function(obj, metadata, options) {
                         var instance = this.new(obj);
                         if (!instance.isNew()) {
                             throw new Error("Cannot call create on instance that is already saved.");
                         }
-                        return instance.save(metadata);
+                        return instance.save(metadata, options);
                     },
 
-                    update: function(obj, metadata) {
+                    update: function(obj, metadata, options) {
                         var instance = this.new(obj);
                         if (instance.isNew()) {
                             throw new Error("Cannot call update on instance that is not already saved.");
                         }
-                        return instance.save(metadata);
+                        return instance.save(metadata, options);
                     },
 
-                    destroy: function(id) {
+                    destroy: function(id, options) {
                         var klass = this;
-                        return this._callAdapterMeth('destroy', [id]).then(function(response) {
+                        var args = [id];
+                        if (options) {
+                            args.push(options);
+                        }
+                        return this._callAdapterMeth('destroy', args).then(function(response) {
                             return this._prepareEmptyResponse(response);
                         }.bind(this));
                     },
 
-                    saveWithoutInstantiating: function(meth, obj, metadata) {
-                        var args = metadata ? [obj, metadata] : [obj];
+                    saveWithoutInstantiating: function(meth, obj, metadata, options) {
+                        var args = [obj];
+                        if (metadata) {
+                            args.push(metadata);
+                        }
+                        if (options) {
+                            args.push(options);
+                        }
                         return this._callAdapterMeth(meth, args).then(function(response) {
                             return {
                                 result: response.result[0],
@@ -138,10 +148,10 @@ angular.module('Iguana')
 
                 instanceMixin: {
 
-                    save: function(metadata) {
+                    save: function(metadata, options) {
                         var returnValue;
                         this.runCallbacks('save', function() {
-                            returnValue = this._save(metadata);
+                            returnValue = this._save(metadata, options);
                         });
                         return returnValue;
                     },
@@ -151,10 +161,10 @@ angular.module('Iguana')
                         return !id;
                     },
 
-                    _save: function(metadata) {
+                    _save: function(metadata, options) {
                         var action = this.isNew() ? "create" : "update";
 
-                        return this.constructor.saveWithoutInstantiating(action, this.asJson(), metadata).then(function(response) {
+                        return this.constructor.saveWithoutInstantiating(action, this.asJson(), metadata, options).then(function(response) {
                             var attrs = angular.extend({}, response.result);
 
                             this.copyAttrs(attrs);
@@ -165,8 +175,8 @@ angular.module('Iguana')
                         }.bind(this));
                     },
 
-                    destroy: function() {
-                        return this.constructor.destroy(this[this.idProperty()]);
+                    destroy: function(options) {
+                        return this.constructor.destroy(this[this.idProperty()], options);
                     },
 
                     idProperty: function() {
