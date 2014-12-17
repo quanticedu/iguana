@@ -9,7 +9,8 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
 
         this.setBaseUrl = function(baseUrl) {
             this._defaultBaseUrl = baseUrl;
-        }
+        };
+
 
         this.$get = [
             'SuperModel',
@@ -35,10 +36,12 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                         }
                     }.bind(this));
 
+                    this.extendableObject('defaultRequestOptions');
+
                     this.extend({
                         expect: function() {
                             throw new Error("There is no 'expect' method.  Make sure to include iguana-mock.js and inject MockIguana.")
-                        }
+                        },
                     });
 
                     return {

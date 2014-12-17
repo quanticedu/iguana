@@ -292,6 +292,23 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
             expect(resourceSpy.calls[0].args[2].destroy.timeout).toBe(42);
         });
 
+        it('should use the default timeout if none is passed in', function() {
+            Item.defaultRequestOptions().set('timeout', 42);
+            Item.show('id', {});
+            expect(resourceSpy).toHaveBeenCalled();
+            expect(resourceSpy.calls[0].args[2].show.timeout).toBe(42);
+        });
+
+        it('should override default timeout if one is passed in', function() {
+            Item.defaultRequestOptions().set('timeout', 42);
+            Item.show('id', {}, {
+                timeout: 49
+            });
+            Item.show('id', {});
+            expect(resourceSpy).toHaveBeenCalled();
+            expect(resourceSpy.calls[0].args[2].show.timeout).toBe(49);
+        });
+
     });
 
 

@@ -83,7 +83,7 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
 
                     _getResource: function(collection, options) {
                         var url = [this.iguanaKlass.baseUrl, collection, ':' + this.idProperty].join('/') + '.json';
-                        options = options || {};
+                        options = angular.extend({}, this.iguanaKlass.defaultRequestOptions(), options || {});
                         var timeout;
                         var unsupportedOptions = [];
 
