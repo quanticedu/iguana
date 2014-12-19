@@ -87,8 +87,9 @@ describe('Iguana.Crud', function() {
             var mockPromise = {
                 then: function() {
                     return mockPromise;
-                }
-            }
+                },
+                finally: function() {}
+            };
             spyOn(Item.adapter(), 'create').andReturn(mockPromise);
             var metadata = {meta: 'data'};
             item.save(metadata);
@@ -109,6 +110,15 @@ describe('Iguana.Crud', function() {
         it('should set the saving flag while saving', function() {
             var item = Item.new({id: 'id'});
             Item.adapter().expect('update');
+            item.save();
+            expect(item.$$saving).toBe(true);
+            Item.adapter().flush('update');
+            expect(item.$$saving).toBe(false);
+        });
+
+        it('should unset the saving flag on error', function() {
+            var item = Item.new({id: 'id'});
+            Item.adapter().expect('update', 'items', [item.asJson()], {error: 'error'});    
             item.save();
             expect(item.$$saving).toBe(true);
             Item.adapter().flush('update');

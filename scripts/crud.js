@@ -153,7 +153,7 @@ angular.module('Iguana')
                         this.runCallbacks('save', function() {
                             this.$$saving = true;
                             returnValue = this._save(metadata, options);
-                            returnValue.then(function() {
+                            returnValue.finally(function() {
                                 this.$$saving = false;
                             }.bind(this));
                         });
