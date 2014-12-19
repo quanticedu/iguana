@@ -105,6 +105,15 @@ describe('Iguana.Crud', function() {
             var item = Item.new({id: 'id'});
             assertFiresErrorCallbackOnSave(item, 'update');
         });
+
+        it('should set the saving flag while saving', function() {
+            var item = Item.new({id: 'id'});
+            Item.adapter().expect('update');
+            item.save();
+            expect(item.$$saving).toBe(true);
+            Item.adapter().flush('update');
+            expect(item.$$saving).toBe(false);
+        });
         
         function assertSavesAndFiresSuccessCallback(item, action) {
             var toBeSpiedOn = {onSuccess: function(response){
