@@ -557,7 +557,14 @@ angular.module('Iguana')
                     },
 
                     destroy: function(options) {
-                        return this.constructor.destroy(this[this.idProperty()], options);
+                        this.$$destroying = true;
+                        this.$$saving = true;
+                        var returnValue = this.constructor.destroy(this[this.idProperty()], options);
+                        returnValue.finally(function() {
+                            this.$$destroying = false;
+                            this.$$saving = false;
+                        }.bind(this));
+                        return returnValue;
                     },
 
                     idProperty: function() {

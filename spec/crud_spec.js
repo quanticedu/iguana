@@ -184,6 +184,28 @@ describe('Iguana.Crud', function() {
             Item.adapter().flush('destroy');
             expect(toBeSpiedOn.onError).toHaveBeenCalledWith('error');
         });
+
+        it('should set the destroying and saving flags while saving', function() {
+            var item = Item.new({id: 'id'});
+            Item.adapter().expect('destroy');
+            item.destroy();
+            expect(item.$$destroying).toBe(true);
+            expect(item.$$saving).toBe(true);
+            Item.adapter().flush('destroy');
+            expect(item.$$destroying).toBe(false);
+            expect(item.$$saving).toBe(false);
+        });
+
+        it('should unset the destroying and saving flags on error', function() {
+            var item = Item.new({id: 'id'});
+            Item.adapter().expect('destroy', 'items', ['id'], {error: 'error'});
+            item.destroy();
+            expect(item.$$destroying).toBe(true);
+            expect(item.$$saving).toBe(true);
+            Item.adapter().flush('destroy');
+            expect(item.$$destroying).toBe(false);
+            expect(item.$$saving).toBe(false);
+        });
     });
     
     function assertMakesApiCallAndReturnsNothing(meth, args) {
