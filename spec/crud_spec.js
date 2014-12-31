@@ -112,8 +112,11 @@ describe('Iguana.Crud', function() {
             Item.adapter().expect('update');
             item.save();
             expect(item.$$saving).toBe(true);
+            var callback = jasmine.createSpy('callback');
+            item.$$savePromise.then(callback);
             Item.adapter().flush('update');
             expect(item.$$saving).toBe(false);
+            expect(callback).toHaveBeenCalled();
         });
 
         it('should unset the saving flag on error', function() {
@@ -190,10 +193,13 @@ describe('Iguana.Crud', function() {
             Item.adapter().expect('destroy');
             item.destroy();
             expect(item.$$destroying).toBe(true);
+            var callback = jasmine.createSpy('callback');
             expect(item.$$saving).toBe(true);
+            item.$$savePromise.then(callback);
             Item.adapter().flush('destroy');
             expect(item.$$destroying).toBe(false);
             expect(item.$$saving).toBe(false);
+            expect(callback).toHaveBeenCalled();
         });
 
         it('should unset the destroying and saving flags on error', function() {

@@ -153,8 +153,10 @@ angular.module('Iguana')
                         this.runCallbacks('save', function() {
                             this.$$saving = true;
                             returnValue = this._save(metadata, options);
+                            this.$$savePromise = returnValue;
                             returnValue.finally(function() {
                                 this.$$saving = false;
+                                this.$$savePromise = undefined;
                             }.bind(this));
                         });
                         return returnValue;
@@ -183,9 +185,11 @@ angular.module('Iguana')
                         this.$$destroying = true;
                         this.$$saving = true;
                         var returnValue = this.constructor.destroy(this[this.idProperty()], options);
+                        this.$$savePromise = returnValue;
                         returnValue.finally(function() {
                             this.$$destroying = false;
                             this.$$saving = false;
+                            this.$$savePromise = undefined;
                         }.bind(this));
                         return returnValue;
                     },
