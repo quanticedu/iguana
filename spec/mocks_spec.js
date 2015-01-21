@@ -127,7 +127,7 @@ describe('IguanaMock', function() {
     // ## Mocking Basics
     it('should work with expect/call/fush', function() {
         // In most cases, making mock api calls will involve 3 steps.     
-        var controller = $controller("ItemController", {
+        var controller = $controller('ItemController', {
             $scope: scope
         });
         // First, call expect() to indicate that you expect a method to be called ...
@@ -145,7 +145,7 @@ describe('IguanaMock', function() {
 
         // ### Basic expect/call/flush
         it('should work with no special features set', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('show');
@@ -159,7 +159,7 @@ describe('IguanaMock', function() {
         // You can indicate the arguments you expect to be passed to the
         // method with _toBeCalledWith_
         it('should work with toBeCalledWith', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('show').toBeCalledWith('someId');
@@ -172,7 +172,7 @@ describe('IguanaMock', function() {
         // ### returns
         // You can indicate the response that comes back from the server
         it('should work with returns and a full response', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('show').returns({
@@ -194,7 +194,7 @@ describe('IguanaMock', function() {
         // If you don't expect any metadata, then you can just pass the result
         // to _returns_
         it('should work with returns and just a result hash', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('show').returns({
@@ -210,7 +210,7 @@ describe('IguanaMock', function() {
 
         // You can pass an instance instead of a hash to returns
         it('should work with returns and just a result instance', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             var item = Item.new({
@@ -233,7 +233,7 @@ describe('IguanaMock', function() {
         // If you just care about the metadata, then you can set it with
         // _returnsMeta_
         it('should work with returnsMeta', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('show').returnsMeta({
@@ -249,7 +249,7 @@ describe('IguanaMock', function() {
         // ## fails
         // If you want the api call to fail, you can call _fail_
         it('should work with fail', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('show').fails({
@@ -268,7 +268,7 @@ describe('IguanaMock', function() {
 
         // ### Basic expect/call/flush
         it('should work with no special features set', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('index');
@@ -282,7 +282,7 @@ describe('IguanaMock', function() {
         // You can indicate the arguments you expect to be passed to the
         // method with _toBeCalledWith_
         it('should work with toBeCalledWith', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('index').toBeCalledWith('someQuery');
@@ -295,7 +295,7 @@ describe('IguanaMock', function() {
         // ### returns
         // You can indicate the response that comes back from the server
         it('should work with returns and a full response', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('index').returns({
@@ -317,7 +317,7 @@ describe('IguanaMock', function() {
         // If you don't expect any metadata, then you can just pass the result
         // to _returns_
         it('should work with returns and just a result hash', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('index').returns([{
@@ -333,7 +333,7 @@ describe('IguanaMock', function() {
 
         // You can pass a list of instances instead of a hash to returns
         it('should work with returns and just a list of result instances', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             var items = [Item.new({
@@ -357,7 +357,7 @@ describe('IguanaMock', function() {
         // If you just care about the metadata, then you can set it with
         // _returnsMeta_
         it('should work with returnsMeta', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('index').returnsMeta({
@@ -373,7 +373,7 @@ describe('IguanaMock', function() {
         // ## fails
         // If you want the api call to fail, you can call _fail_
         it('should work with fail', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('index').fails({
@@ -393,7 +393,7 @@ describe('IguanaMock', function() {
 
         // ### Basic expect/call/flush with create
         it('create should work with no special features set', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('create');
@@ -406,7 +406,7 @@ describe('IguanaMock', function() {
 
         // ### Basic expect/call/flush with update
         it('update should work with no special features set', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             //load up an item
@@ -430,7 +430,7 @@ describe('IguanaMock', function() {
         // If you don't care what kind of save is called (either
         // create or update are both ok?)
         it('save should work with no special features set', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('save').returns({
@@ -447,14 +447,14 @@ describe('IguanaMock', function() {
             Item.flush('save');
             expect(scope.item).not.toBe(null);
             expect(scope.item.constructor).toBe(Item);
-            expect($window.alert.calls.length).toBe(2);
+            expect($window.alert.calls.count()).toBe(2);
         });
 
         // ### returns
         // In general, there is no need to indicate the return value,
         // because the server usually will return the same item that was saved.
         it('should return the item that was passed in', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('save');
@@ -471,7 +471,7 @@ describe('IguanaMock', function() {
         // But, if you expect the server to make changes to the item, then
         // you can use returns to indicate that 
         it('should return the item that was passed in', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('save').returns({
@@ -494,7 +494,7 @@ describe('IguanaMock', function() {
         // you want to set the metadata, you can use
         // _returnsMeta_
         it('should work with returnsMeta', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('save').returnsMeta({
@@ -511,7 +511,7 @@ describe('IguanaMock', function() {
         // ## fails
         // If you want the api call to fail, you can call _fail_
         it('should work with fail', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('save').fails({
@@ -529,7 +529,7 @@ describe('IguanaMock', function() {
 
         // ### Basic expect/call/flush
         it('should work with no special features set', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('show');
@@ -549,7 +549,7 @@ describe('IguanaMock', function() {
         // You can indicate the arguments you expect to be passed to the
         // method with _toBeCalledWith_
         it('should work with toBeCalledWith', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('show').returns({
@@ -569,20 +569,20 @@ describe('IguanaMock', function() {
         // Destroy always returns an empty result, so you cannot 
         // pass a result to returns
         it('should work with returns and a full response', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             expect(function() {
                 Item.expect('destroy').returns({
                     foo: 'bar'
                 });
-            }).toThrow('destroy always returns an empty result, so you cannot mock out a different result.');
+            }).toThrow(new Error('destroy always returns an empty result, so you cannot mock out a different result.'));
         });
 
         // ## returnsMeta
         // You can set the metadata that cose back with _returnsMeta_
         it('should work with returnsMeta', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('show').returns({
@@ -604,7 +604,7 @@ describe('IguanaMock', function() {
         // ## fails
         // If you want the api call to fail, you can call _fail_
         it('should work with fail', function() {
-            var controller = $controller("ItemController", {
+            var controller = $controller('ItemController', {
                 $scope: scope
             });
             Item.expect('show').returns({

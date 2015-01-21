@@ -322,9 +322,9 @@ describe('Iguana', function() {
             //method on our api.
             Item.expect('update').toBeCalledWith(scope.item.asJson());
             scope.save();
-            expect($window.alert.calls.length).toBe(1);
+            expect($window.alert.calls.count()).toBe(1);
             Item.flush('update');
-            expect($window.alert.calls.length).toBe(2);
+            expect($window.alert.calls.count()).toBe(2);
 
         });
     });

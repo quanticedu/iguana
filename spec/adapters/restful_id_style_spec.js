@@ -41,7 +41,7 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
                 $httpBackend = $injector.get('$httpBackend');
                 var Iguana = _Iguana_;
                 Item = Iguana.subclass(function() {
-                    this.setCollection("items");
+                    this.setCollection('items');
                 });
             });
         });
@@ -69,8 +69,8 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
                     queryParam: 1
                 });
                 $httpBackend.flush();
-                expect(Item._instantiateFromResponse.calls.length).toBe(1);
-                var response = Item._instantiateFromResponse.calls[0].args[1];
+                expect(Item._instantiateFromResponse.calls.count()).toBe(1);
+                var response = Item._instantiateFromResponse.calls.argsFor(0)[1];
 
                 //Returning an iguana-formatted response
                 expect(response).toEqual({
@@ -104,8 +104,8 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
                     queryParam: 1
                 });
                 $httpBackend.flush();
-                expect(Item._instantiateFromResponse.calls.length).toBe(1);
-                var response = Item._instantiateFromResponse.calls[0].args[1];
+                expect(Item._instantiateFromResponse.calls.count()).toBe(1);
+                var response = Item._instantiateFromResponse.calls.argsFor(0)[1];
 
                 //Returning an iguana-formatted response
                 expect(response).toEqual({
@@ -147,7 +147,7 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
                         expect(response.meta).toBe('meta');
                     }
                 };
-                spyOn(callbacks, 'success').andCallThrough();
+                spyOn(callbacks, 'success').and.callThrough();
                 Item.create(attrs, metadata).then(callbacks.success);
                 $httpBackend.flush();
                 expect(callbacks.success).toHaveBeenCalled();
@@ -184,7 +184,7 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
                         expect(response.meta).toBe('meta');
                     }
                 };
-                spyOn(callbacks, 'success').andCallThrough();
+                spyOn(callbacks, 'success').and.callThrough();
                 Item.update(attrs, metadata).then(callbacks.success);
                 $httpBackend.flush();
                 expect(callbacks.success).toHaveBeenCalled();
@@ -208,8 +208,8 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
                 spyOn(Item, '_prepareEmptyResponse');
                 Item.destroy('id');
                 $httpBackend.flush();
-                expect(Item._prepareEmptyResponse.calls.length).toBe(1);
-                var response = Item._prepareEmptyResponse.calls[0].args[0];
+                expect(Item._prepareEmptyResponse.calls.count()).toBe(1);
+                var response = Item._prepareEmptyResponse.calls.argsFor(0)[0];
 
                 //Returning an iguana-formatted response
                 expect(response).toEqual({
@@ -226,7 +226,7 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
 
         beforeEach(function() {
             resourceSpy = jasmine.createSpy('$resource');
-            resourceSpy.andReturn({
+            resourceSpy.and.returnValue({
                 index: function() {},
                 show: function() {},
                 create: function() {},
@@ -255,7 +255,7 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
                 timeout: 42
             });
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls[0].args[2].show.timeout).toBe(42);
+            expect(resourceSpy.calls.argsFor(0)[2].show.timeout).toBe(42);
         });
 
         it('should pass timeout down in an index call', function() {
@@ -263,7 +263,7 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
                 timeout: 42
             });
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls[0].args[2].index.timeout).toBe(42);
+            expect(resourceSpy.calls.argsFor(0)[2].index.timeout).toBe(42);
         });
 
         it('should pass timeout down in a create call', function() {
@@ -271,7 +271,7 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
                 timeout: 42
             });
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls[0].args[2].create.timeout).toBe(42);
+            expect(resourceSpy.calls.argsFor(0)[2].create.timeout).toBe(42);
         });
 
         it('should pass timeout down in an update call', function() {
@@ -281,7 +281,7 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
                 timeout: 42
             });
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls[0].args[2].update.timeout).toBe(42);
+            expect(resourceSpy.calls.argsFor(0)[2].update.timeout).toBe(42);
         });
 
         it('should pass timeout down in a destroy call', function() {
@@ -289,14 +289,14 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
                 timeout: 42
             });
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls[0].args[2].destroy.timeout).toBe(42);
+            expect(resourceSpy.calls.argsFor(0)[2].destroy.timeout).toBe(42);
         });
 
         it('should use the default timeout if none is passed in', function() {
             Item.defaultRequestOptions().set('timeout', 42);
             Item.show('id', {});
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls[0].args[2].show.timeout).toBe(42);
+            expect(resourceSpy.calls.argsFor(0)[2].show.timeout).toBe(42);
         });
 
         it('should override default timeout if one is passed in', function() {
@@ -306,7 +306,7 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
             });
             Item.show('id', {});
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls[0].args[2].show.timeout).toBe(49);
+            expect(resourceSpy.calls.argsFor(0)[2].show.timeout).toBe(49);
         });
 
     });

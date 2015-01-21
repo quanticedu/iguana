@@ -1,4 +1,3 @@
-
 'use strict';
 
 describe('Iguana.SingleCollectionInheritance', function() {
@@ -102,7 +101,7 @@ describe('Iguana.SingleCollectionInheritance', function() {
             var func = function() {
                 new Item();
             };
-            expect(func).toThrow("Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()");
+            expect(func).toThrow(new Error('Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()'));
         });
 
         it('should throw an error if no class matches the __iguana_type property', function() {
@@ -112,7 +111,7 @@ describe('Iguana.SingleCollectionInheritance', function() {
                     __iguana_type: 'noItemForThis'
                 });
             };
-            expect(func).toThrow('No class could be found for __iguana_type="noItemForThis".');
+            expect(func).toThrow(new Error('No class could be found for __iguana_type="noItemForThis".'));
         });
 
         it('should not set the type property if there is no alias', function() {
@@ -138,7 +137,7 @@ describe('Iguana.SingleCollectionInheritance', function() {
                 return new mockClass();
             };
 
-            spyOn(Item, 'getAliasedKlass').andReturn(mockClass);
+            spyOn(Item, 'getAliasedKlass').and.returnValue(mockClass);
             var instance = Item.new({
                 __iguana_type: 'lazy_loaded_item'
             });
@@ -213,7 +212,7 @@ describe('Iguana.SingleCollectionInheritance', function() {
 
             var expectedObject = {
                 '__iguana_type': 'item_type_1'
-            }
+            };
             ItemType1.adapter().expect('create', 'items', expectedObject, {
                 result: [expectedObject]
             });
