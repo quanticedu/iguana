@@ -55,6 +55,7 @@ describe('Iguana.Alias', function() {
                 this.alias('unexpected');
             });
             var get = $injector.get;
+            spyOn($injector, 'has').and.returnValue(true);
             spyOn($injector, 'get').and.callFake(function(path) {
                 if (path === 'MyClass') {
                     return mockClass;

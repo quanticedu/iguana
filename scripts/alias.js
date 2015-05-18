@@ -24,13 +24,11 @@ angular.module('Iguana')
                         }
                         if (!this._aliasedKlasses[alias]) {
                             var path = this.injectablesMap[alias];
-                            if (path) {
+                            if (path && $injector.has(path)) {
                                 var klass;
-                                try {
-                                    klass = $injector.get(path);
-                                } catch (e) {}
+                                klass = $injector.get(path);
                                 this._aliasedKlasses[alias] = klass;
-                                if (klass && alias !== klass.alias()) {
+                                if (alias !== klass.alias()) {
                                     var message = 'Class included in injectablesMap does not have the expected alias: "' + klass.alias() + '" != "' + alias + '"';
                                     throw new Error(message);
                                 }
