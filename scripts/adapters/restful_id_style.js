@@ -84,43 +84,23 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
                     _getResource: function(collection, options) {
                         var url = [this.iguanaKlass.baseUrl, collection, ':' + this.idProperty].join('/') + '.json';
                         options = angular.extend({}, this.iguanaKlass.defaultRequestOptions(), options || {});
-                        var timeout;
-                        var unsupportedOptions = [];
-
-                        // currently, the only supported option is timeout
-                        Object.keys(options).forEach(function(key) {
-                            if (key === 'timeout') {
-                                timeout = options.timeout;
-                            } else {
-                                unsupportedOptions.push(key);
-                            }
-                        });
-
-                        if (unsupportedOptions.length > 0) {
-                            throw new Error('Unsupported options: "' + unsupportedOptions.join(',') + '"');
-                        }
-
+                        
                         return $resource(url, {}, {
-                            'index': {
-                                method: 'GET',
-                                timeout: timeout
-                            },
-                            'show': {
-                                method: 'GET',
-                                timeout: timeout
-                            },
-                            'create': {
-                                method: 'POST',
-                                timeout: timeout
-                            },
-                            'update': {
-                                method: 'PUT',
-                                timeout: timeout
-                            },
-                            'destroy': {
-                                method: 'DELETE',
-                                timeout: timeout
-                            }
+                            'index': angular.extend({}, options, {
+                                method: 'GET'
+                            }),
+                            'show': angular.extend({}, options, {
+                                method: 'GET'
+                            }),
+                            'create': angular.extend({}, options, {
+                                method: 'POST'
+                            }),
+                            'update': angular.extend({}, options, {
+                                method: 'PUT'
+                            }),
+                            'destroy': angular.extend({}, options, {
+                                method: 'DELETE'
+                            })
                         });
                     }
 

@@ -246,67 +246,65 @@ describe('Iguana.Adapters.RestfulIdStyle', function() {
             });
         });
 
-        // ### 'timeout' options
-        // angular resource supports a timeout option, which can be 
-        // either a number or a promise.  show, index, create, update, and destroy
-        // all support passing this option in
-        it('should pass timeout down in a show call', function() {
+        // ### options
+        // Extra options can be passed in and added onto the request
+        it('should pass option down in a show call', function() {
             Item.show('id', {}, {
-                timeout: 42
+                option: 42
             });
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls.argsFor(0)[2].show.timeout).toBe(42);
+            expect(resourceSpy.calls.argsFor(0)[2].show.option).toBe(42);
         });
 
-        it('should pass timeout down in an index call', function() {
+        it('should pass option down in an index call', function() {
             Item.index({}, {
-                timeout: 42
+                option: 42
             });
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls.argsFor(0)[2].index.timeout).toBe(42);
+            expect(resourceSpy.calls.argsFor(0)[2].index.option).toBe(42);
         });
 
-        it('should pass timeout down in a create call', function() {
+        it('should pass option down in a create call', function() {
             Item.create({}, {}, {
-                timeout: 42
+                option: 42
             });
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls.argsFor(0)[2].create.timeout).toBe(42);
+            expect(resourceSpy.calls.argsFor(0)[2].create.option).toBe(42);
         });
 
-        it('should pass timeout down in an update call', function() {
+        it('should pass option down in an update call', function() {
             Item.update({
                 id: 1
             }, {}, {
-                timeout: 42
+                option: 42
             });
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls.argsFor(0)[2].update.timeout).toBe(42);
+            expect(resourceSpy.calls.argsFor(0)[2].update.option).toBe(42);
         });
 
-        it('should pass timeout down in a destroy call', function() {
+        it('should pass option down in a destroy call', function() {
             Item.destroy('id', {
-                timeout: 42
+                option: 42
             });
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls.argsFor(0)[2].destroy.timeout).toBe(42);
+            expect(resourceSpy.calls.argsFor(0)[2].destroy.option).toBe(42);
         });
 
-        it('should use the default timeout if none is passed in', function() {
-            Item.defaultRequestOptions().set('timeout', 42);
+        it('should use the default option if none is passed in', function() {
+            Item.defaultRequestOptions().set('option', 42);
             Item.show('id', {});
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls.argsFor(0)[2].show.timeout).toBe(42);
+            expect(resourceSpy.calls.argsFor(0)[2].show.option).toBe(42);
         });
 
-        it('should override default timeout if one is passed in', function() {
-            Item.defaultRequestOptions().set('timeout', 42);
+        it('should override default option if one is passed in', function() {
+            Item.defaultRequestOptions().set('option', 42);
             Item.show('id', {}, {
-                timeout: 49
+                option: 49
             });
             Item.show('id', {});
             expect(resourceSpy).toHaveBeenCalled();
-            expect(resourceSpy.calls.argsFor(0)[2].show.timeout).toBe(49);
+            expect(resourceSpy.calls.argsFor(0)[2].show.option).toBe(49);
         });
 
     });
