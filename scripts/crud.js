@@ -1,6 +1,10 @@
+'use strict';
+
 angular.module('Iguana')
     .factory('Iguana.Crud', ['$injector',
         function($injector) {
+
+            var $q = $injector.get('$q');
 
             return {
 
@@ -17,8 +21,9 @@ angular.module('Iguana')
                     },
 
                     setAdapter: function(adapterName) {
+                        var adapterKlass;
                         try {
-                            var adapterKlass = $injector.get(adapterName);
+                            adapterKlass = $injector.get(adapterName);
                         } catch (e) {
                             throw new Error('Cannot find adapter "' + adapterName + '"');
                         }
@@ -30,7 +35,7 @@ angular.module('Iguana')
 
                     setBaseUrl: function(url) {
                         //remove trailing slash
-                        url = url.replace(/\/$/, "");
+                        url = url.replace(/\/$/, '');
                         this.extend({
                             baseUrl: url
                         });
@@ -45,7 +50,7 @@ angular.module('Iguana')
                     adapter: function() {
                         if (!this._adapter) {
                             if (!this.adapterKlass) {
-                                throw new Error("No adapter set.  You need to call setAdapter()");
+                                throw new Error('No adapter set.  You need to call setAdapter()');
                             }
                             this._adapter = new this.adapterKlass(this);
                         }
@@ -63,7 +68,7 @@ angular.module('Iguana')
                     create: function(obj, metadata, options) {
                         var instance = this.new(obj);
                         if (!instance.isNew()) {
-                            throw new Error("Cannot call create on instance that is already saved.");
+                            throw new Error('Cannot call create on instance that is already saved.');
                         }
                         return instance.save(metadata, options);
                     },
@@ -71,13 +76,12 @@ angular.module('Iguana')
                     update: function(obj, metadata, options) {
                         var instance = this.new(obj);
                         if (instance.isNew()) {
-                            throw new Error("Cannot call update on instance that is not already saved.");
+                            throw new Error('Cannot call update on instance that is not already saved.');
                         }
                         return instance.save(metadata, options);
                     },
 
                     destroy: function(id, options) {
-                        var klass = this;
                         var args = [id];
                         if (options) {
                             args.push(options);
@@ -138,7 +142,7 @@ angular.module('Iguana')
 
                     _callAdapterMeth: function(meth, args) {
                         if (!this.collection) {
-                            throw new Error('Cannot make an api call because collection has not been set.  You need to call setCollection().')
+                            throw new Error('Cannot make an api call because collection has not been set.  You need to call setCollection().');
                         }
                         args = Array.prototype.slice.call(args, 0);
                         args.unshift(this.collection);
@@ -149,17 +153,64 @@ angular.module('Iguana')
                 instanceMixin: {
 
                     save: function(metadata, options) {
-                        var returnValue;
+                        var promise;
                         this.runCallbacks('save', function() {
+                            var publicPromise;
                             this.$$saving = true;
-                            returnValue = this._save(metadata, options);
-                            this.$$savePromise = returnValue;
-                            returnValue.finally(function() {
-                                this.$$saving = false;
-                                this.$$savePromise = undefined;
-                            }.bind(this));
+                            promise = this._save(metadata, options);
+                            var requestId = new Date().getTime() + ':' + Math.random();
+
+                            // if saving is not in progress already, then
+                            // create a new $$savePromise (this check allows
+                            // us to support concurrent saves of the same
+                            // object)
+                            if (!this.$$savePromise) {
+                                // create the promise
+                                var _resolve;
+                                var _reject;
+                                publicPromise = $q(function(resolve, reject) {
+                                    _resolve = resolve;
+                                    _reject = reject;
+                                });
+                                publicPromise.resolve = _resolve;
+                                publicPromise.reject = _reject;
+                                publicPromise.savePromises = {};
+                                publicPromise.errors = [];
+
+                                publicPromise.finally(function() {
+                                    this.$$saving = false;
+                                    this.$$savePromise = undefined;
+                                }.bind(this));
+                                this.$$savePromise = publicPromise;
+                            }
+                            publicPromise = this.$$savePromise;
+                            publicPromise.savePromises[requestId] = promise;
+
+                            promise.then(
+                                function() {
+                                    delete publicPromise.savePromises[requestId];
+                                    if (Object.keys(publicPromise.savePromises).length === 0) {
+                                        if (publicPromise.errors.length === 0) {
+                                            publicPromise.resolve();
+                                        } else {
+                                            publicPromise.reject({
+                                                errors: publicPromise.errors
+                                            });
+                                        }
+
+                                    }
+                                },
+                                function(err) {
+                                    publicPromise.errors.push(err);
+                                    delete publicPromise.savePromises[requestId];
+                                    if (Object.keys(publicPromise.savePromises).length === 0) {
+                                        publicPromise.reject({
+                                            errors: publicPromise.errors
+                                        });
+                                    }
+                                });
                         });
-                        return returnValue;
+                        return promise;
                     },
 
                     isNew: function() {
@@ -168,7 +219,7 @@ angular.module('Iguana')
                     },
 
                     _save: function(metadata, options) {
-                        var action = this.isNew() ? "create" : "update";
+                        var action = this.isNew() ? 'create' : 'update';
 
                         return this.constructor.saveWithoutInstantiating(action, this.asJson(), metadata, options).then(function(response) {
                             var attrs = angular.extend({}, response.result);

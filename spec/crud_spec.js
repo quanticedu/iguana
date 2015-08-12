@@ -144,6 +144,93 @@ describe('Iguana.Crud', function() {
             expect(item.$$saving).toBe(false);
         });
 
+        /*
+            This block tests the behavior of $$saving and $$savePromise when
+            multiple save calls go out before the first one returns
+        */
+        describe('$$saving and $$savePromise with consecutive save calls', function() {
+
+            afterEach(function() {
+                // do it again to make sure it works more than once in a row
+                makeConsecutiveSaveCallsAndWatchSavePromise('success', 'success');
+            });
+
+            it('should handle consecutive successes', function() {
+                makeConsecutiveSaveCallsAndWatchSavePromise('success', 'success');
+
+            });
+
+            it('should handle consecutive errors', function() {
+                makeConsecutiveSaveCallsAndWatchSavePromise('errors', 'errors');
+            });
+
+            it('should handle a mix of errors and successes with error at the end', function() {
+                makeConsecutiveSaveCallsAndWatchSavePromise('success', 'error', 'success', 'success', 'error');
+            });
+
+            it('should handle a mix of errors and successes with success at the end', function() {
+                makeConsecutiveSaveCallsAndWatchSavePromise('success', 'error', 'success', 'success', 'error', 'success');
+            });
+
+            function makeConsecutiveSaveCallsAndWatchSavePromise() {
+                var results = Array.prototype.slice.call(arguments);
+                var item = Item.new({
+                    id: 1
+                });
+                var i;
+
+                // setup the expectations
+                var expectedErrors = [];
+                results.forEach(function(result) {
+                    if (result === 'error') {
+                        Item.adapter().expect('update', 'items', [item.asJson()], {
+                            error: 'error'
+                        });
+                        expectedErrors.push('error');
+                    } else {
+                        Item.adapter().expect('update');
+                    }
+                });
+
+                // make all the save calls
+                for (i = 0; i < results.length; i++) {
+                    item.save();
+                }
+
+                // now saving should be true. set up callbacks
+                // on $$savePromise
+                expect(item.$$saving).toBe(true);
+                var success = jasmine.createSpy('success');
+                var failure = jasmine.createSpy('failure');
+                item.$$savePromise.then(success, failure);
+
+                // flush all but one call
+                for (i = 0; i < results.length - 1; i++) {
+                    Item.adapter().flush('update');
+                }
+
+                // saving should still be true and no callback should have been called
+                expect(item.$$saving).toBe(true);
+                expect(success).not.toHaveBeenCalled();
+                expect(failure).not.toHaveBeenCalled();
+
+                // flush the last save call
+                Item.adapter().flush('update');
+
+                // saving should be false and appropriate handler should have been called
+                expect(item.$$saving).toBe(false);
+                if (expectedErrors.length > 0) {
+                    expect(success).not.toHaveBeenCalled();
+                    expect(failure).toHaveBeenCalled();
+                    expect(failure.calls.argsFor(0)[0].errors).toEqual(expectedErrors);
+                } else {
+                    expect(success).toHaveBeenCalled();
+                    expect(failure).not.toHaveBeenCalled();
+                }
+            }
+
+        });
+
         function assertSavesAndFiresSuccessCallback(item, action) {
             var toBeSpiedOn = {
                 onSuccess: function(response) {

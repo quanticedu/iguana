@@ -94,6 +94,10 @@ angular.module('Iguana')
                         return this.deferred.promise;
                     },
 
+                    callMade: function() {
+                        return !!this.deferred;
+                    },
+
                     resolve: function(actualMeth, displayName) {
 
                         //see Save class below
@@ -329,10 +333,19 @@ angular.module('Iguana')
                     },
 
                     _makeApiCall: function(collection, meth) {
-                        var expectation = this._pendingExpectations()[meth][0];
-                        if (!expectation && (meth === 'create' || meth === 'update')) {
-                            expectation = this._pendingExpectations().save[0];
+                        var expectation;
+                        var expectations = this._pendingExpectations()[meth];
+
+                        if (meth === 'create' || meth === 'update') {
+                            expectations = expectations.concat(this._pendingExpectations().save);
                         }
+                        for (var i = 0; i < expectations.length; i++) {
+                            if (!expectations[i].callMade()) {
+                                expectation = expectations[i];
+                                break;
+                            }
+                        }
+
                         if (!expectation) {
                             throw new Error('Unexpected call to ' + collection + '.' + meth + '.  You need to call expect("' + meth + '")');
                         }
