@@ -339,11 +339,22 @@ angular.module('Iguana')
                         if (meth === 'create' || meth === 'update') {
                             expectations = expectations.concat(this._pendingExpectations().save);
                         }
-                        for (var i = 0; i < expectations.length; i++) {
-                            if (!expectations[i].callMade()) {
-                                expectation = expectations[i];
-                                break;
+
+                        // If .expect() was only called once, then we will use
+                        // the same expectation over and over for multiple requests.
+                        //
+                        // If .expect() was called multiple times, then use
+                        // each expectation in order
+                        if (expectations.length <= 1) {
+                            expectation = expectations[0];
+                        } else {
+                            for (var i = 0; i < expectations.length; i++) {
+                                if (!expectations[i].callMade()) {
+                                    expectation = expectations[i];
+                                    break;
+                                }
                             }
+
                         }
 
                         if (!expectation) {
