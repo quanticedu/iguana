@@ -306,14 +306,23 @@ angular.module('Iguana')
                         if (angular.isUndefined(throwIfUnfound)) {
                             throwIfUnfound = true;
                         }
+                        
                         if (!this._aliasedKlasses[alias]) {
+                            // Check the injectables map for the alias.
                             var path = this.injectablesMap[alias];
+
+
+                            // try using the alias itself as the path
+                            if (!path || !$injector.has(path)) {
+                                path = alias;
+                            }
+
                             if (path && $injector.has(path)) {
                                 var klass;
                                 klass = $injector.get(path);
                                 this._aliasedKlasses[alias] = klass;
                                 if (alias !== klass.alias()) {
-                                    var message = 'Class included in injectablesMap does not have the expected alias: "' + klass.alias() + '" != "' + alias + '"';
+                                    var message = 'Iguana class does not have the expected alias: "' + klass.alias() + '" != "' + alias + '"';
                                     throw new Error(message);
                                 }
                             }
