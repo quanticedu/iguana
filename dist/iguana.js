@@ -517,11 +517,25 @@ angular.module('Iguana')
                 instanceMixin: {
 
                     save: function(metadata, options) {
+                        var action = this.isNew() ? 'create' : 'update';
+                        return this._createOrUpdate(action, metadata, options);
+                    },
+
+                    create: function(metadata, options) {
+                        return this._createOrUpdate('create', metadata, options);
+                    },
+
+                    isNew: function() {
+                        var id = this[this.idProperty()];
+                        return !id;
+                    },
+
+                    _createOrUpdate: function(action, metadata, options) {
                         var promise;
                         this.runCallbacks('save', function() {
                             var publicPromise;
                             this.$$saving = true;
-                            promise = this._save(metadata, options);
+                            promise = this._save(action, metadata, options);
                             var requestId = new Date().getTime() + ':' + Math.random();
 
                             // if saving is not in progress already, then
@@ -577,14 +591,7 @@ angular.module('Iguana')
                         return promise;
                     },
 
-                    isNew: function() {
-                        var id = this[this.idProperty()];
-                        return !id;
-                    },
-
-                    _save: function(metadata, options) {
-                        var action = this.isNew() ? 'create' : 'update';
-
+                    _save: function(action, metadata, options) {
                         return this.constructor.saveWithoutInstantiating(action, this.asJson(), metadata, options).then(function(response) {
                             var attrs = angular.extend({}, response.result);
 

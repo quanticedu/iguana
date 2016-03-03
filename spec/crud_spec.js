@@ -75,6 +75,34 @@ describe('Iguana.Crud', function() {
         });
     });
 
+    describe('InstanceMethod create', function() {
+
+        it('should force a POST even if there is an id on the item', function() {
+            var item = Item.new({
+                id: 1
+            });
+
+            Item.adapter().expect('create', 'items', [item.asJson()], {
+                result: [item.asJson()],
+                meta: 'meta'
+            });
+
+            var toBeSpiedOn = {
+                onSuccess: function(response) {
+                    expect(response.result).toBe(item);
+                    expect(response.meta).toBe('meta');
+                }
+            };
+            spyOn(toBeSpiedOn, 'onSuccess').and.callThrough();
+
+            item.create().then(toBeSpiedOn.onSuccess);
+            expect(toBeSpiedOn.onSuccess).not.toHaveBeenCalled(); // results have not come back from the server yet
+            Item.adapter().flush('create');
+            expect(toBeSpiedOn.onSuccess).toHaveBeenCalled();
+        });
+
+    });
+
     describe('InstanceMethod save', function() {
         it('should create a new item', function() {
             var item = Item.new({});
