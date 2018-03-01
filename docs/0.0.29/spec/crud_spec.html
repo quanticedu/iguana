@@ -1,0 +1,427 @@
+<!DOCTYPE html><html lang="en"><head><title>spec/crud_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/crud_spec"><meta name="groc-project-path" content="spec/crud_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/crud_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+
+describe(<span class="hljs-string">'Iguana.Crud'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+
+    <span class="hljs-keyword">var</span> Item;
+
+    beforeEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        module(<span class="hljs-string">'Iguana'</span>);
+        inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($injector, _Iguana_)</span> {</span>
+            <span class="hljs-keyword">var</span> Iguana = _Iguana_;
+            Item = Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">'items'</span>);
+            });
+            Iguana.setAdapter(<span class="hljs-string">'Iguana.Mock.Adapter'</span>);
+        });
+    });
+
+    describe(<span class="hljs-string">'ClassMethod show'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+
+        it(<span class="hljs-string">'should make an api call and process the result'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            assertMakesApiCallAndReturnsASingleInstance(<span class="hljs-string">'show'</span>, [<span class="hljs-string">'arg1'</span>, <span class="hljs-string">'arg2'</span>]);
+        });
+
+        it(<span class="hljs-string">'should make an api call and handle an error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            assertMakesApiCallAndFiresErrorCallback(<span class="hljs-string">'show'</span>, [<span class="hljs-string">'arg1'</span>, <span class="hljs-string">'arg2'</span>]);
+        });
+
+    });
+
+    describe(<span class="hljs-string">'ClassMethod index'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+
+        it(<span class="hljs-string">'should make an api call and process the result'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            assertMakesApiCallAndReturnsAnArrayOfInstances(<span class="hljs-string">'index'</span>, [<span class="hljs-string">'arg1'</span>, <span class="hljs-string">'arg2'</span>]);
+        });
+
+        it(<span class="hljs-string">'should make an api call and handle an error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            assertMakesApiCallAndFiresErrorCallback(<span class="hljs-string">'index'</span>, [<span class="hljs-string">'arg1'</span>, <span class="hljs-string">'arg2'</span>]);
+        });
+    });
+
+    describe(<span class="hljs-string">'ClassMethod create'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+
+        it(<span class="hljs-string">'should make an api call and process the result'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            assertMakesApiCallAndReturnsASingleInstance(<span class="hljs-string">'create'</span>, [{}]);
+        });
+
+        it(<span class="hljs-string">'should make an api call and handle an error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            assertMakesApiCallAndFiresErrorCallback(<span class="hljs-string">'create'</span>, [{}]);
+        });
+    });
+
+    describe(<span class="hljs-string">'ClassMethod update'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+
+        it(<span class="hljs-string">'should make an api call and process the result'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            assertMakesApiCallAndReturnsASingleInstance(<span class="hljs-string">'update'</span>, [{
+                id: <span class="hljs-string">'id'</span>
+            }]);
+        });
+
+        it(<span class="hljs-string">'should make an api call and handle an error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            assertMakesApiCallAndFiresErrorCallback(<span class="hljs-string">'update'</span>, [{
+                id: <span class="hljs-string">'id'</span>
+            }]);
+        });
+    });
+
+    describe(<span class="hljs-string">'ClassMethod destroy'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+
+        it(<span class="hljs-string">'should make an api call and process the result'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            assertMakesApiCallAndReturnsNothing(<span class="hljs-string">'destroy'</span>, [<span class="hljs-string">'id'</span>]);
+        });
+
+        it(<span class="hljs-string">'should make an api call and handle an error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            assertMakesApiCallAndFiresErrorCallback(<span class="hljs-string">'destroy'</span>, [<span class="hljs-string">'id'</span>]);
+        });
+    });
+
+    describe(<span class="hljs-string">'InstanceMethod create'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+
+        it(<span class="hljs-string">'should force a POST even if there is an id on the item'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> item = Item.new({
+                id: <span class="hljs-number">1</span>
+            });
+
+            Item.adapter().expect(<span class="hljs-string">'create'</span>, <span class="hljs-string">'items'</span>, [item.asJson()], {
+                result: [item.asJson()],
+                meta: <span class="hljs-string">'meta'</span>
+            });
+
+            <span class="hljs-keyword">var</span> toBeSpiedOn = {
+                onSuccess: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+                    expect(response.result).toBe(item);
+                    expect(response.meta).toBe(<span class="hljs-string">'meta'</span>);
+                }
+            };
+            spyOn(toBeSpiedOn, <span class="hljs-string">'onSuccess'</span>).and.callThrough();
+
+            item.create().then(toBeSpiedOn.onSuccess);
+            expect(toBeSpiedOn.onSuccess).not.toHaveBeenCalled(); <span class="hljs-comment">// results have not come back from the server yet</span>
+            Item.adapter().flush(<span class="hljs-string">'create'</span>);
+            expect(toBeSpiedOn.onSuccess).toHaveBeenCalled();
+        });
+
+    });
+
+    describe(<span class="hljs-string">'InstanceMethod save'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        it(<span class="hljs-string">'should create a new item'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> item = Item.new({});
+            assertSavesAndFiresSuccessCallback(item, <span class="hljs-string">'create'</span>);
+        });
+
+        it(<span class="hljs-string">'should update an existing item'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> item = Item.new({
+                id: <span class="hljs-string">'id'</span>
+            });
+            assertSavesAndFiresSuccessCallback(item, <span class="hljs-string">'update'</span>);
+        });
+
+        it(<span class="hljs-string">'should pass metadata along'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> item = Item.new();
+            <span class="hljs-keyword">var</span> mockPromise = {
+                then: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                    <span class="hljs-keyword">return</span> mockPromise;
+                },
+                <span class="hljs-keyword">finally</span>: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>}
+            };
+            spyOn(Item.adapter(), <span class="hljs-string">'create'</span>).and.returnValue(mockPromise);
+            <span class="hljs-keyword">var</span> metadata = {
+                meta: <span class="hljs-string">'data'</span>
+            };
+            item.save(metadata);
+            expect(Item.adapter().create).toHaveBeenCalled();
+            expect(Item.adapter().create.calls.argsFor(<span class="hljs-number">0</span>)[<span class="hljs-number">2</span>]).toBe(metadata);
+        });
+
+        it(<span class="hljs-string">'should fire error when creating a new item'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> item = Item.new({});
+            assertFiresErrorCallbackOnSave(item, <span class="hljs-string">'create'</span>);
+        });
+
+        it(<span class="hljs-string">'should fire error when updating an existing item'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> item = Item.new({
+                id: <span class="hljs-string">'id'</span>
+            });
+            assertFiresErrorCallbackOnSave(item, <span class="hljs-string">'update'</span>);
+        });
+
+        it(<span class="hljs-string">'should set the saving flag while saving'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> item = Item.new({
+                id: <span class="hljs-string">'id'</span>
+            });
+            Item.adapter().expect(<span class="hljs-string">'update'</span>);
+            item.save();
+            expect(item.$$saving).toBe(<span class="hljs-literal">true</span>);
+            <span class="hljs-keyword">var</span> callback = jasmine.createSpy(<span class="hljs-string">'callback'</span>);
+            item.$$savePromise.then(callback);
+            Item.adapter().flush(<span class="hljs-string">'update'</span>);
+            expect(item.$$saving).toBe(<span class="hljs-literal">false</span>);
+            expect(callback).toHaveBeenCalled();
+        });
+
+        it(<span class="hljs-string">'should unset the saving flag on error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> item = Item.new({
+                id: <span class="hljs-string">'id'</span>
+            });
+            Item.adapter().expect(<span class="hljs-string">'update'</span>, <span class="hljs-string">'items'</span>, [item.asJson()], {
+                error: <span class="hljs-string">'error'</span>
+            });
+            item.save();
+            expect(item.$$saving).toBe(<span class="hljs-literal">true</span>);
+            Item.adapter().flush(<span class="hljs-string">'update'</span>);
+            expect(item.$$saving).toBe(<span class="hljs-literal">false</span>);
+        });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code>This block tests the behavior of $$saving and $$savePromise when
+multiple save calls go out before the first one returns</code></pre></div></div><div class="code"><div class="wrapper">        describe(<span class="hljs-string">'$$saving and $$savePromise with consecutive save calls'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+
+            afterEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>do it again to make sure it works more than once in a row</p></div></div><div class="code"><div class="wrapper">                makeConsecutiveSaveCallsAndWatchSavePromise(<span class="hljs-string">'success'</span>, <span class="hljs-string">'success'</span>);
+            });
+
+            it(<span class="hljs-string">'should handle consecutive successes'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                makeConsecutiveSaveCallsAndWatchSavePromise(<span class="hljs-string">'success'</span>, <span class="hljs-string">'success'</span>);
+
+            });
+
+            it(<span class="hljs-string">'should handle consecutive errors'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                makeConsecutiveSaveCallsAndWatchSavePromise(<span class="hljs-string">'errors'</span>, <span class="hljs-string">'errors'</span>);
+            });
+
+            it(<span class="hljs-string">'should handle a mix of errors and successes with error at the end'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                makeConsecutiveSaveCallsAndWatchSavePromise(<span class="hljs-string">'success'</span>, <span class="hljs-string">'error'</span>, <span class="hljs-string">'success'</span>, <span class="hljs-string">'success'</span>, <span class="hljs-string">'error'</span>);
+            });
+
+            it(<span class="hljs-string">'should handle a mix of errors and successes with success at the end'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                makeConsecutiveSaveCallsAndWatchSavePromise(<span class="hljs-string">'success'</span>, <span class="hljs-string">'error'</span>, <span class="hljs-string">'success'</span>, <span class="hljs-string">'success'</span>, <span class="hljs-string">'error'</span>, <span class="hljs-string">'success'</span>);
+            });
+
+            <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">makeConsecutiveSaveCallsAndWatchSavePromise</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">var</span> results = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>);
+                <span class="hljs-keyword">var</span> item = Item.new({
+                    id: <span class="hljs-number">1</span>
+                });
+                <span class="hljs-keyword">var</span> i;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>setup the expectations</p></div></div><div class="code"><div class="wrapper">                <span class="hljs-keyword">var</span> expectedErrors = [];
+                results.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(result)</span> {</span>
+                    <span class="hljs-keyword">if</span> (result === <span class="hljs-string">'error'</span>) {
+                        Item.adapter().expect(<span class="hljs-string">'update'</span>, <span class="hljs-string">'items'</span>, [item.asJson()], {
+                            error: <span class="hljs-string">'error'</span>
+                        });
+                        expectedErrors.push(<span class="hljs-string">'error'</span>);
+                    } <span class="hljs-keyword">else</span> {
+                        Item.adapter().expect(<span class="hljs-string">'update'</span>);
+                    }
+                });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>make all the save calls</p></div></div><div class="code"><div class="wrapper">                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; results.length; i++) {
+                    item.save();
+                }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>now saving should be true. set up callbacks
+on $$savePromise</p></div></div><div class="code"><div class="wrapper">                expect(item.$$saving).toBe(<span class="hljs-literal">true</span>);
+                <span class="hljs-keyword">var</span> success = jasmine.createSpy(<span class="hljs-string">'success'</span>);
+                <span class="hljs-keyword">var</span> failure = jasmine.createSpy(<span class="hljs-string">'failure'</span>);
+                item.$$savePromise.then(success, failure);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>flush all but one call</p></div></div><div class="code"><div class="wrapper">                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; results.length - <span class="hljs-number">1</span>; i++) {
+                    Item.adapter().flush(<span class="hljs-string">'update'</span>);
+                }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>saving should still be true and no callback should have been called</p></div></div><div class="code"><div class="wrapper">                expect(item.$$saving).toBe(<span class="hljs-literal">true</span>);
+                expect(success).not.toHaveBeenCalled();
+                expect(failure).not.toHaveBeenCalled();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>flush the last save call</p></div></div><div class="code"><div class="wrapper">                Item.adapter().flush(<span class="hljs-string">'update'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>saving should be false and appropriate handler should have been called</p></div></div><div class="code"><div class="wrapper">                expect(item.$$saving).toBe(<span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">if</span> (expectedErrors.length &gt; <span class="hljs-number">0</span>) {
+                    expect(success).not.toHaveBeenCalled();
+                    expect(failure).toHaveBeenCalled();
+                    expect(failure.calls.argsFor(<span class="hljs-number">0</span>)[<span class="hljs-number">0</span>].errors).toEqual(expectedErrors);
+                } <span class="hljs-keyword">else</span> {
+                    expect(success).toHaveBeenCalled();
+                    expect(failure).not.toHaveBeenCalled();
+                }
+            }
+
+        });
+
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">assertSavesAndFiresSuccessCallback</span><span class="hljs-params">(item, action)</span> {</span>
+            <span class="hljs-keyword">var</span> toBeSpiedOn = {
+                onSuccess: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+                    expect(response.result).toBe(item);
+                    expect(response.meta).toBe(<span class="hljs-string">'meta'</span>);
+                }
+            };
+            spyOn(toBeSpiedOn, <span class="hljs-string">'onSuccess'</span>).and.callThrough();
+
+            Item.adapter().expect(action, <span class="hljs-string">'items'</span>, [item.asJson()], {
+                result: [item.asJson()],
+                meta: <span class="hljs-string">'meta'</span>
+            });
+
+            item.save().then(toBeSpiedOn.onSuccess);
+            expect(toBeSpiedOn.onSuccess).not.toHaveBeenCalled(); <span class="hljs-comment">// results have not come back from the server yet</span>
+            Item.adapter().flush(action);
+            expect(toBeSpiedOn.onSuccess).toHaveBeenCalled();
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">assertFiresErrorCallbackOnSave</span><span class="hljs-params">(item, action)</span> {</span>
+            <span class="hljs-keyword">var</span> error = {
+                message: <span class="hljs-string">'message'</span>
+            };
+            <span class="hljs-keyword">var</span> toBeSpiedOn = {
+                onError: <span class="hljs-literal">null</span>
+            };
+            spyOn(toBeSpiedOn, <span class="hljs-string">'onError'</span>);
+
+            Item.adapter().expect(action, <span class="hljs-string">'items'</span>, [item.asJson()], {
+                error: error
+            });
+
+            item.save().catch(toBeSpiedOn.onError);
+            expect(toBeSpiedOn.onError).not.toHaveBeenCalled(); <span class="hljs-comment">// results have not come back from the server yet</span>
+            Item.adapter().flush(action);
+            expect(toBeSpiedOn.onError).toHaveBeenCalled();
+        }
+    });
+
+    describe(<span class="hljs-string">'InstanceMethod destroy'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        it(<span class="hljs-string">'should destroy an instance and call success'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> toBeSpiedOn = {
+                onSuccess: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+                    expect(response.result).toBe(<span class="hljs-literal">null</span>);
+                    expect(response.meta).toBe(<span class="hljs-string">'meta'</span>);
+                }
+            };
+            spyOn(toBeSpiedOn, <span class="hljs-string">'onSuccess'</span>).and.callThrough();
+
+            <span class="hljs-keyword">var</span> item = Item.new({
+                id: <span class="hljs-string">'id'</span>
+            });
+            Item.adapter().expect(<span class="hljs-string">'destroy'</span>, <span class="hljs-string">'items'</span>, [<span class="hljs-string">'id'</span>], {
+                result: [],
+                meta: <span class="hljs-string">'meta'</span>
+            });
+            item.destroy().then(toBeSpiedOn.onSuccess);
+
+            expect(toBeSpiedOn.onSuccess).not.toHaveBeenCalled(); <span class="hljs-comment">// results have not come back from the server yet</span>
+            Item.adapter().flush(<span class="hljs-string">'destroy'</span>);
+            expect(toBeSpiedOn.onSuccess).toHaveBeenCalled();
+        });
+
+        it(<span class="hljs-string">'should fire an error when failing to destroy'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> error = {
+                message: <span class="hljs-string">'message'</span>
+            };
+            <span class="hljs-keyword">var</span> toBeSpiedOn = {
+                onError: <span class="hljs-literal">null</span>
+            };
+            spyOn(toBeSpiedOn, <span class="hljs-string">'onError'</span>);
+
+            <span class="hljs-keyword">var</span> item = Item.new({
+                id: <span class="hljs-string">'id'</span>
+            });
+            Item.adapter().expect(<span class="hljs-string">'destroy'</span>, <span class="hljs-string">'items'</span>, [<span class="hljs-string">'id'</span>], {
+                error: <span class="hljs-string">'error'</span>
+            });
+            item.destroy().catch(toBeSpiedOn.onError);
+
+            expect(toBeSpiedOn.onError).not.toHaveBeenCalled(); <span class="hljs-comment">// results have not come back from the server yet</span>
+            Item.adapter().flush(<span class="hljs-string">'destroy'</span>);
+            expect(toBeSpiedOn.onError).toHaveBeenCalledWith(<span class="hljs-string">'error'</span>);
+        });
+
+        it(<span class="hljs-string">'should set the destroying and saving flags while saving'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> item = Item.new({
+                id: <span class="hljs-string">'id'</span>
+            });
+            Item.adapter().expect(<span class="hljs-string">'destroy'</span>);
+            item.destroy();
+            expect(item.$$destroying).toBe(<span class="hljs-literal">true</span>);
+            <span class="hljs-keyword">var</span> callback = jasmine.createSpy(<span class="hljs-string">'callback'</span>);
+            expect(item.$$saving).toBe(<span class="hljs-literal">true</span>);
+            item.$$savePromise.then(callback);
+            Item.adapter().flush(<span class="hljs-string">'destroy'</span>);
+            expect(item.$$destroying).toBe(<span class="hljs-literal">false</span>);
+            expect(item.$$saving).toBe(<span class="hljs-literal">false</span>);
+            expect(callback).toHaveBeenCalled();
+        });
+
+        it(<span class="hljs-string">'should unset the destroying and saving flags on error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> item = Item.new({
+                id: <span class="hljs-string">'id'</span>
+            });
+            Item.adapter().expect(<span class="hljs-string">'destroy'</span>, <span class="hljs-string">'items'</span>, [<span class="hljs-string">'id'</span>], {
+                error: <span class="hljs-string">'error'</span>
+            });
+            item.destroy();
+            expect(item.$$destroying).toBe(<span class="hljs-literal">true</span>);
+            expect(item.$$saving).toBe(<span class="hljs-literal">true</span>);
+            Item.adapter().flush(<span class="hljs-string">'destroy'</span>);
+            expect(item.$$destroying).toBe(<span class="hljs-literal">false</span>);
+            expect(item.$$saving).toBe(<span class="hljs-literal">false</span>);
+        });
+    });
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">assertMakesApiCallAndReturnsNothing</span><span class="hljs-params">(meth, args)</span> {</span>
+        assertMakesApiCallAndFiresSuccessCallback(meth, args, [], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+            expect(response.result).toBe(<span class="hljs-literal">null</span>);
+            expect(response.meta).toBe(<span class="hljs-string">'meta'</span>);
+        });
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">assertMakesApiCallAndReturnsASingleInstance</span><span class="hljs-params">(meth, args)</span> {</span>
+        <span class="hljs-keyword">var</span> attrs = {
+            id: <span class="hljs-string">'id'</span>
+        };
+        assertMakesApiCallAndFiresSuccessCallback(meth, args, [attrs], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+            <span class="hljs-keyword">var</span> item = response.result;
+            expect(item.asJson()).toEqual(attrs);
+            expect(item.constructor).toBe(Item);
+            expect(response.meta).toBe(<span class="hljs-string">'meta'</span>);
+        });
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">assertMakesApiCallAndReturnsAnArrayOfInstances</span><span class="hljs-params">(meth, args)</span> {</span>
+        <span class="hljs-keyword">var</span> attrs = [{
+            id: <span class="hljs-string">'id1'</span>
+        }, {
+            id: <span class="hljs-string">'id2'</span>
+        }];
+        assertMakesApiCallAndFiresSuccessCallback(<span class="hljs-string">'index'</span>, args, attrs, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+            <span class="hljs-keyword">var</span> items = response.result;
+            <span class="hljs-keyword">var</span> json = [];
+            angular.forEach(items, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(item)</span> {</span>
+                expect(item.constructor).toBe(Item);
+                json.push(item.asJson());
+            });
+            expect(json).toEqual(attrs);
+            expect(response.meta).toBe(<span class="hljs-string">'meta'</span>);
+        });
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">assertMakesApiCallAndFiresSuccessCallback</span><span class="hljs-params">(meth, args, returnAttrs, success)</span> {</span>
+        <span class="hljs-keyword">var</span> toBeSpiedOn = {
+            onSuccess: success
+        };
+        spyOn(toBeSpiedOn, <span class="hljs-string">'onSuccess'</span>).and.callThrough();
+
+        Item.adapter().expect(meth, <span class="hljs-string">'items'</span>, args, {
+            result: returnAttrs,
+            meta: <span class="hljs-string">'meta'</span>
+        });
+
+        Item[meth].apply(Item, args).then(toBeSpiedOn.onSuccess);
+        expect(toBeSpiedOn.onSuccess).not.toHaveBeenCalled(); <span class="hljs-comment">// results have not come back from the server yet</span>
+        Item.adapter().flush(meth);
+        expect(toBeSpiedOn.onSuccess).toHaveBeenCalled();
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">assertMakesApiCallAndFiresErrorCallback</span><span class="hljs-params">(meth, args)</span> {</span>
+        <span class="hljs-keyword">var</span> error = {
+            message: <span class="hljs-string">'message'</span>
+        };
+        <span class="hljs-keyword">var</span> toBeSpiedOn = {
+            onError: <span class="hljs-literal">null</span>
+        };
+        spyOn(toBeSpiedOn, <span class="hljs-string">'onError'</span>);
+
+        Item.adapter().expect(meth, <span class="hljs-string">'items'</span>, args, {
+            error: error
+        });
+
+        Item[meth].apply(Item, args).catch(toBeSpiedOn.onError);
+        expect(toBeSpiedOn.onError).not.toHaveBeenCalled(); <span class="hljs-comment">// results have not come back from the server yet</span>
+        Item.adapter().flush(meth);
+        expect(toBeSpiedOn.onError).toHaveBeenCalledWith(error);
+    }
+
+
+
+});</div></div></div></div></body></html>

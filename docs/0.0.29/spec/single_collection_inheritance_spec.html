@@ -1,0 +1,195 @@
+<!DOCTYPE html><html lang="en"><head><title>spec/single_collection_inheritance_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/single_collection_inheritance_spec"><meta name="groc-project-path" content="spec/single_collection_inheritance_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/single_collection_inheritance_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+
+describe(<span class="hljs-string">'Iguana.SingleCollectionInheritance'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+
+    <span class="hljs-keyword">var</span> Iguana, Item;
+
+    beforeEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        module(<span class="hljs-string">'Iguana'</span>);
+
+        inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_Iguana_)</span> {</span>
+            Iguana = _Iguana_;
+            Iguana.setAdapter(<span class="hljs-string">'Iguana.Mock.Adapter'</span>);
+        });
+
+    });
+
+    describe(<span class="hljs-string">'new'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        <span class="hljs-keyword">var</span> ItemType1, ItemType2;
+
+        beforeEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="single-collection-inheritance">Single Collection Inheritance</h1>
+<p>You may have different documents in a single collection that
+you want to be mapped to different classes.  This is known as
+&quot;ploymorphism&quot; or &quot;single collection inheritance.&quot;  </p>
+<p>In order to implement single collection inheritance, you 
+will need to set aliases for your classes.
+Doing so will cause a property to be added to each document (by default,
+the property is __iguana_type), 
+indicating which class it should be mapped to.  This allows
+iguana to map each document to the appropriate class.</p></div></div><div class="code"><div class="wrapper">            inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...</p></div></div><div class="code"><div class="wrapper">                Item = Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                    <span class="hljs-keyword">this</span>.alias(<span class="hljs-string">'item'</span>);
+                    <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">'items'</span>);
+                });
+
+                ItemType1 = Item.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                    <span class="hljs-keyword">this</span>.alias(<span class="hljs-string">'item_type_1'</span>);
+                });
+
+                ItemType2 = Item.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                    <span class="hljs-keyword">this</span>.alias(<span class="hljs-string">'item_type_2'</span>);
+                });
+            });
+
+        });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Now that you have called alias(), when a document 
+is loaded up over the api, it will be instantiated
+as instance of the appropriate class.</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should create an instance of a subclass if the type property matches the alias'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-comment">//There are two items in the database</span>
+            <span class="hljs-keyword">var</span> items = [{
+                id: <span class="hljs-number">1</span>,
+                __iguana_type: <span class="hljs-string">'item_type_1'</span>
+            }, {
+                id: <span class="hljs-number">2</span>,
+                __iguana_type: <span class="hljs-string">'item_type_2'</span>
+            }];
+
+            <span class="hljs-comment">//Mocking out the adapter to load up the first item.</span>
+            Item.adapter().expect(<span class="hljs-string">'show'</span>, <span class="hljs-string">'items'</span>, <span class="hljs-number">1</span>, {
+                result: [items[<span class="hljs-number">0</span>]]
+            });
+            Item.show(<span class="hljs-number">1</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+                <span class="hljs-keyword">var</span> item = response.result;
+
+                <span class="hljs-comment">//Since the __iguana_type is 'item_type_1', the result is </span>
+                <span class="hljs-comment">//an instance of ItemType1</span>
+                expect(item.constructor).toBe(ItemType1);
+            });
+
+            <span class="hljs-comment">//Mocking out the adapter to load up the second item.</span>
+            Item.adapter().expect(<span class="hljs-string">'show'</span>, <span class="hljs-string">'items'</span>, <span class="hljs-number">2</span>, {
+                result: [items[<span class="hljs-number">1</span>]]
+            });
+            Item.show(<span class="hljs-number">2</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+                <span class="hljs-keyword">var</span> item = response.result;
+
+                <span class="hljs-comment">//Since the __iguana_type is 'item_type_2', the result is </span>
+                <span class="hljs-comment">//an instance of ItemType2</span>
+                expect(item.constructor).toBe(ItemType2);
+            });
+        });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>When a new instance is created, the __iguana_type is set automatically.</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should create an instance of the class and set the __iguana_type if the __iguana_type is not set'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">var</span> instance = ItemType1.new({});
+            expect(instance.constructor).toBe(ItemType1);
+            expect(instance.__iguana_type).toBe(<span class="hljs-string">'item_type_1'</span>);
+        });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Iguana classes cannot be created with &#39;new Item()&#39;; You must call &#39;Item.new&#39; </p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should only allow instances to be created with Item.new, not new Item()'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> func = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">new</span> Item();
+            };
+            expect(func).toThrow(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()'</span>));
+        });
+
+        it(<span class="hljs-string">'should throw an error if no class matches the __iguana_type property'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">var</span> func = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                Item.new({
+                    __iguana_type: <span class="hljs-string">'noItemForThis'</span>
+                });
+            };
+            expect(func).toThrow(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'No class could be found for __iguana_type="noItemForThis".'</span>));
+        });
+
+        it(<span class="hljs-string">'should not set the type property if there is no alias'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> UnAliasedItem = Iguana.subclass();
+            <span class="hljs-keyword">var</span> instance = UnAliasedItem.new({});
+            expect(instance.constructor).toBe(UnAliasedItem);
+            expect(instance.__iguana_type).toBeUndefined();
+        });
+
+        it(<span class="hljs-string">'should create an instance of the class if the type property matches the sciAlias'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> instance = Item.new({
+                __iguana_type: <span class="hljs-string">'item'</span>
+            });
+            expect(instance.constructor).toBe(Item);
+        });
+
+        it(<span class="hljs-string">'should work with a lazy-loaded class'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> mockClass = jasmine.createSpy(<span class="hljs-string">'mockClass'</span>);
+            mockClass.inheritsFrom = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+            };
+            mockClass.new = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> mockClass();
+            };
+
+            spyOn(Item, <span class="hljs-string">'getAliasedKlass'</span>).and.returnValue(mockClass);
+            <span class="hljs-keyword">var</span> instance = Item.new({
+                __iguana_type: <span class="hljs-string">'lazy_loaded_item'</span>
+            });
+            expect(Item.getAliasedKlass).toHaveBeenCalledWith(<span class="hljs-string">'lazy_loaded_item'</span>, <span class="hljs-literal">false</span>);
+            expect(instance.constructor).toBe(mockClass);
+        });
+
+    });
+
+    describe(<span class="hljs-string">'sciProperty'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+
+        it(<span class="hljs-string">'should default to __iguana_type'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            expect(Iguana.sciProperty).toBe(<span class="hljs-string">'__iguana_type'</span>);
+            expect(Iguana.subclass().sciProperty).toBe(<span class="hljs-string">'__iguana_type'</span>);
+        });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="configuring-the-property-used-for-the-alias">Configuring the property used for the alias.</h3>
+<p>If you want to use something other than &#39;__iguana_type&#39; for
+the property that defines the alias, you can use &#39;setSciProperty&#39;.</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should be overridable'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> Item = Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">this</span>.alias(<span class="hljs-string">'item'</span>);
+                <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">'items'</span>);
+                <span class="hljs-keyword">this</span>.setSciProperty(<span class="hljs-string">'item_type'</span>);
+            });
+
+            <span class="hljs-keyword">var</span> ItemType1 = Item.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">this</span>.alias(<span class="hljs-string">'item_type_1'</span>);
+            });
+
+            <span class="hljs-keyword">var</span> ItemType2 = Item.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">this</span>.alias(<span class="hljs-string">'item_type_2'</span>);
+            });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Since we called setSciProperty(&#39;itemType&#39;), we should
+use the itemType property to define the alias of the 
+class used to instantiate the document.</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">var</span> item = {
+                id: <span class="hljs-number">1</span>,
+                item_type: <span class="hljs-string">'item_type_1'</span>
+            };
+
+            <span class="hljs-comment">//Mocking out the adapter to load up the item.</span>
+            Item.adapter().expect(<span class="hljs-string">'show'</span>, <span class="hljs-string">'items'</span>, <span class="hljs-number">1</span>, {
+                result: [item]
+            });
+            Item.show(<span class="hljs-number">1</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+                <span class="hljs-keyword">var</span> loadedItem = response.result;
+
+                <span class="hljs-comment">//Since the __iguana_type is 'item_type_1', the result is </span>
+                <span class="hljs-comment">//an instance of ItemType1</span>
+                expect(loadedItem.constructor).toBe(ItemType1);
+            });
+        });
+
+    });
+
+    describe(<span class="hljs-string">'create'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="create-class-method">create class method</h3>
+<p>Calling the create method on a subclass will
+automatically set the appropriate class</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should set the sciProperty'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> Item = Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">this</span>.alias(<span class="hljs-string">'item'</span>);
+                <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">'items'</span>);
+            });
+
+            <span class="hljs-keyword">var</span> ItemType1 = Item.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">this</span>.alias(<span class="hljs-string">'item_type_1'</span>);
+            });
+
+            <span class="hljs-keyword">var</span> expectedObject = {
+                <span class="hljs-string">'__iguana_type'</span>: <span class="hljs-string">'item_type_1'</span>
+            };
+            ItemType1.adapter().expect(<span class="hljs-string">'create'</span>, <span class="hljs-string">'items'</span>, expectedObject, {
+                result: [expectedObject]
+            });
+            ItemType1.create({});
+            ItemType1.adapter().flush(<span class="hljs-string">'create'</span>);
+        });
+
+    });
+
+
+});</div></div></div></div></body></html>
