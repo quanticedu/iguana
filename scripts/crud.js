@@ -81,12 +81,12 @@ angular.module('Iguana')
                         return instance.save(metadata, options);
                     },
 
-                    destroy: function(id, options) {
+                    destroy: function(id, metadata, options) {
                         var args = [id];
                         if (options) {
                             args.push(options);
                         }
-                        return this._callAdapterMeth('destroy', args).then(function(response) {
+                        return this._callAdapterMeth('destroy', args, metadata).then(function(response) {
                             return this._prepareEmptyResponse(response);
                         }.bind(this));
                     },
@@ -239,10 +239,10 @@ angular.module('Iguana')
                         }.bind(this));
                     },
 
-                    destroy: function(options) {
+                    destroy: function(options, metadata) {
                         this.$$destroying = true;
                         this.$$saving = true;
-                        var returnValue = this.constructor.destroy(this[this.idProperty()], options);
+                        var returnValue = this.constructor.destroy(this[this.idProperty()], metadata, options);
                         this.$$savePromise = returnValue;
                         returnValue.finally(function() {
                             this.$$destroying = false;

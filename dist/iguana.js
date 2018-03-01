@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('Iguana', ['SuperModel', 'ngResource'])
     .provider('Iguana', function() {
 
@@ -44,7 +46,7 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
 
                     this.extend({
                         expect: function() {
-                            throw new Error("There is no 'expect' method.  Make sure to include iguana-mock.js and inject MockIguana.")
+                            throw new Error('There is no \'expect\' method.  Make sure to include iguana-mock.js and inject MockIguana.');
                         },
                     });
 
@@ -55,7 +57,7 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                             }
 
                             if (typeof attrs !== 'object' || Object.prototype.toString.call(attrs) === '[object Array]') {
-                                throw new Error("Expecting to instantiate Iguana class with object, got '" + attrs + "'");
+                                throw new Error('Expecting to instantiate Iguana class with object, got \'' + attrs + '\'');
                             }
 
                             this.copyAttrsOnInitialize(attrs);
@@ -76,11 +78,13 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                                 angular.extend(this, this.$$sourceAttrs);
                             });
                         }
-                    }
+                    };
 
                 });
 
-                if (this._defaultAdapterName) Iguana.setAdapter(this._defaultAdapterName);
+                if (this._defaultAdapterName) {
+                    Iguana.setAdapter(this._defaultAdapterName);
+                }
                 Iguana.setBaseUrl(this._defaultBaseUrl);
 
                 if (this._defaultRequestOptions) {
@@ -94,82 +98,86 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
         ];
 
     });
+'use strict';
+
 angular.module('Iguana')
-.factory('Iguana.Adapters.AdapterBase', ['$q', 'SuperModel', function($q, SuperModel){
+    .factory('Iguana.Adapters.AdapterBase', ['$q', 'SuperModel',
+        function($q, SuperModel) {
 
-    /**
-    # Creating adapters
-    To create a new adapter, you will need to create a new service that
-    subclasses Iguana.Adapters.AdapterBase.  
-    For an example, see [Iguana.Adapters.RestfulIdStyle](restful_id_style.html)
+            /**
+                # Creating adapters
+                To create a new adapter, you will need to create a new service that
+                subclasses Iguana.Adapters.AdapterBase.
+                For an example, see [Iguana.Adapters.RestfulIdStyle](restful_id_style.html)
 
-    Your subclass should define some or all of the methods described below.    
+                Your subclass should define some or all of the methods described below.
 
-    All methods should return a promise which will be resolved with an 
-    object that has the following two properties:
+                All methods should return a promise which will be resolved with an
+                object that has the following two properties:
 
-    **result** - an array of documents.  
-    **metadata** - anything you want it to be.
-    */
-        
-        return SuperModel.subclass(function() {
-           
-            return {
-                initialize: function(iguanaKlass) {
-                    this.iguanaKlass = iguanaKlass;
-                },
-                
-                // ### show
-                // Any arguments passed to Iguana.show will be passed through to 
-                // the adapter, allowing the adapter to support any kind of 
-                // querying functionality.  
-                //  
-                // The 'result' array should have only a single document.  Any 
-                // subsequent documents will be ignored.
-                show: function(collection, arg1, arg2) {
-                    throw new Error("Adapter does not support show method");
-                },
-                
-                // ### index
-                // Any arguments passed to Iguana.index will be passed through to 
-                // the adapter, allowing the adapter to support any kind of 
-                // querying functionality.
-                //  
-                // The 'result' array can have any number of documents
-                index: function(collection, arg1, arg2) {
-                    throw new Error("Adapter does not support index method");
-                },
-                
-                // ### create
-                // A document will be passed to create
-                //  
-                // The 'result' array should have only a single document.  Any 
-                // subsequent documents will be ignored.
-                create: function(collection, obj) {
-                    throw new Error("Adapter does not support create method");
-                },
-                
-                // ### update
-                // A document will be passed to update
-                //  
-                // The 'result' array should have only a single document.  Any 
-                // subsequent documents will be ignored.
-                update: function(collection, obj) {
-                    throw new Error("Adapter does not support update method");
-                },
-                
-                // ### destroy
-                // An id will be passed to destroy.  (Maybe we need to support other
-                // querying functionality here as well?)  
-                //   
-                // The 'result' array should be empty.  Any contents will be ignored.
-                destroy: function(collection, id) {
-                    throw new Error("Adapter does not support destroy method");
-                }
-            };
-        })
-        
-    }]);
+                **result** - an array of documents.
+                **metadata** - anything you want it to be.
+            */
+
+            return SuperModel.subclass(function() {
+
+                return {
+                    initialize: function(iguanaKlass) {
+                        this.iguanaKlass = iguanaKlass;
+                    },
+
+                    // ### show
+                    // Any arguments passed to Iguana.show will be passed through to
+                    // the adapter, allowing the adapter to support any kind of
+                    // querying functionality.
+                    //
+                    // The 'result' array should have only a single document.  Any
+                    // subsequent documents will be ignored.
+                    show: function() {
+                        throw new Error('Adapter does not support show method');
+                    },
+
+                    // ### index
+                    // Any arguments passed to Iguana.index will be passed through to
+                    // the adapter, allowing the adapter to support any kind of
+                    // querying functionality.
+                    //
+                    // The 'result' array can have any number of documents
+                    index: function() {
+                        throw new Error('Adapter does not support index method');
+                    },
+
+                    // ### create
+                    // A document will be passed to create
+                    //
+                    // The 'result' array should have only a single document.  Any
+                    // subsequent documents will be ignored.
+                    create: function() {
+                        throw new Error('Adapter does not support create method');
+                    },
+
+                    // ### update
+                    // A document will be passed to update
+                    //
+                    // The 'result' array should have only a single document.  Any
+                    // subsequent documents will be ignored.
+                    update: function() {
+                        throw new Error('Adapter does not support update method');
+                    },
+
+                    // ### destroy
+                    // An id will be passed to destroy.  (Maybe we need to support other
+                    // querying functionality here as well?)
+                    //
+                    // The 'result' array should be empty.  Any contents will be ignored.
+                    destroy: function() {
+                        throw new Error('Adapter does not support destroy method');
+                    }
+                };
+            });
+
+        }
+    ]);
 'use strict';
 
 angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
@@ -211,11 +219,13 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
                         }, options);
                     },
 
-                    destroy: function(collection, id, options) {
+                    destroy: function(collection, id, metadata, options) {
                         if (!id) {
                             throw new Error('No id provided');
                         }
-                        var params = {};
+                        var params = {
+                            meta: metadata
+                        };
                         params[this.idProperty] = id;
                         return this._makeApiCall(collection, 'destroy', params, options);
                     },
@@ -256,7 +266,7 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
                     _getResource: function(collection, options) {
                         var url = [this.iguanaKlass.baseUrl, collection, ':' + this.idProperty].join('/') + '.json';
                         options = angular.extend({}, this.iguanaKlass.defaultRequestOptions(), options || {});
-                        
+
                         return $resource(url, {}, {
                             'index': angular.extend({}, options, {
                                 method: 'GET'
@@ -282,6 +292,8 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
 
         }
     ]);
+'use strict';
+
 angular.module('Iguana')
     .factory('Iguana.Alias', ['$injector',
         function($injector) {
@@ -306,7 +318,7 @@ angular.module('Iguana')
                         if (angular.isUndefined(throwIfUnfound)) {
                             throwIfUnfound = true;
                         }
-                        
+
                         if (!this._aliasedKlasses[alias]) {
                             // Check the injectables map for the alias.
                             var path = this.injectablesMap[alias];
@@ -338,13 +350,15 @@ angular.module('Iguana')
                         angular.extend(this.injectablesMap, obj);
                     },
 
-                    // this same object will be shared between all subclasses of Iguana, 
+                    // this same object will be shared between all subclasses of Iguana,
                     // so any class can access any aliased class
                     _aliasedKlasses: {}
                 }
             };
         }
     ]);
+'use strict';
+
 angular.module('Iguana')
     .factory('Iguana.Callbacks', [
 
@@ -445,12 +459,12 @@ angular.module('Iguana')
                         return instance.save(metadata, options);
                     },
 
-                    destroy: function(id, options) {
+                    destroy: function(id, metadata, options) {
                         var args = [id];
                         if (options) {
                             args.push(options);
                         }
-                        return this._callAdapterMeth('destroy', args).then(function(response) {
+                        return this._callAdapterMeth('destroy', args, metadata).then(function(response) {
                             return this._prepareEmptyResponse(response);
                         }.bind(this));
                     },
@@ -603,10 +617,10 @@ angular.module('Iguana')
                         }.bind(this));
                     },
 
-                    destroy: function(options) {
+                    destroy: function(options, metadata) {
                         this.$$destroying = true;
                         this.$$saving = true;
-                        var returnValue = this.constructor.destroy(this[this.idProperty()], options);
+                        var returnValue = this.constructor.destroy(this[this.idProperty()], metadata, options);
                         this.$$savePromise = returnValue;
                         returnValue.finally(function() {
                             this.$$destroying = false;
@@ -625,143 +639,147 @@ angular.module('Iguana')
 
         }
     ]);
- angular.module('Iguana')
-     .factory('Iguana.Embeds', ['AClassAbove',
-         function(Class) {
+'use strict';
 
-             var EmbedRelationship = Class.subclass({
-                 initialize: function(propName, klassFetcher) {
-                     // We don't want to worry about whether the class has been aliased or
-                     // yet when the relationship is set up.  So long as it has been aliased by the
-                     // time we try to process a relationship, that's good enough.  So we take
-                     // a function that will let us fetch the klass just in time.
-                     this.propName = propName;
-                     this.klassFetcher = klassFetcher;
-                 },
+angular.module('Iguana')
+    .factory('Iguana.Embeds', ['AClassAbove',
+        function(Class) {
 
-                 process: function(parent, attrs) {
-                     var sourceValue = attrs[this.propName];
-                     if (!sourceValue) return;
-                     attrs[this.propName] = this._instantiate(parent, sourceValue);
-                 }
-             });
+            var EmbedRelationship = Class.subclass({
+                initialize: function(propName, klassFetcher) {
+                    // We don't want to worry about whether the class has been aliased or
+                    // yet when the relationship is set up.  So long as it has been aliased by the
+                    // time we try to process a relationship, that's good enough.  So we take
+                    // a function that will let us fetch the klass just in time.
+                    this.propName = propName;
+                    this.klassFetcher = klassFetcher;
+                },
 
-             var EmbedManyRelationship = EmbedRelationship.subclass({
+                process: function(parent, attrs) {
+                    var sourceValue = attrs[this.propName];
+                    if (!sourceValue) {
+                        return;
+                    }
+                    attrs[this.propName] = this._instantiate(parent, sourceValue);
+                }
+            });
 
-                 _instantiate: function(parent, sourceValue) {
-                     var target;
+            var EmbedManyRelationship = EmbedRelationship.subclass({
 
-                     // figure out if we are dealing with an array or an object
-                     if (Object.prototype.toString.call(sourceValue) === '[object Array]') {
-                         target = [];
-                     } else if (typeof sourceValue === 'object') {
-                         target = {};
-                     } else {
-                         throw new Error('Expecting array or object for embedsMany relationship "' + this.propName + '". Got ' + sourceValue);
-                     }
+                _instantiate: function(parent, sourceValue) {
+                    var target;
 
-                     angular.forEach(sourceValue, function(val, key) {
-                         var instance = this.klassFetcher().new(val);
-                         instance.$$embeddedIn = parent;
-                         target[key] = instance;
-                     }.bind(this));
+                    // figure out if we are dealing with an array or an object
+                    if (Object.prototype.toString.call(sourceValue) === '[object Array]') {
+                        target = [];
+                    } else if (typeof sourceValue === 'object') {
+                        target = {};
+                    } else {
+                        throw new Error('Expecting array or object for embedsMany relationship "' + this.propName + '". Got ' + sourceValue);
+                    }
 
-                     return target;
-                 }
+                    angular.forEach(sourceValue, function(val, key) {
+                        var instance = this.klassFetcher().new(val);
+                        instance.$$embeddedIn = parent;
+                        target[key] = instance;
+                    }.bind(this));
 
-             });
+                    return target;
+                }
 
-             var EmbedOneRelationship = EmbedRelationship.subclass({
+            });
 
-                 _instantiate: function(parent, sourceValue) {
-                     var instance = this.klassFetcher().new(sourceValue);
-                     instance.$$embeddedIn = parent;
-                     return instance;
-                 }
+            var EmbedOneRelationship = EmbedRelationship.subclass({
 
-             });
+                _instantiate: function(parent, sourceValue) {
+                    var instance = this.klassFetcher().new(sourceValue);
+                    instance.$$embeddedIn = parent;
+                    return instance;
+                }
 
-             return {
+            });
 
-                 included: function(Iguana) {
-                     Iguana.extendableObject('embedRelationships');
-                     Iguana.setCallback('before', 'copyAttrs', 'processEmbeds');
+            return {
 
-                     // // We would like to bring this back, but it can
-                     // // case MaxCallStack errors in Chrome.  Maybe
-                     // // we can eventually find a solution
-                     // Iguana.setCallback('around', 'save', function(save) {
-                     //     var wrapped = save;
-                     // 
-                     //     
-                     //     
-                     //     // var relationships = this.embedRelationships();
-                     //     // for (var propName in relationships) {
-                     //     //     if (!relationships.hasOwnProperty(propName)) { 
-                     //     //         continue
-                     //     //     }
-                     //     //     var relationship = relationships[propName];
-                     //     //     var value = this[propName];
-                     //     //     if (value) {
-                     //     //         var isArray = (Object.prototype.toString.call(value) === '[object Array]');
-                     //     //         var values = isArray ? value : [value];
-                     //     //         values.forEach(function(item) {
-                     //     //             var reWrapped = function(wrapped) {
-                     //     //                 item.runCallbacks('save', wrapped);
-                     //     //             }.bind(item, wrapped);
-                     //     //             wrapped = reWrapped;
-                     //     //         });
-                     //     //     }
-                     //     // }
-                     // 
-                     //     wrapped();
-                     // });
-                 },
+                included: function(Iguana) {
+                    Iguana.extendableObject('embedRelationships');
+                    Iguana.setCallback('before', 'copyAttrs', 'processEmbeds');
 
-                 classMixin: {
+                    // // We would like to bring this back, but it can
+                    // // case MaxCallStack errors in Chrome.  Maybe
+                    // // we can eventually find a solution
+                    // Iguana.setCallback('around', 'save', function(save) {
+                    //     var wrapped = save;
+                    //
+                    //
+                    //
+                    //     // var relationships = this.embedRelationships();
+                    //     // for (var propName in relationships) {
+                    //     //     if (!relationships.hasOwnProperty(propName)) {
+                    //     //         continue
+                    //     //     }
+                    //     //     var relationship = relationships[propName];
+                    //     //     var value = this[propName];
+                    //     //     if (value) {
+                    //     //         var isArray = (Object.prototype.toString.call(value) === '[object Array]');
+                    //     //         var values = isArray ? value : [value];
+                    //     //         values.forEach(function(item) {
+                    //     //             var reWrapped = function(wrapped) {
+                    //     //                 item.runCallbacks('save', wrapped);
+                    //     //             }.bind(item, wrapped);
+                    //     //             wrapped = reWrapped;
+                    //     //         });
+                    //     //     }
+                    //     // }
+                    //
+                    //     wrapped();
+                    // });
+                },
 
-                     embedsMany: function(propName, classAlias) {
-                         this.embedRelationships().set(propName, new EmbedManyRelationship(
-                             propName,
-                             this.getAliasedKlass.bind(this, classAlias)
-                         ));
-                     },
+                classMixin: {
 
-                     embedsOne: function(propName, classAlias) {
-                         this.embedRelationships().set(propName, new EmbedOneRelationship(
-                             propName,
-                             this.getAliasedKlass.bind(this, classAlias)
-                         ));
-                     },
+                    embedsMany: function(propName, classAlias) {
+                        this.embedRelationships().set(propName, new EmbedManyRelationship(
+                            propName,
+                            this.getAliasedKlass.bind(this, classAlias)
+                        ));
+                    },
 
-                     embeddedIn: function(propName) {
-                         this.extend({
-                             '_embeddedIn': propName
-                         });
-                         var obj = {};
-                         obj[propName] = function() {
-                             return this.$$embeddedIn;
-                         };
-                         this.include(obj);
-                     }
-                 },
+                    embedsOne: function(propName, classAlias) {
+                        this.embedRelationships().set(propName, new EmbedOneRelationship(
+                            propName,
+                            this.getAliasedKlass.bind(this, classAlias)
+                        ));
+                    },
 
-                 instanceMixin: {
-                     embedRelationships: function() {
-                         return this.constructor.embedRelationships.apply(this.constructor);
-                     },
+                    embeddedIn: function(propName) {
+                        this.extend({
+                            '_embeddedIn': propName
+                        });
+                        var obj = {};
+                        obj[propName] = function() {
+                            return this.$$embeddedIn;
+                        };
+                        this.include(obj);
+                    }
+                },
 
-                     processEmbeds: function() {
-                         this.runCallbacks('processEmbeds', function() {
-                             angular.forEach(this.embedRelationships(), function(relationship) {
-                                 relationship.process(this, this.$$sourceAttrs);
-                             }.bind(this));
-                         });
-                     }
-                 }
-             };
-         }
-     ]);
+                instanceMixin: {
+                    embedRelationships: function() {
+                        return this.constructor.embedRelationships.apply(this.constructor);
+                    },
+
+                    processEmbeds: function() {
+                        this.runCallbacks('processEmbeds', function() {
+                            angular.forEach(this.embedRelationships(), function(relationship) {
+                                relationship.process(this, this.$$sourceAttrs);
+                            }.bind(this));
+                        });
+                    }
+                }
+            };
+        }
+    ]);
 'use strict';
 
 angular.module('Iguana')
@@ -815,30 +833,36 @@ angular.module('Iguana')
 
         }
     ]);
+'use strict';
+
 angular.module('Iguana')
-.factory('Iguana.Serializers', [function(){
-        
-        
-        return {
-            instanceMixin: {
-                asJson: function() {
-                    return angular.fromJson(angular.toJson(this));
-                },
-                
-                toJson: function() {
-                    return angular.toJson(this);
+    .factory('Iguana.Serializers', [
+
+        function() {
+
+            return {
+                instanceMixin: {
+                    asJson: function() {
+                        return angular.fromJson(angular.toJson(this));
+                    },
+
+                    toJson: function() {
+                        return angular.toJson(this);
+                    }
                 }
-            }
-        };
-        
-    }]);
+            };
+
+        }
+    ]);
+'use strict';
+
 angular.module('Iguana')
     .factory('Iguana.SingleCollectionInheritance', function() {
 
         return {
 
             included: function(Iguana) {
-                // if the class has an alias, but the type property is 
+                // if the class has an alias, but the type property is
                 // not set, then set it to the alias.
                 Iguana.setCallback('after', 'copyAttrs', function() {
                     var sciProperty = this.constructor.sciProperty;
@@ -850,7 +874,7 @@ angular.module('Iguana')
                 Iguana.setCallback('before', 'copyAttrsOnInitialize', function() {
                     var attrs = this.$$sourceAttrs;
                     if (!attrs || !attrs.$$instantiatedWithNew) {
-                        throw new Error("Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()");
+                        throw new Error('Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()');
                     }
 
                     delete attrs.$$instantiatedWithNew;
@@ -879,7 +903,7 @@ angular.module('Iguana')
                     }
 
                     if (typeof attrs !== 'object' || Object.prototype.toString.call(attrs) === '[object Array]') {
-                        throw new Error("Expecting to instantiate Iguana class with object, got '" + attrs + "'");
+                        throw new Error('Expecting to instantiate Iguana class with object, got \'' + attrs + '\'');
                     }
 
                     //Ensure that all instances are created with Iguana.new rather than 'new Iguana'
@@ -889,14 +913,14 @@ angular.module('Iguana')
                     var instance;
 
                     // Since the lazy-loading relies on sciProperty, it can only work on subclasses. I guess this makes
-                    // sense, since we'll always be loading things from the db with SomeItem.show() or 
+                    // sense, since we'll always be loading things from the db with SomeItem.show() or
                     // whatever.
                     if (!attrs.hasOwnProperty(this.sciProperty)) {
                         instance = new this(attrs);
                     } else if (attrs[this.sciProperty] && attrs[this.sciProperty] === this.alias()) {
                         instance = new this(attrs);
                     } else {
-                        var klass
+                        var klass;
                         klass = this.getAliasedKlass(attrs[this.sciProperty], false);
 
                         if (klass && !klass.inheritsFrom(this)) {

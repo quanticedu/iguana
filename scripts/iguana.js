@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('Iguana', ['SuperModel', 'ngResource'])
     .provider('Iguana', function() {
 
@@ -44,7 +46,7 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
 
                     this.extend({
                         expect: function() {
-                            throw new Error("There is no 'expect' method.  Make sure to include iguana-mock.js and inject MockIguana.")
+                            throw new Error('There is no \'expect\' method.  Make sure to include iguana-mock.js and inject MockIguana.');
                         },
                     });
 
@@ -55,7 +57,7 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                             }
 
                             if (typeof attrs !== 'object' || Object.prototype.toString.call(attrs) === '[object Array]') {
-                                throw new Error("Expecting to instantiate Iguana class with object, got '" + attrs + "'");
+                                throw new Error('Expecting to instantiate Iguana class with object, got \'' + attrs + '\'');
                             }
 
                             this.copyAttrsOnInitialize(attrs);
@@ -76,11 +78,13 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                                 angular.extend(this, this.$$sourceAttrs);
                             });
                         }
-                    }
+                    };
 
                 });
 
-                if (this._defaultAdapterName) Iguana.setAdapter(this._defaultAdapterName);
+                if (this._defaultAdapterName) {
+                    Iguana.setAdapter(this._defaultAdapterName);
+                }
                 Iguana.setBaseUrl(this._defaultBaseUrl);
 
                 if (this._defaultRequestOptions) {

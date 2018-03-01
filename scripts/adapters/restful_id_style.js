@@ -39,11 +39,13 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
                         }, options);
                     },
 
-                    destroy: function(collection, id, options) {
+                    destroy: function(collection, id, metadata, options) {
                         if (!id) {
                             throw new Error('No id provided');
                         }
-                        var params = {};
+                        var params = {
+                            meta: metadata
+                        };
                         params[this.idProperty] = id;
                         return this._makeApiCall(collection, 'destroy', params, options);
                     },
@@ -84,7 +86,7 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
                     _getResource: function(collection, options) {
                         var url = [this.iguanaKlass.baseUrl, collection, ':' + this.idProperty].join('/') + '.json';
                         options = angular.extend({}, this.iguanaKlass.defaultRequestOptions(), options || {});
-                        
+
                         return $resource(url, {}, {
                             'index': angular.extend({}, options, {
                                 method: 'GET'

@@ -1,10 +1,12 @@
+'use strict';
+
 angular.module('Iguana')
     .factory('Iguana.SingleCollectionInheritance', function() {
 
         return {
 
             included: function(Iguana) {
-                // if the class has an alias, but the type property is 
+                // if the class has an alias, but the type property is
                 // not set, then set it to the alias.
                 Iguana.setCallback('after', 'copyAttrs', function() {
                     var sciProperty = this.constructor.sciProperty;
@@ -16,7 +18,7 @@ angular.module('Iguana')
                 Iguana.setCallback('before', 'copyAttrsOnInitialize', function() {
                     var attrs = this.$$sourceAttrs;
                     if (!attrs || !attrs.$$instantiatedWithNew) {
-                        throw new Error("Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()");
+                        throw new Error('Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()');
                     }
 
                     delete attrs.$$instantiatedWithNew;
@@ -45,7 +47,7 @@ angular.module('Iguana')
                     }
 
                     if (typeof attrs !== 'object' || Object.prototype.toString.call(attrs) === '[object Array]') {
-                        throw new Error("Expecting to instantiate Iguana class with object, got '" + attrs + "'");
+                        throw new Error('Expecting to instantiate Iguana class with object, got \'' + attrs + '\'');
                     }
 
                     //Ensure that all instances are created with Iguana.new rather than 'new Iguana'
@@ -55,14 +57,14 @@ angular.module('Iguana')
                     var instance;
 
                     // Since the lazy-loading relies on sciProperty, it can only work on subclasses. I guess this makes
-                    // sense, since we'll always be loading things from the db with SomeItem.show() or 
+                    // sense, since we'll always be loading things from the db with SomeItem.show() or
                     // whatever.
                     if (!attrs.hasOwnProperty(this.sciProperty)) {
                         instance = new this(attrs);
                     } else if (attrs[this.sciProperty] && attrs[this.sciProperty] === this.alias()) {
                         instance = new this(attrs);
                     } else {
-                        var klass
+                        var klass;
                         klass = this.getAliasedKlass(attrs[this.sciProperty], false);
 
                         if (klass && !klass.inheritsFrom(this)) {

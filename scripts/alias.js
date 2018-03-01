@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('Iguana')
     .factory('Iguana.Alias', ['$injector',
         function($injector) {
@@ -22,7 +24,7 @@ angular.module('Iguana')
                         if (angular.isUndefined(throwIfUnfound)) {
                             throwIfUnfound = true;
                         }
-                        
+
                         if (!this._aliasedKlasses[alias]) {
                             // Check the injectables map for the alias.
                             var path = this.injectablesMap[alias];
@@ -54,7 +56,7 @@ angular.module('Iguana')
                         angular.extend(this.injectablesMap, obj);
                     },
 
-                    // this same object will be shared between all subclasses of Iguana, 
+                    // this same object will be shared between all subclasses of Iguana,
                     // so any class can access any aliased class
                     _aliasedKlasses: {}
                 }
