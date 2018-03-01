@@ -1,152 +1,280 @@
-<!DOCTYPE html><html lang="en"><head><title>spec/adapters/restful_id_style_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="spec/adapters/restful_id_style_spec"><meta name="groc-project-path" content="spec/adapters/restful_id_style_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/adapters/restful_id_style_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+<!DOCTYPE html><html lang="en"><head><title>spec/adapters/restful_id_style_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="spec/adapters/restful_id_style_spec"><meta name="groc-project-path" content="spec/adapters/restful_id_style_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/adapters/restful_id_style_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
 
-<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Iguana.Adapters.RestfulIdStyle&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+describe(<span class="hljs-string">'Iguana.Adapters.RestfulIdStyle'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
 
-    <span class="kd">var</span> <span class="nx">Item</span><span class="p">,</span> <span class="nx">$httpBackend</span><span class="p">,</span> <span class="nx">myApp</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="restfulidstyle-adapter">RestfulIdStyle Adapter</h1>
-
+    <span class="hljs-keyword">var</span> Item, $httpBackend, myApp;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="restfulidstyle-adapter">RestfulIdStyle Adapter</h1>
 <p>This adapter is based on the <a href="https://gist.github.com/wycats/5500104">id-style json api</a> described by Yehuda Katz.</p>
-
 <p>To the api described there, RestfulIdStyle adds the ability to include 
 metadata in responses, as expected by Iguana.  The relationships described in that document
-are not yet supported in RestfulIdStyle, but could be one day.</p></div></div><div class="code"><div class="wrapper">    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="setup">Setup</h3>
-
+are not yet supported in RestfulIdStyle, but could be one day.</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="setup">Setup</h3>
 <p>Add Iguana and Iguana.Adapters.RestfulIdStyle as dependencies to your app and
-set it the default adapter for Iguana.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...        </p></div></div><div class="code"><div class="wrapper">        
-        <span class="nx">myApp</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Iguana&#39;</span><span class="p">,</span> <span class="s1">&#39;Iguana.Adapters.RestfulIdStyle&#39;</span><span class="p">])</span>
-            <span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">IguanaProvider</span><span class="p">){</span>
-                <span class="nx">IguanaProvider</span><span class="p">.</span><span class="nx">setAdapter</span><span class="p">(</span><span class="s1">&#39;Iguana.Adapters.RestfulIdStyle&#39;</span><span class="p">);</span>
-            <span class="p">});</span>
-        
-        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">);</span>
-        
-        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$injector</span><span class="p">,</span> <span class="nx">_Iguana_</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">$httpBackend</span> <span class="o">=</span> <span class="nx">$injector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;$httpBackend&#39;</span><span class="p">);</span>
-            <span class="kd">var</span> <span class="nx">Iguana</span> <span class="o">=</span> <span class="nx">_Iguana_</span><span class="p">;</span>
-            <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="nx">setCollection</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">);</span>
-            <span class="p">});</span>
-        <span class="p">});</span>
-    <span class="p">});</span>
-    
-    <span class="nx">afterEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">verifyNoOutstandingExpectation</span><span class="p">();</span>
-        <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">verifyNoOutstandingRequest</span><span class="p">();</span>
-    <span class="p">});</span>
-    
-    
-    
-    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="show">show</h3>
+set it the default adapter for Iguana.</p></div></div><div class="code"><div class="wrapper">    beforeEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...        </p></div></div><div class="code"><div class="wrapper">        myApp = angular.module(<span class="hljs-string">'myApp'</span>, [<span class="hljs-string">'Iguana'</span>, <span class="hljs-string">'Iguana.Adapters.RestfulIdStyle'</span>])
+            .config(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(IguanaProvider)</span> {</span>
+                IguanaProvider.setAdapter(<span class="hljs-string">'Iguana.Adapters.RestfulIdStyle'</span>);
+            });
 
+        module(<span class="hljs-string">'myApp'</span>);
+
+    });
+
+    afterEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    describe(<span class="hljs-string">'api methods'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        beforeEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($injector, _Iguana_)</span> {</span>
+                $httpBackend = $injector.get(<span class="hljs-string">'$httpBackend'</span>);
+                <span class="hljs-keyword">var</span> Iguana = _Iguana_;
+                Item = Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                    <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">'items'</span>);
+                });
+            });
+        });
+
+        describe(<span class="hljs-string">'show'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="show">show</h3>
 <p>Show accepts a single argument, which is the id of a document.  </p>
+<p>The second argument can be any object, and will be passed through to the server-side api</p></div></div><div class="code"><div class="wrapper">            it(<span class="hljs-string">'should make an api call and process the result'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">var</span> attrs = {
+                    id: <span class="hljs-string">'id'</span>
+                };
+                $httpBackend.expectGET(<span class="hljs-string">'/items/id.json?queryParam=1'</span>).respond(<span class="hljs-number">200</span>, {
+                    contents: {
+                        items: [attrs]
+                    },
+                    meta: <span class="hljs-string">'meta'</span>
+                });
+                spyOn(Item, <span class="hljs-string">'_instantiateFromResponse'</span>);
 
-<p>The second argument can be any object, and will be passed through to the server-side api</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">};</span>
-            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">expectGET</span><span class="p">(</span><span class="s1">&#39;/items/id.json?queryParam=1&#39;</span><span class="p">).</span><span class="nx">respond</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="nx">contents</span><span class="o">:</span> <span class="p">{</span><span class="nx">items</span><span class="o">:</span> <span class="p">[</span><span class="nx">attrs</span><span class="p">]},</span> <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">});</span>
-            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="s1">&#39;_instantiateFromResponse&#39;</span><span class="p">);</span>
-            
-            <span class="c1">//Calling show with an id </span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">queryParam</span><span class="o">:</span> <span class="mi">1</span><span class="p">});</span>
-            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">Item</span><span class="p">.</span><span class="nx">_instantiateFromResponse</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-            <span class="kd">var</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="nx">_instantiateFromResponse</span><span class="p">.</span><span class="nx">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">args</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-            
-            <span class="c1">//Returning an iguana-formatted response</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span>
-                <span class="nx">result</span><span class="o">:</span> <span class="p">[</span><span class="nx">attrs</span><span class="p">],</span>
-                <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span>
-            <span class="p">});</span>
-        <span class="p">});</span>
-        
-    <span class="p">});</span>
-    
-    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="index">index</h3>
+                <span class="hljs-comment">//Calling show with an id </span>
+                Item.show(<span class="hljs-string">'id'</span>, {
+                    queryParam: <span class="hljs-number">1</span>
+                });
+                $httpBackend.flush();
+                expect(Item._instantiateFromResponse.calls.count()).toBe(<span class="hljs-number">1</span>);
+                <span class="hljs-keyword">var</span> response = Item._instantiateFromResponse.calls.argsFor(<span class="hljs-number">0</span>)[<span class="hljs-number">1</span>];
 
+                <span class="hljs-comment">//Returning an iguana-formatted response</span>
+                expect(response).toEqual({
+                    result: [attrs],
+                    meta: <span class="hljs-string">'meta'</span>
+                });
+            });
+
+        });
+
+        describe(<span class="hljs-string">'index'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="index">index</h3>
 <p>index can accept any query parameters that your server-side api supports.   </p>
+<p>As with show (see above), index should eventually support querying functionality.</p></div></div><div class="code"><div class="wrapper">            it(<span class="hljs-string">'should make an api call and process the result'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">var</span> attrsList = [{
+                    id: <span class="hljs-string">'id1'</span>
+                }, {
+                    id: <span class="hljs-string">'id2'</span>
+                }];
+                $httpBackend.expectGET(<span class="hljs-string">'/items.json?queryParam=1'</span>).respond(<span class="hljs-number">200</span>, {
+                    contents: {
+                        items: attrsList
+                    },
+                    meta: <span class="hljs-string">'meta'</span>
+                });
+                spyOn(Item, <span class="hljs-string">'_instantiateFromResponse'</span>);
+                Item.index({
+                    queryParam: <span class="hljs-number">1</span>
+                });
+                $httpBackend.flush();
+                expect(Item._instantiateFromResponse.calls.count()).toBe(<span class="hljs-number">1</span>);
+                <span class="hljs-keyword">var</span> response = Item._instantiateFromResponse.calls.argsFor(<span class="hljs-number">0</span>)[<span class="hljs-number">1</span>];
 
-<p>As with show (see above), index should eventually support querying functionality.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">attrsList</span> <span class="o">=</span> <span class="p">[{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id1&#39;</span><span class="p">},</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id2&#39;</span><span class="p">}];</span>
-            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">expectGET</span><span class="p">(</span><span class="s1">&#39;/items.json?queryParam=1&#39;</span><span class="p">).</span><span class="nx">respond</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="nx">contents</span><span class="o">:</span> <span class="p">{</span><span class="nx">items</span><span class="o">:</span> <span class="nx">attrsList</span><span class="p">},</span> <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">});</span>
-            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="s1">&#39;_instantiateFromResponse&#39;</span><span class="p">);</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">index</span><span class="p">({</span><span class="nx">queryParam</span><span class="o">:</span> <span class="mi">1</span><span class="p">});</span>
-            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">Item</span><span class="p">.</span><span class="nx">_instantiateFromResponse</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-            <span class="kd">var</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="nx">_instantiateFromResponse</span><span class="p">.</span><span class="nx">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">args</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-            
-            <span class="c1">//Returning an iguana-formatted response</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span>
-                <span class="nx">result</span><span class="o">:</span> <span class="nx">attrsList</span><span class="p">,</span>
-                <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span>
-            <span class="p">});</span>
-        <span class="p">});</span>
-        
-    <span class="p">});</span>
-    
-    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="create">create</h3>
+                <span class="hljs-comment">//Returning an iguana-formatted response</span>
+                expect(response).toEqual({
+                    result: attrsList,
+                    meta: <span class="hljs-string">'meta'</span>
+                });
+            });
 
+        });
+
+        describe(<span class="hljs-string">'create'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="create">create</h3>
 <p>as required by Iguana.Adapter.Base, create expects a document
-and an optional metadata hash</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="nx">prop</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">};</span>
-            <span class="kd">var</span> <span class="nx">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;data&#39;</span><span class="p">};</span>
-            <span class="kd">var</span> <span class="nx">returnAttrs</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">({},</span> <span class="nx">attrs</span><span class="p">,</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">});</span>
-            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">expectPOST</span><span class="p">(</span><span class="s1">&#39;/items.json&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">record</span><span class="o">:</span> <span class="nx">attrs</span><span class="p">,</span> <span class="nx">meta</span><span class="o">:</span> <span class="nx">metadata</span><span class="p">}).</span><span class="nx">respond</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="nx">contents</span><span class="o">:</span> <span class="p">{</span><span class="nx">items</span><span class="o">:</span> <span class="p">[</span><span class="nx">returnAttrs</span><span class="p">]},</span> <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">});</span>
-            <span class="kd">var</span> <span class="nx">callbacks</span> <span class="o">=</span> <span class="p">{</span><span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
-                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
-                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">returnAttrs</span><span class="p">);</span>
-                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">meta</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;meta&#39;</span><span class="p">);</span>
-            <span class="p">}};</span>
-            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">callbacks</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">).</span><span class="nx">andCallThrough</span><span class="p">();</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">attrs</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">callbacks</span><span class="p">.</span><span class="nx">success</span><span class="p">);</span>
-            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">callbacks</span><span class="p">.</span><span class="nx">success</span><span class="p">).</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span>
-        <span class="p">});</span>
-        
-    <span class="p">});</span>
-    
-    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="update">update</h3>
+and an optional metadata hash</p></div></div><div class="code"><div class="wrapper">            it(<span class="hljs-string">'should make an api call and process the result'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">var</span> attrs = {
+                    prop: <span class="hljs-string">'value'</span>
+                };
+                <span class="hljs-keyword">var</span> metadata = {
+                    meta: <span class="hljs-string">'data'</span>
+                };
+                <span class="hljs-keyword">var</span> returnAttrs = angular.extend({}, attrs, {
+                    id: <span class="hljs-string">'id'</span>
+                });
+                $httpBackend.expectPOST(<span class="hljs-string">'/items.json'</span>, {
+                    record: attrs,
+                    meta: metadata
+                }).respond(<span class="hljs-number">200</span>, {
+                    contents: {
+                        items: [returnAttrs]
+                    },
+                    meta: <span class="hljs-string">'meta'</span>
+                });
+                <span class="hljs-keyword">var</span> callbacks = {
+                    success: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+                        expect(response.result.constructor).toBe(Item);
+                        expect(response.result.asJson()).toEqual(returnAttrs);
+                        expect(response.meta).toBe(<span class="hljs-string">'meta'</span>);
+                    }
+                };
+                spyOn(callbacks, <span class="hljs-string">'success'</span>).and.callThrough();
+                Item.create(attrs, metadata).then(callbacks.success);
+                $httpBackend.flush();
+                expect(callbacks.success).toHaveBeenCalled();
+            });
 
+        });
+
+        describe(<span class="hljs-string">'update'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="update">update</h3>
 <p>as required by Iguana.Adapter.Base, update expects a document
-and an optional metadata hash</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="nx">prop</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">};</span>
-            <span class="kd">var</span> <span class="nx">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;data&#39;</span><span class="p">};</span>
-            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">expectPUT</span><span class="p">(</span><span class="s1">&#39;/items.json&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">record</span><span class="o">:</span> <span class="nx">attrs</span><span class="p">,</span> <span class="nx">meta</span><span class="o">:</span> <span class="nx">metadata</span><span class="p">}).</span><span class="nx">respond</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="nx">contents</span><span class="o">:</span> <span class="p">{</span><span class="nx">items</span><span class="o">:</span> <span class="p">[</span><span class="nx">attrs</span><span class="p">]},</span> <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">});</span>
-            <span class="kd">var</span> <span class="nx">callbacks</span> <span class="o">=</span> <span class="p">{</span><span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
-                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">constructor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">Item</span><span class="p">);</span>
-                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">attrs</span><span class="p">);</span>
-                <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">meta</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;meta&#39;</span><span class="p">);</span>
-            <span class="p">}};</span>
-            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">callbacks</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">).</span><span class="nx">andCallThrough</span><span class="p">();</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">attrs</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">callbacks</span><span class="p">.</span><span class="nx">success</span><span class="p">);</span>
-            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">callbacks</span><span class="p">.</span><span class="nx">success</span><span class="p">).</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span>
-        <span class="p">});</span>
-        
-    <span class="p">});</span>
-    
-    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="destroy">destroy</h3>
+and an optional metadata hash</p></div></div><div class="code"><div class="wrapper">            it(<span class="hljs-string">'should make an api call and process the result'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">var</span> attrs = {
+                    id: <span class="hljs-string">'id'</span>,
+                    prop: <span class="hljs-string">'value'</span>
+                };
+                <span class="hljs-keyword">var</span> metadata = {
+                    meta: <span class="hljs-string">'data'</span>
+                };
+                $httpBackend.expectPUT(<span class="hljs-string">'/items.json'</span>, {
+                    record: attrs,
+                    meta: metadata
+                }).respond(<span class="hljs-number">200</span>, {
+                    contents: {
+                        items: [attrs]
+                    },
+                    meta: <span class="hljs-string">'meta'</span>
+                });
+                <span class="hljs-keyword">var</span> callbacks = {
+                    success: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+                        expect(response.result.constructor).toBe(Item);
+                        expect(response.result.asJson()).toEqual(attrs);
+                        expect(response.meta).toBe(<span class="hljs-string">'meta'</span>);
+                    }
+                };
+                spyOn(callbacks, <span class="hljs-string">'success'</span>).and.callThrough();
+                Item.update(attrs, metadata).then(callbacks.success);
+                $httpBackend.flush();
+                expect(callbacks.success).toHaveBeenCalled();
+            });
 
+        });
+
+        describe(<span class="hljs-string">'destroy'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="destroy">destroy</h3>
 <p>as required by Iguana.Adapter.Base, destroy expects an id
-as it's only argument.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should make an api call and process the result&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">};</span>
-            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">expectDELETE</span><span class="p">(</span><span class="s1">&#39;/items/id.json&#39;</span><span class="p">).</span><span class="nx">respond</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="nx">contents</span><span class="o">:</span> <span class="p">{},</span> <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">});</span>
-            <span class="nx">spyOn</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="s1">&#39;_prepareEmptyResponse&#39;</span><span class="p">);</span>
-            <span class="nx">Item</span><span class="p">.</span><span class="nx">destroy</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">);</span>
-            <span class="nx">$httpBackend</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">Item</span><span class="p">.</span><span class="nx">_prepareEmptyResponse</span><span class="p">.</span><span class="nx">calls</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-            <span class="kd">var</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="nx">_prepareEmptyResponse</span><span class="p">.</span><span class="nx">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">args</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-            
-            <span class="c1">//Returning an iguana-formatted response</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span>
-                <span class="nx">result</span><span class="o">:</span> <span class="p">[],</span>
-                <span class="nx">meta</span><span class="o">:</span> <span class="s1">&#39;meta&#39;</span>
-            <span class="p">});</span>
-        <span class="p">});</span>
-        
-    <span class="p">});</span>
+as it&#39;s only argument.</p></div></div><div class="code"><div class="wrapper">            it(<span class="hljs-string">'should make an api call and process the result'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">var</span> attrs = {
+                    id: <span class="hljs-string">'id'</span>
+                };
+                $httpBackend.expectDELETE(<span class="hljs-string">'/items/id.json'</span>).respond(<span class="hljs-number">200</span>, {
+                    contents: {},
+                    meta: <span class="hljs-string">'meta'</span>
+                });
+                spyOn(Item, <span class="hljs-string">'_prepareEmptyResponse'</span>);
+                Item.destroy(<span class="hljs-string">'id'</span>);
+                $httpBackend.flush();
+                expect(Item._prepareEmptyResponse.calls.count()).toBe(<span class="hljs-number">1</span>);
+                <span class="hljs-keyword">var</span> response = Item._prepareEmptyResponse.calls.argsFor(<span class="hljs-number">0</span>)[<span class="hljs-number">0</span>];
 
-    
-<span class="p">});</span></div></div></div></div></body></html>
+                <span class="hljs-comment">//Returning an iguana-formatted response</span>
+                expect(response).toEqual({
+                    result: [],
+                    meta: <span class="hljs-string">'meta'</span>
+                });
+            });
+
+        });
+    });
+
+    describe(<span class="hljs-string">'options'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        <span class="hljs-keyword">var</span> resourceSpy;
+
+        beforeEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            resourceSpy = jasmine.createSpy(<span class="hljs-string">'$resource'</span>);
+            resourceSpy.and.returnValue({
+                index: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>},
+                show: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>},
+                create: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>},
+                update: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>},
+                destroy: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>}
+            });
+            module(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($provide)</span> {</span>
+                $provide.value(<span class="hljs-string">'$resource'</span>, resourceSpy);
+            });
+
+            inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($injector, _Iguana_)</span> {</span>
+                <span class="hljs-keyword">var</span> Iguana = _Iguana_;
+                $httpBackend = $injector.get(<span class="hljs-string">'$httpBackend'</span>);
+                Item = Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                    <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">"items"</span>);
+                });
+            });
+        });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="options">options</h3>
+<p>Extra options can be passed in and added onto the request</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should pass option down in a show call'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            Item.show(<span class="hljs-string">'id'</span>, {}, {
+                option: <span class="hljs-number">42</span>
+            });
+            expect(resourceSpy).toHaveBeenCalled();
+            expect(resourceSpy.calls.argsFor(<span class="hljs-number">0</span>)[<span class="hljs-number">2</span>].show.option).toBe(<span class="hljs-number">42</span>);
+        });
+
+        it(<span class="hljs-string">'should pass option down in an index call'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            Item.index({}, {
+                option: <span class="hljs-number">42</span>
+            });
+            expect(resourceSpy).toHaveBeenCalled();
+            expect(resourceSpy.calls.argsFor(<span class="hljs-number">0</span>)[<span class="hljs-number">2</span>].index.option).toBe(<span class="hljs-number">42</span>);
+        });
+
+        it(<span class="hljs-string">'should pass option down in a create call'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            Item.create({}, {}, {
+                option: <span class="hljs-number">42</span>
+            });
+            expect(resourceSpy).toHaveBeenCalled();
+            expect(resourceSpy.calls.argsFor(<span class="hljs-number">0</span>)[<span class="hljs-number">2</span>].create.option).toBe(<span class="hljs-number">42</span>);
+        });
+
+        it(<span class="hljs-string">'should pass option down in an update call'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            Item.update({
+                id: <span class="hljs-number">1</span>
+            }, {}, {
+                option: <span class="hljs-number">42</span>
+            });
+            expect(resourceSpy).toHaveBeenCalled();
+            expect(resourceSpy.calls.argsFor(<span class="hljs-number">0</span>)[<span class="hljs-number">2</span>].update.option).toBe(<span class="hljs-number">42</span>);
+        });
+
+        it(<span class="hljs-string">'should pass option down in a destroy call'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            Item.destroy(<span class="hljs-string">'id'</span>, {
+                option: <span class="hljs-number">42</span>
+            });
+            expect(resourceSpy).toHaveBeenCalled();
+            expect(resourceSpy.calls.argsFor(<span class="hljs-number">0</span>)[<span class="hljs-number">2</span>].destroy.option).toBe(<span class="hljs-number">42</span>);
+        });
+
+        it(<span class="hljs-string">'should use the default option if none is passed in'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            Item.defaultRequestOptions().set(<span class="hljs-string">'option'</span>, <span class="hljs-number">42</span>);
+            Item.show(<span class="hljs-string">'id'</span>, {});
+            expect(resourceSpy).toHaveBeenCalled();
+            expect(resourceSpy.calls.argsFor(<span class="hljs-number">0</span>)[<span class="hljs-number">2</span>].show.option).toBe(<span class="hljs-number">42</span>);
+        });
+
+        it(<span class="hljs-string">'should override default option if one is passed in'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            Item.defaultRequestOptions().set(<span class="hljs-string">'option'</span>, <span class="hljs-number">42</span>);
+            Item.show(<span class="hljs-string">'id'</span>, {}, {
+                option: <span class="hljs-number">49</span>
+            });
+            Item.show(<span class="hljs-string">'id'</span>, {});
+            expect(resourceSpy).toHaveBeenCalled();
+            expect(resourceSpy.calls.argsFor(<span class="hljs-number">0</span>)[<span class="hljs-number">2</span>].show.option).toBe(<span class="hljs-number">49</span>);
+        });
+
+    });
+
+
+});</div></div></div></div></body></html>

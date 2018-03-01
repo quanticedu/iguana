@@ -1,55 +1,51 @@
-<!DOCTYPE html><html lang="en"><head><title>spec/serializers_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/serializers_spec"><meta name="groc-project-path" content="spec/serializers_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/serializers_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+<!DOCTYPE html><html lang="en"><head><title>spec/serializers_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/serializers_spec"><meta name="groc-project-path" content="spec/serializers_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/serializers_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
 
-<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Iguana.Serializers&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+describe(<span class="hljs-string">'Iguana.Serializers'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
 
-    <span class="kd">var</span> <span class="nx">Iguana</span><span class="p">,</span> <span class="nx">Item</span><span class="p">;</span>
+    <span class="hljs-keyword">var</span> Iguana, Item;
 
-    <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">module</span><span class="p">(</span><span class="s1">&#39;Iguana&#39;</span><span class="p">);</span>
+    beforeEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        module(<span class="hljs-string">'Iguana'</span>);
 
-        <span class="nx">inject</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">_Iguana_</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">Iguana</span> <span class="o">=</span> <span class="nx">_Iguana_</span><span class="p">;</span>
-            <span class="nx">Item</span> <span class="o">=</span> <span class="nx">Iguana</span><span class="p">.</span><span class="nx">subclass</span><span class="p">();</span>
-        <span class="p">});</span>
+        inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_Iguana_)</span> {</span>
+            Iguana = _Iguana_;
+            Item = Iguana.subclass();
+        });
 
-    <span class="p">});</span>
+    });
     
-    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;asJson&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="asjson">asJson</h3>
-
-<p>'asJson' returns an object following the rules
+    describe(<span class="hljs-string">'asJson'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="asjson">asJson</h3>
+<p>&#39;asJson&#39; returns an object following the rules
 that angular.toJson uses.  This means that 
 properties whose names start with $ or whose values
 are functions will be removed, and everything else
-will be converted to json formats.</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should return an object&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="nx">someString</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
-                <span class="nx">someNumber</span><span class="o">:</span> <span class="mf">1.4</span><span class="p">,</span>
-                <span class="nx">someArray</span><span class="o">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
-                <span class="nx">someDate</span><span class="o">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="mi">2013</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
-                <span class="nx">someObject</span><span class="o">:</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">},</span>
-                <span class="nx">$$ignoreThisProp</span><span class="o">:</span> <span class="s1">&#39;ignored&#39;</span><span class="p">,</span>
-                <span class="nx">ignoreThisFunction</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span>
-            <span class="p">};</span>
-            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">asJson</span><span class="p">()).</span><span class="nx">toEqual</span><span class="p">({</span>
-                <span class="nx">someString</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
-                <span class="nx">someNumber</span><span class="o">:</span> <span class="mf">1.4</span><span class="p">,</span>
-                <span class="nx">someArray</span><span class="o">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
-                <span class="nx">someDate</span><span class="o">:</span> <span class="s1">&#39;2013-02-01T05:00:00.000Z&#39;</span><span class="p">,</span>
-                <span class="nx">someObject</span><span class="o">:</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">}</span>
-            <span class="p">});</span>
-        <span class="p">});</span>
-    <span class="p">})</span>
+will be converted to json formats.</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should return an object'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">var</span> obj = {
+                someString: <span class="hljs-string">'value'</span>,
+                someNumber: <span class="hljs-number">1.4</span>,
+                someArray: [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>],
+                someDate: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2013</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>),
+                someObject: {a: <span class="hljs-number">1</span>},
+                $$ignoreThisProp: <span class="hljs-string">'ignored'</span>,
+                ignoreThisFunction: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>}
+            };
+            <span class="hljs-keyword">var</span> item = Item.new(obj);
+            expect(item.asJson()).toEqual({
+                someString: <span class="hljs-string">'value'</span>,
+                someNumber: <span class="hljs-number">1.4</span>,
+                someArray: [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>],
+                someDate: <span class="hljs-string">'2013-02-01T05:00:00.000Z'</span>,
+                someObject: {a: <span class="hljs-number">1</span>}
+            });
+        });
+    })
     </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h3 id="tojson">toJson</h3>
-
 <p>This one is just</p>
-
-<pre><code>return angular.toJson(this);
-</code></pre></div></div><div class="code"><div class="wrapper">    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;toJson&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should return a string&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">Item</span><span class="p">.</span><span class="k">new</span><span class="p">({</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">}).</span><span class="nx">toJson</span><span class="p">()).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">&#39;{&quot;a&quot;:1}&#39;</span><span class="p">);</span>
-        <span class="p">});</span>
-    <span class="p">});</span>
+<pre><code>return angular.toJson(this);</code></pre></div></div><div class="code"><div class="wrapper">    describe(<span class="hljs-string">'toJson'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        it(<span class="hljs-string">'should return a string'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+            expect(Item.new({a: <span class="hljs-number">1</span>}).toJson()).toEqual(<span class="hljs-string">'{"a":1}'</span>);
+        });
+    });
 
     
-<span class="p">});</span></div></div></div></div></body></html>
+});</div></div></div></div></body></html>
