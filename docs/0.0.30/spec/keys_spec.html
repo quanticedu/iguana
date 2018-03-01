@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="en"><head><title>spec/keys_spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="spec/keys_spec"><meta name="groc-project-path" content="spec/keys_spec.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">spec/keys_spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+
+describe(<span class="hljs-string">'Iguana.Keys'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+
+    <span class="hljs-keyword">var</span> Iguana, Item;
+
+    beforeEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        module(<span class="hljs-string">'Iguana'</span>);
+
+        inject(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(MockIguana, _Iguana_)</span> {</span>
+            Iguana = _Iguana_;
+            Item = Iguana.subclass(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                <span class="hljs-keyword">this</span>.setCollection(<span class="hljs-string">'items'</span>);
+            });
+        });
+
+    });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="keys">Keys</h1>
+<h3 id="definesetter">defineSetter</h3>
+<p>Used to define a setter on an attribute for a record</p></div></div><div class="code"><div class="wrapper">    describe(<span class="hljs-string">'defineSetter'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>In this case we call some side effect whenever the
+value is updated and then 
+use writeKey to actually update the value</p></div></div><div class="code"><div class="wrapper">        it(<span class="hljs-string">'should support defining a set function for a key'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+
+            <span class="hljs-keyword">var</span> sideEffect = jasmine.createSpy(<span class="hljs-string">'sideEffect'</span>);
+            Item.defineSetter(<span class="hljs-string">'myKey'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(val)</span> {</span>
+                <span class="hljs-keyword">if</span> (val === <span class="hljs-keyword">this</span>.myKey) {
+                    <span class="hljs-keyword">return</span> val;
+                }
+                sideEffect(val);
+                <span class="hljs-keyword">this</span>.writeKey(<span class="hljs-string">'myKey'</span>, val);
+                <span class="hljs-keyword">return</span> val;
+            });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>the setter is not called when the item is initialized</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">var</span> item = Item.new({
+                myKey: <span class="hljs-string">'value'</span>
+            });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>but it is called when the value is updated</p></div></div><div class="code"><div class="wrapper">            item.myKey = <span class="hljs-string">'a new value'</span>;
+
+            expect(sideEffect).toHaveBeenCalled();
+            expect(item.myKey).toBe(<span class="hljs-string">'a new value'</span>);
+
+        });
+
+
+    });
+
+
+});</div></div></div></div></body></html>

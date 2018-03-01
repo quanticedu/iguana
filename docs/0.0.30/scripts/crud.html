@@ -1,0 +1,258 @@
+<!DOCTYPE html><html lang="en"><head><title>scripts/crud</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="scripts/crud"><meta name="groc-project-path" content="scripts/crud.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">scripts/crud.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+
+angular.module(<span class="hljs-string">'Iguana'</span>)
+    .factory(<span class="hljs-string">'Iguana.Crud'</span>, [<span class="hljs-string">'$injector'</span>,
+        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($injector)</span> {</span>
+
+            <span class="hljs-keyword">var</span> $q = $injector.get(<span class="hljs-string">'$q'</span>);
+
+            <span class="hljs-keyword">return</span> {
+
+                included: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Iguana)</span> {</span>
+                    Iguana.setIdProperty(<span class="hljs-string">'id'</span>);
+                },
+
+                classMixin: {
+
+                    setCollection: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collection)</span> {</span>
+                        <span class="hljs-keyword">this</span>.extend({
+                            collection: collection
+                        });
+                    },
+
+                    setAdapter: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(adapterName)</span> {</span>
+                        <span class="hljs-keyword">var</span> adapterKlass;
+                        <span class="hljs-keyword">try</span> {
+                            adapterKlass = $injector.get(adapterName);
+                        } <span class="hljs-keyword">catch</span> (e) {
+                            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Cannot find adapter "'</span> + adapterName + <span class="hljs-string">'"'</span>);
+                        }
+
+                        <span class="hljs-keyword">this</span>.extend({
+                            adapterKlass: adapterKlass
+                        });
+                    },
+
+                    setBaseUrl: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> {</span>
+                        <span class="hljs-comment">//remove trailing slash</span>
+                        url = url.replace(<span class="hljs-regexp">/\/$/</span>, <span class="hljs-string">''</span>);
+                        <span class="hljs-keyword">this</span>.extend({
+                            baseUrl: url
+                        });
+                    },
+
+                    setIdProperty: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(idProperty)</span> {</span>
+                        <span class="hljs-keyword">this</span>.extend({
+                            idProperty: idProperty
+                        });
+                    },
+
+                    adapter: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>._adapter) {
+                            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.adapterKlass) {
+                                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'No adapter set.  You need to call setAdapter()'</span>);
+                            }
+                            <span class="hljs-keyword">this</span>._adapter = <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>.adapterKlass(<span class="hljs-keyword">this</span>);
+                        }
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._adapter;
+                    },
+
+                    show: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._callAdapterMethAndInstantiateResult(<span class="hljs-string">'show'</span>, <span class="hljs-literal">true</span>, <span class="hljs-built_in">arguments</span>);
+                    },
+
+                    index: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._callAdapterMethAndInstantiateResult(<span class="hljs-string">'index'</span>, <span class="hljs-literal">false</span>, <span class="hljs-built_in">arguments</span>);
+                    },
+
+                    create: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(obj, metadata, options)</span> {</span>
+                        <span class="hljs-keyword">var</span> instance = <span class="hljs-keyword">this</span>.new(obj);
+                        <span class="hljs-keyword">if</span> (!instance.isNew()) {
+                            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Cannot call create on instance that is already saved.'</span>);
+                        }
+                        <span class="hljs-keyword">return</span> instance.save(metadata, options);
+                    },
+
+                    update: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(obj, metadata, options)</span> {</span>
+                        <span class="hljs-keyword">var</span> instance = <span class="hljs-keyword">this</span>.new(obj);
+                        <span class="hljs-keyword">if</span> (instance.isNew()) {
+                            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Cannot call update on instance that is not already saved.'</span>);
+                        }
+                        <span class="hljs-keyword">return</span> instance.save(metadata, options);
+                    },
+
+                    destroy: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(id, metadata, options)</span> {</span>
+                        <span class="hljs-keyword">var</span> args = [id];
+                        <span class="hljs-keyword">if</span> (options) {
+                            args.push(options);
+                        }
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._callAdapterMeth(<span class="hljs-string">'destroy'</span>, args, metadata).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+                            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._prepareEmptyResponse(response);
+                        }.bind(<span class="hljs-keyword">this</span>));
+                    },
+
+                    saveWithoutInstantiating: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(meth, obj, metadata, options)</span> {</span>
+                        <span class="hljs-keyword">var</span> args = [obj];
+                        <span class="hljs-keyword">if</span> (metadata) {
+                            args.push(metadata);
+                        }
+                        <span class="hljs-keyword">if</span> (options) {
+                            args.push(options);
+                        }
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._callAdapterMeth(meth, args).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+                            <span class="hljs-keyword">return</span> {
+                                result: response.result[<span class="hljs-number">0</span>],
+                                meta: response.meta
+                            };
+                        });
+                    },
+
+                    _prepareEmptyResponse: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+                        <span class="hljs-keyword">return</span> {
+                            result: <span class="hljs-literal">null</span>,
+                            meta: response.meta
+                        };
+                    },
+
+                    _callAdapterMethAndInstantiateResult: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(meth, singlify, args)</span> {</span>
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._callAdapterMeth(meth, args).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+                            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._instantiateFromResponse(singlify, response);
+                        }.bind(<span class="hljs-keyword">this</span>));
+                    },
+
+                    _instantiateFromResponse: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(singlify, response)</span> {</span>
+                        <span class="hljs-keyword">var</span> instances = <span class="hljs-keyword">this</span>._instantiateFromResult(response.result);
+                        <span class="hljs-keyword">var</span> result = singlify ? instances[<span class="hljs-number">0</span>] : instances;
+                        <span class="hljs-keyword">return</span> {
+                            result: result,
+                            meta: response.meta
+                        };
+                    },
+
+                    _instantiateFromResult: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(result)</span> {</span>
+                        <span class="hljs-keyword">if</span> (!result) {
+                            <span class="hljs-keyword">return</span> [];
+                        }
+                        <span class="hljs-keyword">var</span> instances = [];
+                        angular.forEach(result, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(attrs)</span> {</span>
+                            instances.push(<span class="hljs-keyword">this</span>.new(attrs));
+                        }.bind(<span class="hljs-keyword">this</span>));
+                        <span class="hljs-keyword">return</span> instances;
+                    },
+
+                    _callAdapterMeth: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(meth, args)</span> {</span>
+                        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.collection) {
+                            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Cannot make an api call because collection has not been set.  You need to call setCollection().'</span>);
+                        }
+                        args = <span class="hljs-built_in">Array</span>.prototype.slice.call(args, <span class="hljs-number">0</span>);
+                        args.unshift(<span class="hljs-keyword">this</span>.collection);
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.adapter()[meth].apply(<span class="hljs-keyword">this</span>.adapter(), args);
+                    }
+                },
+
+                instanceMixin: {
+
+                    save: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(metadata, options)</span> {</span>
+                        <span class="hljs-keyword">var</span> action = <span class="hljs-keyword">this</span>.isNew() ? <span class="hljs-string">'create'</span> : <span class="hljs-string">'update'</span>;
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._createOrUpdate(action, metadata, options);
+                    },
+
+                    create: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(metadata, options)</span> {</span>
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._createOrUpdate(<span class="hljs-string">'create'</span>, metadata, options);
+                    },
+
+                    isNew: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                        <span class="hljs-keyword">var</span> id = <span class="hljs-keyword">this</span>[<span class="hljs-keyword">this</span>.idProperty()];
+                        <span class="hljs-keyword">return</span> !id;
+                    },
+
+                    _createOrUpdate: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(action, metadata, options)</span> {</span>
+                        <span class="hljs-keyword">var</span> promise;
+                        <span class="hljs-keyword">this</span>.runCallbacks(<span class="hljs-string">'save'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                            <span class="hljs-keyword">var</span> publicPromise;
+                            <span class="hljs-keyword">this</span>.$$saving = <span class="hljs-literal">true</span>;
+                            promise = <span class="hljs-keyword">this</span>._save(action, metadata, options);
+                            <span class="hljs-keyword">var</span> requestId = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().getTime() + <span class="hljs-string">':'</span> + <span class="hljs-built_in">Math</span>.random();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if saving is not in progress already, then
+create a new $$savePromise (this check allows
+us to support concurrent saves of the same
+object)</p></div></div><div class="code"><div class="wrapper">                            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.$$savePromise) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>create the promise</p></div></div><div class="code"><div class="wrapper">                                <span class="hljs-keyword">var</span> _resolve;
+                                <span class="hljs-keyword">var</span> _reject;
+                                publicPromise = $q(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(resolve, reject)</span> {</span>
+                                    _resolve = resolve;
+                                    _reject = reject;
+                                });
+                                publicPromise.resolve = _resolve;
+                                publicPromise.reject = _reject;
+                                publicPromise.savePromises = {};
+                                publicPromise.errors = [];
+
+                                publicPromise.finally(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                                    <span class="hljs-keyword">this</span>.$$saving = <span class="hljs-literal">false</span>;
+                                    <span class="hljs-keyword">this</span>.$$savePromise = <span class="hljs-literal">undefined</span>;
+                                }.bind(<span class="hljs-keyword">this</span>));
+                                <span class="hljs-keyword">this</span>.$$savePromise = publicPromise;
+                            }
+                            publicPromise = <span class="hljs-keyword">this</span>.$$savePromise;
+                            publicPromise.savePromises[requestId] = promise;
+
+                            promise.then(
+                                <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                                    <span class="hljs-keyword">delete</span> publicPromise.savePromises[requestId];
+                                    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(publicPromise.savePromises).length === <span class="hljs-number">0</span>) {
+                                        <span class="hljs-keyword">if</span> (publicPromise.errors.length === <span class="hljs-number">0</span>) {
+                                            publicPromise.resolve();
+                                        } <span class="hljs-keyword">else</span> {
+                                            publicPromise.reject({
+                                                errors: publicPromise.errors
+                                            });
+                                        }
+
+                                    }
+                                },
+                                <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span>
+                                    publicPromise.errors.push(err);
+                                    <span class="hljs-keyword">delete</span> publicPromise.savePromises[requestId];
+                                    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(publicPromise.savePromises).length === <span class="hljs-number">0</span>) {
+                                        publicPromise.reject({
+                                            errors: publicPromise.errors
+                                        });
+                                    }
+                                });
+                        });
+                        <span class="hljs-keyword">return</span> promise;
+                    },
+
+                    _save: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(action, metadata, options)</span> {</span>
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.constructor.saveWithoutInstantiating(action, <span class="hljs-keyword">this</span>.asJson(), metadata, options).then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(response)</span> {</span>
+                            <span class="hljs-keyword">var</span> attrs = angular.extend({}, response.result);
+
+                            <span class="hljs-keyword">this</span>.copyAttrs(attrs);
+                            <span class="hljs-keyword">return</span> {
+                                result: <span class="hljs-keyword">this</span>,
+                                meta: response.meta
+                            };
+                        }.bind(<span class="hljs-keyword">this</span>));
+                    },
+
+                    destroy: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options, metadata)</span> {</span>
+                        <span class="hljs-keyword">this</span>.$$destroying = <span class="hljs-literal">true</span>;
+                        <span class="hljs-keyword">this</span>.$$saving = <span class="hljs-literal">true</span>;
+                        <span class="hljs-keyword">var</span> returnValue = <span class="hljs-keyword">this</span>.constructor.destroy(<span class="hljs-keyword">this</span>[<span class="hljs-keyword">this</span>.idProperty()], metadata, options);
+                        <span class="hljs-keyword">this</span>.$$savePromise = returnValue;
+                        returnValue.finally(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                            <span class="hljs-keyword">this</span>.$$destroying = <span class="hljs-literal">false</span>;
+                            <span class="hljs-keyword">this</span>.$$saving = <span class="hljs-literal">false</span>;
+                            <span class="hljs-keyword">this</span>.$$savePromise = <span class="hljs-literal">undefined</span>;
+                        }.bind(<span class="hljs-keyword">this</span>));
+                        <span class="hljs-keyword">return</span> returnValue;
+                    },
+
+                    idProperty: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.constructor.idProperty;
+                    }
+
+                }
+            };
+
+        }
+    ]);</div></div></div></div></body></html>

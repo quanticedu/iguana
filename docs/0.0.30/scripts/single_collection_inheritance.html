@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="en"><head><title>scripts/single_collection_inheritance</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="scripts/single_collection_inheritance"><meta name="groc-project-path" content="scripts/single_collection_inheritance.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">scripts/single_collection_inheritance.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+
+angular.module(<span class="hljs-string">'Iguana'</span>)
+    .factory(<span class="hljs-string">'Iguana.SingleCollectionInheritance'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+
+        <span class="hljs-keyword">return</span> {
+
+            included: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Iguana)</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if the class has an alias, but the type property is
+not set, then set it to the alias.</p></div></div><div class="code"><div class="wrapper">                Iguana.setCallback(<span class="hljs-string">'after'</span>, <span class="hljs-string">'copyAttrs'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                    <span class="hljs-keyword">var</span> sciProperty = <span class="hljs-keyword">this</span>.constructor.sciProperty;
+                    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.constructor.alias() &amp;&amp; !<span class="hljs-keyword">this</span>.hasOwnProperty(sciProperty)) {
+                        <span class="hljs-keyword">this</span>[sciProperty] = <span class="hljs-keyword">this</span>.constructor.alias();
+                    }
+                });
+
+                Iguana.setCallback(<span class="hljs-string">'before'</span>, <span class="hljs-string">'copyAttrsOnInitialize'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+                    <span class="hljs-keyword">var</span> attrs = <span class="hljs-keyword">this</span>.$$sourceAttrs;
+                    <span class="hljs-keyword">if</span> (!attrs || !attrs.$$instantiatedWithNew) {
+                        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Iguana classes must be instantiated with MyKlass.new() rather that new MyKlass()'</span>);
+                    }
+
+                    <span class="hljs-keyword">delete</span> attrs.$$instantiatedWithNew;
+                });
+            },
+
+            classMixin: {
+
+                sciProperty: <span class="hljs-string">'__iguana_type'</span>,
+
+                setSciProperty: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(prop)</span> {</span>
+                    <span class="hljs-keyword">this</span>.extend({
+                        sciProperty: prop
+                    });
+                },
+
+                <span class="hljs-keyword">new</span>: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(attrs, raiseOnFailure)</span> {</span>
+                    <span class="hljs-comment">//clone the provided attrs object</span>
+                    attrs = angular.extend({}, attrs);
+
+                    <span class="hljs-keyword">if</span> (raiseOnFailure !== <span class="hljs-literal">false</span>) {
+                        raiseOnFailure = <span class="hljs-literal">true</span>;
+                    }
+                    <span class="hljs-keyword">if</span> (attrs === <span class="hljs-literal">undefined</span>) {
+                        attrs = {};
+                    }
+
+                    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> attrs !== <span class="hljs-string">'object'</span> || <span class="hljs-built_in">Object</span>.prototype.toString.call(attrs) === <span class="hljs-string">'[object Array]'</span>) {
+                        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Expecting to instantiate Iguana class with object, got \''</span> + attrs + <span class="hljs-string">'\''</span>);
+                    }
+
+                    <span class="hljs-comment">//Ensure that all instances are created with Iguana.new rather than 'new Iguana'</span>
+                    <span class="hljs-comment">//See after copyAttrs callback above</span>
+                    attrs.$$instantiatedWithNew = <span class="hljs-literal">true</span>;
+
+                    <span class="hljs-keyword">var</span> instance;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Since the lazy-loading relies on sciProperty, it can only work on subclasses. I guess this makes
+sense, since we&#39;ll always be loading things from the db with SomeItem.show() or
+whatever.</p></div></div><div class="code"><div class="wrapper">                    <span class="hljs-keyword">if</span> (!attrs.hasOwnProperty(<span class="hljs-keyword">this</span>.sciProperty)) {
+                        instance = <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>(attrs);
+                    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (attrs[<span class="hljs-keyword">this</span>.sciProperty] &amp;&amp; attrs[<span class="hljs-keyword">this</span>.sciProperty] === <span class="hljs-keyword">this</span>.alias()) {
+                        instance = <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>(attrs);
+                    } <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">var</span> klass;
+                        klass = <span class="hljs-keyword">this</span>.getAliasedKlass(attrs[<span class="hljs-keyword">this</span>.sciProperty], <span class="hljs-literal">false</span>);
+
+                        <span class="hljs-keyword">if</span> (klass &amp;&amp; !klass.inheritsFrom(<span class="hljs-keyword">this</span>)) {
+                            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Cannot instantiate because class "'</span> + klass.alias() + <span class="hljs-string">'" does not inherit from "'</span> + <span class="hljs-keyword">this</span>.alias() + <span class="hljs-string">'."'</span>);
+                        }
+
+                        <span class="hljs-keyword">if</span> (klass) {
+                            instance = klass.new(attrs, <span class="hljs-literal">false</span>);
+                        }
+
+                    }
+
+                    <span class="hljs-keyword">if</span> (instance) {
+                        <span class="hljs-keyword">return</span> instance;
+                    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (raiseOnFailure) {
+                        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'No class could be found for '</span> + <span class="hljs-keyword">this</span>.sciProperty + <span class="hljs-string">'="'</span> + attrs[<span class="hljs-keyword">this</span>.sciProperty] + <span class="hljs-string">'".'</span>);
+                    }
+                }
+            }
+        };
+    });</div></div></div></div></body></html>
