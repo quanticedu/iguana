@@ -86,6 +86,9 @@ angular.module('Iguana')
                         if (options) {
                             args.push(options);
                         }
+                        if (metadata) {
+                            args.push(metadata);
+                        }
                         return this._callAdapterMeth('destroy', args, metadata).then(function(response) {
                             return this._prepareEmptyResponse(response);
                         }.bind(this));
@@ -239,7 +242,7 @@ angular.module('Iguana')
                         }.bind(this));
                     },
 
-                    destroy: function(options, metadata) {
+                    destroy: function(metadata, options) {
                         this.$$destroying = true;
                         this.$$saving = true;
                         var returnValue = this.constructor.destroy(this[this.idProperty()], metadata, options);
