@@ -47,7 +47,7 @@ angular.module('Iguana', ['SuperModel', 'ngResource'])
                     this.extend({
                         expect: function() {
                             throw new Error('There is no \'expect\' method.  Make sure to include iguana-mock.js and inject MockIguana.');
-                        },
+                        }
                     });
 
                     return {

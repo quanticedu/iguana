@@ -57,6 +57,14 @@ angular.module('Iguana')
                         return this._adapter;
                     },
 
+                    // This method can be used if, for example, you want to
+                    // post your index calls because your params are too long
+                    // for a get call.
+                    overrideAction: function(actionName, override) {
+                        this._actionOverrides = this._actionOverrides || {};
+                        this._actionOverrides[actionName] = override;
+                    },
+
                     show: function() {
                         return this._callAdapterMethAndInstantiateResult('show', true, arguments);
                     },

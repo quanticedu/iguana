@@ -84,10 +84,14 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
                     },
 
                     _getResource: function(collection, options) {
-                        var url = [this.iguanaKlass.baseUrl, collection, ':' + this.idProperty].join('/') + '.json';
+
+                        // http://hostname.com/collection/:path/:id.json
+                        // :path is generally not used, unless _actionOverrides below
+                        var url = [this.iguanaKlass.baseUrl, collection, ':path', ':' + this.idProperty].join('/') + '.json';
+
                         options = angular.extend({}, this.iguanaKlass.defaultRequestOptions(), options || {});
 
-                        return $resource(url, {}, {
+                        var actions = {
                             'index': angular.extend({}, options, {
                                 method: 'GET'
                             }),
@@ -103,7 +107,25 @@ angular.module('Iguana.Adapters.RestfulIdStyle', ['Iguana', 'ngResource'])
                             'destroy': angular.extend({}, options, {
                                 method: 'DELETE'
                             })
-                        });
+                        };
+
+                        // see overrideAction class method
+                        if (this.iguanaKlass._actionOverrides) {
+                            for (var actionName in this.iguanaKlass._actionOverrides) {
+                                var override = this.iguanaKlass._actionOverrides[actionName];
+                                var action = actions[actionName];
+                                if (!action) {
+                                    throw new Error('No action "' + actionName + '"');
+                                }
+                                if (override.path) {
+                                    override.params = override.params || {};
+                                    override.params.path = override.path;
+                                }
+                                angular.extend(action, override);
+                            }
+                        }
+
+                        return $resource(url, {}, actions);
                     }
 
                 };
